@@ -10,12 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('siswa', function (Blueprint $table) {
-            $table->string('nis_siswa')->primary();
-            $table->string('nama_siswa');
-            $table->enum('kelamin_siswa', ['Laki-laki', 'Perempuan']);
-            $table->string('kelas_siswa');
-            $table->string('nohp_siswa')->nullable(); // Nomor HP siswa, bisa null jika tidak diisi
+        Schema::create('petugas', function (Blueprint $table) {
+            $table->string('nip')->primary();
+            $table->string('nama');
+            $table->string('nohp')->nullable();
+            $table->text('alamat');
             $table->unsignedBigInteger('id_user'); // foreign key ke tabel pengguna
             $table->foreign('id_user')->references('id_user')->on('pengguna')->onDelete('cascade');
             $table->timestamps();
@@ -28,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('siswa');
+        Schema::dropIfExists('petugas');
     }
 };

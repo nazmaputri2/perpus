@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\RiwayatAktivitasController;
 use App\Http\Controllers\BerandaSiswaController;
+use App\Http\Controllers\PetugasController;
 use App\Http\Middleware\CekLogin;
 
 
@@ -29,6 +30,12 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     Route::post('datasiswa', [SiswaController::class, 'store'])->name('petugas.datasiswa.store');
     Route::put('datasiswa/{nis_siswa}', [SiswaController::class, 'update'])->name('petugas.datasiswa.update');
     Route::delete('datasiswa/{nis_siswa}', [SiswaController::class, 'destroy'])->name('petugas.datasiswa.destroy');
+
+    Route::get('datapetugas', [PetugasController::class, 'index'])->name('petugas.datapetugas');
+    Route::post('datapetugas', [PetugasController::class, 'store'])->name('petugas.datapetugas.store');
+    Route::put('datapetugas/{nip}', [PetugasController::class, 'update'])->name('petugas.datapetugas.update');
+    Route::delete('datapetugas/{nip}', [PetugasController::class, 'destroy'])->name('petugas.datapetugas.destroy');
+
 
 
      // Data Buku (contoh, sesuaikan dengan controller Anda)
