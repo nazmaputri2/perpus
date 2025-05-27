@@ -98,6 +98,8 @@
         document.getElementById('edit-nama_siswa').value = student.nama_siswa;
         document.getElementById('edit-kelamin_siswa').value = student.kelamin_siswa;
         document.getElementById('edit-kelas_siswa').value = student.kelas_siswa;
+        document.getElementById('edit-nohp_siswa').value = student.nohp_siswa;
+
 
          const form = document.getElementById('edit-form');
     form.action = `/petugas/datasiswa/${student.nis_siswa}`;

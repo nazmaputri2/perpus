@@ -18,7 +18,7 @@
                     @method('PUT')
                     <div>
                         <label for="edit-nis_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS</label>
-                        <input type="text" id="edit-nis_siswa" name="nis_siswa" required
+                        <input type="text" id="edit-nis_siswa" name="nis_siswa" readonly
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div>
