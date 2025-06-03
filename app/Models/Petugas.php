@@ -5,7 +5,7 @@ use App\Models\Pengguna;
 
 use Illuminate\Database\Eloquent\Model;
 
-class petugas extends Model
+class Petugas extends Model
 {
     protected $table = 'petugas';
     protected $primaryKey = 'nip';

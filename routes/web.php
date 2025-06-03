@@ -6,6 +6,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\RiwayatAktivitasController;
 use App\Http\Controllers\BerandaSiswaController;
 use App\Http\Controllers\PetugasController;
+use App\Http\Controllers\DataBukuController;
 use App\Http\Middleware\CekLogin;
 
 
@@ -39,10 +40,10 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
 
 
      // Data Buku (contoh, sesuaikan dengan controller Anda)
-    // Route::get('databuku', [BukuController::class, 'index'])->name('petugas.databuku');
-    // Route::post('databuku', [BukuController::class, 'store'])->name('petugas.databuku.store');
-    // Route::put('databuku/{id}', [BukuController::class, 'update'])->name('petugas.databuku.update');
-    // Route::delete('databuku/{id}', [BukuController::class, 'destroy'])->name('petugas.databuku.destroy');
+    Route::get('databuku', [DataBukuController::class, 'index'])->name('petugas.databuku');
+    Route::post('databuku', [DataBukuController::class, 'store'])->name('petugas.databuku.store');
+    Route::put('databuku/{id}', [DataBukuController::class, 'update'])->name('petugas.databuku.update');
+    Route::delete('databuku/{id}', [DataBukuController::class, 'destroy'])->name('petugas.databuku.destroy');
 
     // Data Peminjaman (contoh, sesuaikan dengan controller Anda)
     // Route::get('datapeminjaman', [PeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
