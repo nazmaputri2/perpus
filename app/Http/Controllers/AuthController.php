@@ -41,6 +41,6 @@ session([
     public function logout(Request $request)
     {
         $request->session()->flush();
-        return redirect()->route('login');
+        return redirect()->route('auth.login');
     }
 }

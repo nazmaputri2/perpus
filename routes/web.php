@@ -7,11 +7,12 @@ use App\Http\Controllers\RiwayatAktivitasController;
 use App\Http\Controllers\BerandaSiswaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\DataBukuController;
+use App\Http\Controllers\GantiPasswordController;
 use App\Http\Middleware\CekLogin;
 
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.login');
+Route::post('/', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth.custom')->group(function () {
@@ -22,6 +23,8 @@ Route::middleware('auth.custom')->group(function () {
     Route::get('/siswa-beranda', function () {
         return view('siswa.beranda'); // Ganti dengan tampilan beranda siswa
     })->name('siswa.beranda');
+
+     Route::post('/ganti-password', [GantiPasswordController::class, 'update'])->name('password.update');
     
 });
 
@@ -57,7 +60,11 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
 
     Route::get('/siswa/beranda', [BerandaSiswaController::class, 'index'])->name('siswa.beranda');
         Route::post('/siswa/beranda', [SiswaController::class, 'pinjamBuku'])->name('siswa.pinjam.buku');
-
+Route::get('/profil', function () {
+    // Anda akan mengambil data siswa dari database di sini
+    // Untuk saat ini, kita akan meneruskan array kosong atau dummy
+    return view('siswa.profile');
+})->name('siswa.profile');
 
 });
 
