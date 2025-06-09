@@ -18,7 +18,10 @@ return new class extends Migration
             $table->year('tahun_terbit');
             $table->text('sinopsis')->nullable();
             $table->integer('stok')->default(0);
+            $table->string('jenis_buku');
+            $table->string('kelas')->default('tidak ada');
             $table->timestamps();
+    
         });
     }
 

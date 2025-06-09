@@ -1,8 +1,7 @@
 <div id="detailModal" tabindex="-1" aria-hidden="true"
-    class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+    class="hidden fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full justify-center items-center"> {{-- Tambah justify-center items-center --}}
     <div class="relative w-full max-w-3xl h-full md:h-auto">
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Detail Buku</h3>
                 <button type="button"
@@ -16,23 +15,24 @@
                 </button>
             </div>
 
-            <!-- Body -->
             <div class="p-6 space-y-6">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="md:w-1/3 flex justify-center">
-                        <img id="modalImage" src="" class="rounded-lg max-h-60" alt="Cover">
+                        <img id="modalImage" src="" class="rounded-lg max-h-60 object-contain" alt="Cover"> {{-- object-contain untuk menghindari distorsi --}}
                     </div>
                     <div class="md:w-2/3">
-                        <ul class="text-sm text-gray-800 dark:text-gray-200 space-y-4">
+                        <ul class="text-sm text-gray-800 dark:text-gray-200 space-y-2"> {{-- Kurangi spacing --}}
                             <li><strong>ISBN:</strong> <span id="modalIsbn"></span></li>
                             <li><strong>Judul:</strong> <span id="modalTitle"></span></li>
                             <li><strong>Penulis:</strong> <span id="modalAuthor"></span></li>
                             <li><strong>Penerbit:</strong> <span id="modalPublisher"></span></li>
-                            <li><strong>Tahun:</strong> <span id="modalYear"></span></li>
+                            <li><strong>Tahun Terbit:</strong> <span id="modalYear"></span></li> {{-- Sesuaikan label --}}
                             <li><strong>Jumlah Stok:</strong> <span id="modalStock"></span></li>
+                            <li><strong>Jenis Buku:</strong> <span id="modalJenisbuku"></span></li>
+                            <li><strong>Kelas:</strong> <span id="modalkelas"></span></li>
                             <li>
                                 <strong>Sinopsis:</strong><br>
-                                <div class="max-h-40 overflow-y-auto mt-1 p-2 bg-gray-50 rounded">
+                                <div class="max-h-40 overflow-y-auto mt-1 p-2 bg-gray-50 rounded dark:bg-gray-600 dark:text-gray-300">
                                     <span id="modalDescription"></span>
                                 </div>
                             </li>
@@ -41,12 +41,14 @@
                 </div>
             </div>
 
-            <!-- Footer -->
-            <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button id="editBookBtn" type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    data-modal-target="editbuku" data-modal-toggle="editbuku">
+            <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2"> {{-- Tambah gap --}}
+                <button id="editBookBtn" data-modal-target="editbuku" type="button" {{-- Hapus data-modal-toggle="editbuku" karena akan dihandle JS --}}
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Ubah
+                </button>
+                <button id="deleteBookBtn" data-modal-target="deleteConfirmationModal" type="button"
+                    class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                    Hapus
                 </button>
             </div>
         </div>

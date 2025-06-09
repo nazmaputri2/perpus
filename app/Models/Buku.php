@@ -19,7 +19,8 @@ class Buku extends Model
         'tahun_terbit',
         'sinopsis',
         'stok',
+        'jenis_buku',
+        'kelas',
         'gambar',
     ];
 }
-
