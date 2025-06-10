@@ -7,146 +7,200 @@
     @include('components.modal-keluar')
 @endpush
 
+
 @section('content')
-
-
-
- {{-- @push('toasts')
-<div id="toast-alert"
-     class="fixed inset-x-0 top-6 mx-auto z-50 flex items-center gap-3 w-fit max-w-lg p-4 text-green-600 bg-green-100 border border-green-300 rounded-xl shadow-lg
-     opacity-0 -translate-y-4 transition-all duration-500 ease-out"
-     style="z-index: 99999;">
-    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-    </svg>
-    <div class="text-sm font-medium">
-        <span class="font-bold">Selamat Datang Petugas {{ session('user')['name'] ?? 'name' }}!</span>
-    </div>
-</div>
-@endpush --}}
-
-@push('toasts')
-    {{-- Cek apakah ada session 'status' dengan nilai 'password-updated' --}}
-    @if (session('status') === 'password-updated')
-        {{-- Komponen Notifikasi Sukses dari Flowbite/Tailwind --}}
-        <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
-            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-                <i class="fas fa-check w-5 h-5"></i>
-                <span class="sr-only">Check icon</span>
-            </div>
-            <div class="ms-3 text-sm font-normal">Password berhasil diperbarui.</div>
-            <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
-                <span class="sr-only">Close</span>
-                <i class="fas fa-times w-3 h-3"></i>
-            </button>
-        </div>
-    @endif
-@endpush
-
-    <!-- Card Data -->
-    <div class="p-4 bg-white rounded-xl shadow-lg mb-6 border border-gray-200">
-        <div class="grid grid-cols-3 gap-4 mb-4 ">
-            <div class="flex items-center justify-center h-32 rounded-lg bg-blue-100 p-6 shadow-md transition-all duration-300 hover:scale-105 cursor-pointer transform-gpu origin-center">
-                <div class="text-center">
-                    <h2 class="text-xl font-bold text-black mb-2">42</h2>
-                    <p class="text-sm font-medium text-black">Total Buku</p>
+    <!-- Card Data dengan Glassmorphism Effect -->
+    <div class="p-6 bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl mb-8 border border-white/30">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- Total Buku Card -->
+            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-200 to-blue-300 p-6 shadow-lg transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10 text-center">
+                    <div class="text-blue-700 text-sm font-medium mb-2 uppercase tracking-wider">Total Buku</div>
+                    <div class="text-4xl font-bold text-blue-800 mb-1">42</div>
+                    <div class="h-1 w-12 bg-blue-500/40 rounded-full mx-auto group-hover:w-16 transition-all duration-300"></div>
                 </div>
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/30 rounded-full blur-xl"></div>
             </div>
-            <div class="flex items-center justify-center h-32 rounded-lg bg-yellow-100 p-6 shadow-md transition-transform duration-300 hover:scale-105 cursor-pointer transform-gpu origin-center">
-                <div class="text-center">
-                    <h2 class="text-xl font-bold text-black mb-2">16</h2>
-                    <p class="text-sm font-medium text-black">Buku Dipinjam</p>
+            <!-- Buku Dipinjam Card -->
+            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-200 to-purple-300 p-6 shadow-lg transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10 text-center">
+                    <div class="text-purple-700 text-sm font-medium mb-2 uppercase tracking-wider">Buku Dipinjam</div>
+                    <div class="text-4xl font-bold text-purple-800 mb-1">16</div>
+                    <div class="h-1 w-12 bg-purple-500/40 rounded-full mx-auto group-hover:w-16 transition-all duration-300"></div>
                 </div>
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/30 rounded-full blur-xl"></div>
             </div>
-            <div class="flex items-center justify-center h-32 rounded-lg bg-green-100 p-6 shadow-md transition-transform duration-300 hover:scale-105 cursor-pointer transform-gpu origin-center">
-                <div class="text-center">
-                    <h2 class="text-xl font-bold text-black mb-2">8</h2>
-                    <p class="text-sm font-medium text-black">Buku Dikembalikan</p>
+            <!-- Buku Dikembalikan Card -->
+            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-200 to-green-300 p-6 shadow-lg transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer">
+                <div class="absolute inset-0 bg-gradient-to-br from-green-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10 text-center">
+                    <div class="text-green-700 text-sm font-medium mb-2 uppercase tracking-wider">Buku Dikembalikan</div>
+                    <div class="text-4xl font-bold text-green-800 mb-1">8</div>
+                    <div class="h-1 w-12 bg-green-500/40 rounded-full mx-auto group-hover:w-16 transition-all duration-300"></div>
                 </div>
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/30 rounded-full blur-xl"></div>
             </div>
         </div>
     </div>
-
-    <!-- Card Tabel Aktivitas Terbaru -->
-    <div class="p-4 bg-white rounded-xl shadow-lg mb-6 border border-gray-200">
-        <div class="mb-4">
-            <h3 class="text-lg font-semibold text-gray-800">Aktivitas Terbaru</h3>
+    <!-- Card Aktivitas Terbaru -->
+    <div class="p-6 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl mb-8 border border-white/20">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                Aktivitas Terbaru
+            </h3>
+            <div class="h-2 w-2 bg-emerald-500 rounded-full animate-pulse"></div>
         </div>
-        <div class="grid grid-cols-1 gap-4 mb-4">
-            <div class="w-full overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-black dark:text-black border-2 border-gray-300 dark:border-gray-700">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-black">
+        
+        <div class="overflow-hidden rounded-xl border border-gray-200/50">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                         <tr>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Aktivitas</th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Pengguna</th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Waktu</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Aktivitas
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Pengguna
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Waktu
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-b border-gray-300 dark:border-gray-600">
-                                Meminjam Buku "Matahari"</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">Riansyah</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">32 menit yang lalu</td>
+                    <tbody class="divide-y divide-gray-200/50">
+                        <tr class="hover:bg-blue-50/50 transition-colors duration-200 group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <span class="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Meminjam Buku "Matahari"
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                    Riansyah
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">32 menit yang lalu</td>
                         </tr>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-b border-gray-300 dark:border-gray-600">
-                                Mengembalikan Buku "Bulan"</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">Putra Maulana</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">1 jam yang lalu</td>
+                        <tr class="hover:bg-green-50/50 transition-colors duration-200 group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <span class="font-medium text-gray-900 group-hover:text-green-600 transition-colors">
+                                        Mengembalikan Buku "Bulan"
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                    Putra Maulana
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">1 jam yang lalu</td>
                         </tr>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-b border-gray-300 dark:border-gray-600">
-                                Menambahkan Buku "Harmoni"</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">Rafif Ruhul Haqq</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">2 jam yang lalu</td>
+                        <tr class="hover:bg-purple-50/50 transition-colors duration-200 group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                    <span class="font-medium text-gray-900 group-hover:text-purple-600 transition-colors">
+                                        Menambahkan Buku "Harmoni"
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    Rafif Ruhul Haqq
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">2 jam yang lalu</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-    <!-- Card Tabel Peminjam Terbanyak -->
-    <div class="p-4 bg-white rounded-xl shadow-lg mb-6 border border-gray-200">
-        <div class="mb-4">
-            <h3 class="text-lg font-semibold text-gray-800">Peminjam Terbanyak</h3>
+    <!-- Card Peminjam Terbanyak dengan Ranking Modern -->
+    <div class="p-6 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl mb-8 border border-white/20">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                🏆 Peminjam Terbanyak
+            </h3>
+            <div class="flex space-x-1">
+                <div class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                <div class="w-2 h-2 bg-yellow-600 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+            </div>
         </div>
-        <div class="grid grid-cols-1 gap-4 mb-4">
-            <div class="w-full overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-black dark:text-black border-2 border-gray-300 dark:border-gray-700">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-black">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Nama Siswa</th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Kelas</th>
-                            <th scope="col" class="px-6 py-3 border-b border-gray-300 dark:border-gray-600">Jumlah Buku</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-b border-gray-300 dark:border-gray-600">
-                                Muhamad Aulia <img src="{{ asset('images/gold.png') }}" alt="Icon" class="h-5 w-5 ml-2 inline"></td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">6</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">10 Buku</td>
-                        </tr>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-b border-gray-300 dark:border-gray-600">
-                                Putri Nazma <img src="{{ asset('images/silver.png') }}" alt="Icon" class="h-5 w-5 ml-2 inline"></td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">6</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">7 Buku</td>
-                        </tr>
-                        <tr class="bg-white dark:bg-gray-800">
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white border-b border-gray-300 dark:border-gray-600">
-                                Yulia Nabila <img src="{{ asset('images/bronze.png') }}" alt="Icon" class="h-5 w-5 ml-2 inline"></td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">5</td>
-                            <td class="px-6 py-4 font-medium border-b border-gray-300 dark:border-gray-600">5 Buku</td>
-                        </tr>
-                    </tbody>
-                </table>
+        
+        <div class="space-y-4">
+            <!-- Peringkat 1 - Biru -->
+            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-200 to-blue-300 p-6 shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-blue-300 rounded-full">
+                            <span class="text-2xl">🥇</span>
+                        </div>
+                        <div>
+                            <div class="text-blue-800 font-bold text-lg">Muhamad Aulia</div>
+                            <div class="text-blue-600 text-sm">Kelas 6</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-blue-800 font-bold text-2xl">10</div>
+                        <div class="text-blue-600 text-sm">Buku</div>
+                    </div>
+                </div>
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-blue-100/30 rounded-full blur-xl"></div>
+            </div>
+            <!-- Peringkat 2 - Ungu -->
+            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-200 to-purple-300 p-6 shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-purple-300 rounded-full">
+                            <span class="text-2xl">🥈</span>
+                        </div>
+                        <div>
+                            <div class="text-purple-800 font-bold text-lg">Putri Nazma</div>
+                            <div class="text-purple-600 text-sm">Kelas 6</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-purple-800 font-bold text-2xl">7</div>
+                        <div class="text-purple-600 text-sm">Buku</div>
+                    </div>
+                </div>
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-purple-100/30 rounded-full blur-xl"></div>
+            </div>
+            <!-- Peringkat 3 - Hijau -->
+            <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-200 to-green-300 p-6 shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div class="absolute inset-0 bg-gradient-to-r from-green-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-green-300 rounded-full">
+                            <span class="text-2xl">🥉</span>
+                        </div>
+                        <div>
+                            <div class="text-green-800 font-bold text-lg">Yulia Nabila</div>
+                            <div class="text-green-600 text-sm">Kelas 5</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-green-800 font-bold text-2xl">5</div>
+                        <div class="text-green-600 text-sm">Buku</div>
+                    </div>
+                </div>
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-green-100/30 rounded-full blur-xl"></div>
             </div>
         </div>
     </div>
 @endsection
+
 
 @push('scripts')
 <script>

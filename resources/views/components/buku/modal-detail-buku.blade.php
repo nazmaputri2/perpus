@@ -41,16 +41,6 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2"> {{-- Tambah gap --}}
-                <button id="editBookBtn" data-modal-target="editbuku" type="button" {{-- Hapus data-modal-toggle="editbuku" karena akan dihandle JS --}}
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Ubah
-                </button>
-                <button id="deleteBookBtn" data-modal-target="deleteConfirmationModal" type="button"
-                    class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                    Hapus
-                </button>
-            </div>
         </div>
     </div>
 </div>
