@@ -10,6 +10,7 @@ class Buku extends Model
     protected $primaryKey = 'isbn';
     public $incrementing = false; // karena primary key bukan integer
     protected $keyType = 'string';
+    public $timestamps = true; 
 
     protected $fillable = [
         'isbn',

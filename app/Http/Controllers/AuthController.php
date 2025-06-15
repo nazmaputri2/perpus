@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pengguna;
+use App\Models\Pengguna; // <-- Pastikan ini diimpor
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth; // <-- PENTING: Import fasad Auth
 
 class AuthController extends Controller
 {
@@ -15,32 +16,35 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required',
         ]);
 
-        $pengguna = Pengguna::where('username', $request->username)->first();
+        // Coba autentikasi menggunakan Auth::attempt
+        // Ini akan mencari pengguna berdasarkan username dan memverifikasi password terhash
+        if (Auth::attempt($credentials)) {
+            // Regenerasi session ID untuk mencegah session fixation attacks
+            $request->session()->regenerate();
 
-        if (!$pengguna || !Hash::check($request->password, $pengguna->password)) {
-            return back()->withErrors(['login' => 'Username atau password salah']);
+            $pengguna = Auth::user(); // Dapatkan instance pengguna yang sedang login
+
+            // Redirect berdasarkan role
+            return redirect()->route($pengguna->role === 'petugas' ? 'petugas.beranda' : 'siswa.beranda');
         }
 
-        // Simpan data pengguna ke session
-session([
-    'user' => [
-        'id' => $pengguna->id,
-        'name' => $pengguna->name,
-        'role' => $pengguna->role,
-    ]
-]);
-        // Redirect berdasarkan role
-        return redirect()->route($pengguna->role === 'petugas' ? 'petugas.beranda' : 'siswa.beranda');
+        // Jika autentikasi gagal
+        return back()->withErrors(['login' => 'Username atau password salah'])->withInput($request->only('username'));
     }
 
     public function logout(Request $request)
     {
-        $request->session()->flush();
+        Auth::logout(); // <-- Gunakan Auth::logout() untuk mengeluarkan pengguna
+
+        // Invalidasi sesi dan regenerasi token CSRF
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('auth.login');
     }
 }

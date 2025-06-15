@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Buku;
-use Illuminate\Support\Facades\Storage; // Pastikan ini di-import
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log; // Tambahkan ini untuk debugging
 
 class DataBukuController extends Controller
 {
@@ -33,11 +34,9 @@ class DataBukuController extends Controller
         $gambar = null;
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
-            // Simpan gambar ke direktori 'public/images/buku' di dalam storage
-            // Laravel akan secara otomatis menempatkannya di storage/app/public/images/buku
-            $path = $file->store('images/buku', 'public');
-            // Dapatkan URL yang dapat diakses publik
-            $gambar = Storage::url($path);
+            $path = $file->store('images/buku', 'public'); // Simpan ke storage/app/public/images/buku
+            $gambar = Storage::url($path); // Dapatkan URL publik: /storage/images/buku/namafile.png
+            Log::info("DataBukuController@store: Gambar baru diupload. Path disimpan ke DB: {$gambar}");
         }
 
         Buku::create([
@@ -50,7 +49,7 @@ class DataBukuController extends Controller
             'kelas' => $request->kelas,
             'sinopsis' => $request->sinopsis,
             'stok' => $request->stok,
-            'gambar' => $gambar,
+            'gambar' => $gambar, // Simpan URL publik ke database
         ]);
 
         return redirect()->route('petugas.databuku')->with('success', 'Data buku berhasil ditambahkan');
@@ -73,20 +72,20 @@ class DataBukuController extends Controller
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $gambar = $buku->gambar;
-        if ($request->hasFile('gambar')) {
+        $gambar = $buku->gambar; // Ambil path gambar yang sudah ada dari DB
+        if ($request->hasFile('gambar')) { // Jika ada file gambar baru yang diupload
             // Hapus gambar lama jika ada dan bukan gambar default
-            // Penting: Pastikan path yang disimpan di DB adalah URL dari Storage::url()
-            // sehingga kita bisa mengkonversinya kembali ke path internal storage
-            if ($gambar && str_contains($gambar, '/storage/images/buku/')) {
-                // Konversi URL publik kembali ke path internal storage
-                $oldPath = str_replace(Storage::url('/'), 'public/', $gambar);
-                Storage::delete($oldPath);
+            if ($gambar && str_starts_with($gambar, '/storage/images/buku/')) { // Pastikan itu URL gambar kita
+                // Konversi URL publik kembali ke path internal storage untuk penghapusan
+                $oldPath = ltrim($gambar, '/storage/'); // Menghapus '/storage/' di awal
+                Storage::disk('public')->delete($oldPath);
+                Log::info("DataBukuController@update: Gambar lama dihapus: {$oldPath}");
             }
 
             $file = $request->file('gambar');
-            $path = $file->store('images/buku', 'public');
-            $gambar = Storage::url($path);
+            $path = $file->store('images/buku', 'public'); // Simpan gambar baru
+            $gambar = Storage::url($path); // Dapatkan URL publik baru
+            Log::info("DataBukuController@update: Gambar baru diupload. Path disimpan ke DB: {$gambar}");
         }
 
         $buku->update([
@@ -99,7 +98,7 @@ class DataBukuController extends Controller
             'kelas' => $request->kelas,
             'sinopsis' => $request->sinopsis,
             'stok' => $request->stok,
-            'gambar' => $gambar,
+            'gambar' => $gambar, // Simpan URL publik yang diperbarui
         ]);
 
         return redirect()->route('petugas.databuku')->with('success', 'Buku berhasil diperbarui');
@@ -110,9 +109,10 @@ class DataBukuController extends Controller
         $buku = Buku::where('isbn', $isbn)->firstOrFail();
 
         // Hapus gambar terkait jika ada
-        if ($buku->gambar && str_contains($buku->gambar, '/storage/images/buku/')) {
-            $oldPath = str_replace(Storage::url('/'), 'public/', $buku->gambar);
-            Storage::delete($oldPath);
+        if ($buku->gambar && str_starts_with($buku->gambar, '/storage/images/buku/')) {
+            $pathToDelete = ltrim($buku->gambar, '/storage/'); // Konversi URL publik ke path internal
+            Storage::disk('public')->delete($pathToDelete);
+            Log::info("DataBukuController@destroy: Gambar dihapus: {$pathToDelete}");
         }
 
         $buku->delete();

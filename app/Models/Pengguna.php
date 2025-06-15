@@ -1,36 +1,46 @@
 <?php
 
 namespace App\Models;
-use App\Models\Siswa;
-use Illuminate\Support\Facades\Hash;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable; // PENTING: Menggunakan Authenticatable
+use Illuminate\Notifications\Notifiable;
 
-class Pengguna extends Model
+class Pengguna extends Authenticatable // PENTING: Extends Authenticatable
 {
+    use Notifiable, HasFactory;
+
     protected $table = 'pengguna';
     protected $primaryKey = 'id_user';
-public $incrementing = true;
-protected $keyType = 'int';
-    public $timestamps = false; // Jika tidak menggunakan timestamps created_at dan updated_at
+    public $incrementing = true;
+    protected $keyType = 'int';
+    public $timestamps = true; // <-- UBAH INI: Migrasi Anda menggunakan timestamps(), jadi set true
+
     protected $fillable = [
         'username',
         'password',
         'role',
+        // 'nis_siswa' TIDAK perlu di sini karena berada di tabel 'siswa'
     ];
+
+    protected $hidden = [
+        'password',
+        'remember_token', // <-- Pastikan ini ada setelah menambahkan kolom remember_token
+    ];
+
+    // Relasi ke tabel siswa
     public function siswa()
     {
-        return $this->hasOne(Siswa::class, 'id_user');
+        // 'id_user' pada tabel 'siswa' adalah foreign key
+        // 'id_user' pada tabel 'pengguna' adalah primary key
+        return $this->hasOne(Siswa::class, 'id_user', 'id_user');
+    }
+
+    // Relasi ke tabel petugas
+    public function petugas()
+    {
+        // 'id_user' pada tabel 'petugas' adalah foreign key
+        // 'id_user' pada tabel 'pengguna' adalah primary key
+        return $this->hasOne(Petugas::class, 'id_user', 'id_user');
     }
 }
- Pengguna::create([
-        'username' => 'nazma',
-        'password' => Hash::make('siswa123'),
-        'role' => 'siswa'
-    ]);
-
-     Pengguna::create([
-        'username' => 'rafif',
-        'password' => Hash::make('petugas123'),
-        'role' => 'petugas'
-    ]);

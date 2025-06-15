@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +6,44 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+}
+
+/* CSS untuk modal konfirmasi - tambahkan ke file CSS atau di dalam <style> tag */
+
+#konfirmasiPinjamModal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#konfirmasiPinjamModal .relative.bg-white {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.2s ease-out;
+}
+
+#konfirmasiPinjamModal:not(.hidden) .relative.bg-white {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Loading button animation */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Modal backdrop */
+#konfirmasiPinjamModal {
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.5);
 }

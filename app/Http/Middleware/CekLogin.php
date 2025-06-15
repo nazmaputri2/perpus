@@ -4,19 +4,19 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth; // <-- PENTING: Import fasad Auth
 
 class CekLogin
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-   public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        if (!session()->has('user')) {
-            return redirect()->route('login')->withErrors(['login' => 'Silakan login dulu.']);
+        if (!Auth::check()) { // <-- Gunakan Auth::check()
+            // Jika ini permintaan AJAX, kembalikan respons JSON 401
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+            // Jika bukan permintaan AJAX, redirect ke halaman login
+            return redirect()->route('auth.login')->with('error', 'Anda harus login untuk mengakses halaman ini.');
         }
 
         return $next($request);
