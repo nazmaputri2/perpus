@@ -8,6 +8,7 @@ use App\Http\Controllers\BerandaSiswaController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\DataBukuController;
 use App\Http\Controllers\GantiPasswordController;
+use App\Http\Controllers\ImportSiswaController; // <-- Pastikan ini diimpor jika digunakan di rute petugas
 use App\Http\Controllers\PeminjamanController; // <-- Pastikan ini diimpor jika digunakan di rute petugas
 // use App\Http\Middleware\CekLogin; // Middleware sudah otomatis dikenali via Kernel
 
@@ -47,10 +48,14 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     Route::delete('databuku/{id}', [DataBukuController::class, 'destroy'])->name('petugas.databuku.destroy');
 
     // Data Peminjaman
-    Route::get('datapeminjaman', [PeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
-    Route::post('datapeminjaman', [PeminjamanController::class, 'store'])->name('petugas.datapeminjaman.store');
-    Route::put('datapeminjaman/{id}', [PeminjamanController::class, 'update'])->name('petugas.datapeminjaman.update');
-    Route::delete('datapeminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('petugas.datapeminjaman.destroy');
+    // Route::get('datapeminjaman', [PeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
+    // Route::post('datapeminjaman', [PeminjamanController::class, 'store'])->name('petugas.datapeminjaman.store');
+    // Route::put('datapeminjaman/{id}', [PeminjamanController::class, 'update'])->name('petugas.datapeminjaman.update');
+    // Route::delete('datapeminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('petugas.datapeminjaman.destroy');
+
+    Route::get('/siswa/import', [ImportSiswaController::class, 'form'])->name('siswa.import.form');
+Route::post('/siswa/import', [ImportSiswaController::class, 'upload'])->name('siswa.import.upload');
+
 
     Route::get('riwayat', [RiwayatAktivitasController::class, 'index'])->name('petugas.riwayat');
 });

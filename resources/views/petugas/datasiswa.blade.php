@@ -9,6 +9,8 @@
     @include('components.datasiswa.modal-tambah-siswa')
     @include('components.datasiswa.modal-edit-siswa')
     @include('components.datasiswa.modal-hapus-siswa')
+    @include('components.datasiswa.modal-import-siswa')
+    {{-- modal siswa --}}
 @endpush
 
 
@@ -34,27 +36,30 @@
     <div class="mb-6">
         <h3 class="text-3xl font-bold text-gray-900 mb-6">Data Siswa</h3>
 
-        <!-- Search & Filter -->
         <div class="flex flex-col lg:flex-row lg:items-center gap-4 w-full justify-between mb-6">
-            <!-- Left: Search Bar -->
             <div class="flex-grow">
                 <div class="relative w-full lg:w-80">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
                     <input type="text" id="search"
-                        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block w-full pl-12 pr-4 py-3 shadow-xl transition-all duration-200 placeholder-gray-400"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block w-full pl-12 pr-4 py-3 shadow-sm transition-all duration-200 placeholder-gray-400"
                         placeholder="Cari siswa berdasarkan...">
                 </div>
             </div>
-            <!-- Right: Add Button -->
-            <button data-modal-target="tambahDataModal" data-modal-toggle="tambahDataModal" type="button"
-                class="bg-blue-600  text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                <i class="fas fa-plus mr-2"></i>Tambah Siswa
-            </button>
+
+            <div class="flex items-center gap-4">
+                <button data-modal-target="importDataModal" data-modal-toggle="importDataModal" type="button"
+                    class="bg-green-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                    <i class="fas fa-file-import mr-2"></i>Import Siswa
+                </button>
+                <button data-modal-target="tambahDataModal" data-modal-toggle="tambahDataModal" type="button"
+                    class="bg-blue-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                    <i class="fas fa-plus mr-2"></i>Tambah Siswa
+                </button>
+            </div>
         </div>
-    </div>
-    <!-- Modern Table Container -->
+    </div>    <!-- Modern Table Container -->
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         <!-- Table Header -->
         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
@@ -159,7 +164,6 @@
                                         class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                         title="Edit Siswa">
                                         <i class="fas fa-edit text-sm"></i>
-                                        <span>Ubah</span>
                                     </button>
 
                                     <!-- Tombol Hapus -->
@@ -168,7 +172,6 @@
                                         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                         title="Hapus Siswa">
                                         <i class="fas fa-trash text-sm"></i>
-                                        <span>Hapus</span>
                                     </button>
                                 </div>
                             </td>

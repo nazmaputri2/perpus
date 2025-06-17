@@ -12,22 +12,25 @@
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
-            <div class="p-6 space-y-6">
-                <form id="edit-form" method="POST"  class="space-y-4">
+            <div class="pt-2 pb-6 px-6 space-y-6">
+                <form id="edit-form" method="POST" class="space-y-4">
                     @csrf
                     @method('PUT')
                     <div>
-                        <label for="edit-nis_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS</label>
+                        <label for="edit-nis_siswa"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS</label>
                         <input type="text" id="edit-nis_siswa" name="nis_siswa" readonly
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div>
-                        <label for="edit-nama_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Siswa</label>
+                        <label for="edit-nama_siswa"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Siswa</label>
                         <input type="text" id="edit-nama_siswa" name="nama_siswa" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <div>
-                        <label for="edit-kelamin_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelamin</label>
+                        <label for="edit-kelamin_siswa"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Jenis Kelamin</label>
                         <select id="edit-kelamin_siswa" name="kelamin_siswa" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value="Laki-laki">Laki-laki</option>
@@ -35,19 +38,29 @@
                         </select>
                     </div>
                     <div>
-                        <label for="edit-kelas_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas</label>
-                        <input type="text" id="edit-kelas_siswa" name="kelas_siswa" required
+                        <label for="edit-kelas_siswa"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas</label>
+                        <select id="edit-kelas_siswa" name="kelas_siswa" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" disabled selected>Pilih Kelas</option>
+                            <option value="1">Kelas 1</option>
+                            <option value="2">Kelas 2</option>
+                            <option value="3">Kelas 3</option>
+                            <option value="4">Kelas 4</option>
+                            <option value="5">Kelas 5</option>
+                            <option value="6">Kelas 6</option>
+                        </select>
                     </div>
-                    <div>
-                        <label for="edit-nohp_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
-                        <input type="text" id="edit-nohp_siswa" name="nohp_siswa" required
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <button type="submit"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan Perubahan</button>
-                </form>
+                    <label for="edit-nohp_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No
+                        HP</label>
+                    <input type="text" id="edit-nohp_siswa" name="nohp_siswa" required
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             </div>
+            <button type="submit"
+                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan
+                Perubahan</button>
+            </form>
         </div>
     </div>
+</div>
 </div>

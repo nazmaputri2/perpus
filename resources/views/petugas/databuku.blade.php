@@ -1,7 +1,6 @@
+
 @extends('layouts.petugas')
-
 @section('title', 'Data Buku')
-
 @push('modals')
     @include('components.modal-ubah-sandi')
     @include('components.modal-keluar')
@@ -12,7 +11,6 @@
     {{-- Tambahkan modal konfirmasi hapus --}}
     @include('components.buku.modal-hapus-buku')
 @endpush
-
 @section('content')
 <div class="mb-6">
     <h3 class="text-3xl font-bold text-gray-900 mb-6">Data Buku</h3>
@@ -24,31 +22,31 @@
                     <i class="fas fa-search text-gray-400"></i>
                 </div>
                 <input type="text" id="search"
-                    class="bg-white border-0 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block w-full pl-12 pr-4 py-3 shadow-sm transition-all duration-200 placeholder-gray-400"
-                    placeholder="Cari buku berdasarkan judul, penulis, atau ISBN...">
+                    class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block w-full pl-12 pr-4 py-3 shadow-sm transition-all duration-200 placeholder-gray-400"
+                    placeholder="Cari buku berdasarkan...">
             </div>
             <div class="flex gap-3">
                 <select id="filter-kategori"
-                    class="bg-white border-0 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-3 shadow-sm transition-all duration-200 cursor-pointer">
+                    class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-3 shadow-sm transition-all duration-200 cursor-pointer">
                     <option selected disabled>Kategori</option>
                     <option value="pelajaran">Pelajaran</option>
                     <option value="fiksi">Fiksi</option>
                     <option value="nonfiksi">Non Fiksi</option>
                 </select>
                 <select id="filter-kelas"
-                    class="bg-white border-0 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-3 shadow-sm transition-all duration-200 cursor-pointer">
+                    class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-3 shadow-sm transition-all duration-200 cursor-pointer">
                     <option selected disabled>Kelas</option>
-                    <option value="6">Kelas 6</option>
-                    <option value="5">Kelas 5</option>
-                    <option value="4">Kelas 4</option>
-                    <option value="3">Kelas 3</option>
-                    <option value="2">Kelas 2</option>
                     <option value="1">Kelas 1</option>
+                    <option value="2">Kelas 2</option>
+                    <option value="3">Kelas 3</option>
+                    <option value="4">Kelas 4</option>
+                    <option value="5">Kelas 5</option>
+                    <option value="6">Kelas 6</option>
                 </select>
             </div>
         </div>
         <button data-modal-target="crud-modal" data-modal-toggle="crud-modal" type="button"
-            class="bg-blue-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+            class="bg-blue-600   text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
             <i class="fas fa-plus mr-2"></i>Tambah Buku
         </button>
     </div>
@@ -175,14 +173,14 @@
                     
                     <td class="px-6 py-4">
                         <div class="flex space-x-2">
-                             <button class=" relative overflow-hidden bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                             <button class=" relative overflow-hidden bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                     title="Edit Buku"
                                     data-modal-toggle="editbuku" data-modal-target="editbuku"   
                                     onclick=" prepareEditModal({{ json_encode($bukus) }})">
                                 <i class="fas fa-edit text-sm group-hover/btn:scale-110 transition-transform duration-200"></i>
                                 <div class="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300"></div>
                             </button>
-                            <button class="group/btn relative overflow-hidden bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                            <button class="group/btn relative overflow-hidden bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                     title="Hapus Buku"
                                     data-modal-target="deleteConfirmationModal"
                                     data-modal-toggle="deleteConfirmationModal"
@@ -190,7 +188,7 @@
                                 <i class="fas fa-trash text-sm group-hover/btn:scale-110 transition-transform duration-200"></i>
                                 <div class="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300"></div>
                             </button>
-                            <button class="group/btn relative overflow-hidden bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                            <button class="group/btn relative overflow-hidden bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                     title="Detail Buku"
                                     data-modal-toggle="detailModal" data-modal-target="detailModal"
                                    onclick="openDetailModal({
@@ -231,14 +229,12 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
 <script>
     
     function openDetailModal(data) {
         // Log data untuk debugging, bisa dihapus nanti
         console.log('Data yang diterima modal detail:', data);
-
         // Isi modal detail dengan data yang diterima
         document.getElementById('modalImage').src = data.image;
         document.getElementById('modalIsbn').textContent = data.isbn;
@@ -255,13 +251,11 @@
         // PERBAIKAN UNTUK 'KELAS'
         // Gunakan notasi kurung siku ['class'] karena 'class' adalah reserved keyword di JS
         document.getElementById('modalkelas').textContent = data['class'];
-
         // Sisa fungsi tetap sama
         window.currentBookData = data;
         const detailModalElement = document.getElementById('detailModal');
         detailModalElement.classList.remove('hidden');
         detailModalElement.setAttribute('aria-hidden', 'false');
-
         const editButton = document.getElementById('editBookBtn');
         if (editButton) {
             editButton.onclick = function () {
@@ -270,7 +264,6 @@
                 prepareEditModal(window.currentBookData); // Kirim data saat memanggil edit
             };
         }
-
         const deleteButton = document.getElementById('deleteBookBtn');
         if (deleteButton) {
             deleteButton.onclick = function () {
@@ -280,14 +273,11 @@
             };
         }
     }
-
     // Pastikan fungsi lain juga disertakan
     function prepareEditModal(data) {
         if (!data) return;
-
         const editForm = document.getElementById('editBookForm');
         editForm.action = `/petugas/databuku/${data.isbn}`;
-
         document.getElementById('edit-isbn').value = data.isbn;
         document.getElementById('edit-judul_buku').value = data.judul; // sesuaikan dengan properti di data
         document.getElementById('edit-penulis').value = data.penulis;
@@ -298,16 +288,13 @@
         document.getElementById('editFotoPreview').src = `{{ asset('') }}/${data.gambar}`;
         document.getElementById('edit-jenis_buku').value = data.jenis_buku;
         document.getElementById('edit-kelas').value = data.kelas;
-
         const editModalElement = document.getElementById('editbuku');
         editModalElement.classList.remove('hidden');
         editModalElement.setAttribute('aria-hidden', 'false');
     }
-
-    function prepareDeleteModal(bookId) {
+    function prepareDeleteModal(isbn) {
         const deleteForm = document.getElementById('deleteBookForm');
-        deleteForm.action = `/petugas/databuku/${bookId}`;
-
+        deleteForm.action = `/petugas/databuku/${isbn}`;
         const deleteModalElement = document.getElementById('deleteConfirmationModal');
         deleteModalElement.classList.remove('hidden'); 
         deleteModalElement.setAttribute('aria-hidden', 'false');

@@ -6,7 +6,7 @@
                 <a href="{{ route('siswa.beranda') }}" class="flex ms-2 md:me-24">
                     <img src="{{ asset('images/logopbl.png') }}" class="h-8 me-3" alt="" />
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">PUSTAKALAYA</span>
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-black">PUSTAKALAYA</span>
                 </a>
             </div>
             <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -46,14 +46,12 @@
                                 Peminjaman
                             </a>
                         </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-target="authentication-modal" data-modal-toggle="authentication-modal">
-                                <i class="fa fa-lock mr-2"></i>
-                                Ubah Sandi
-                            </a>
-                        </li>
+                               <li>
+            <a href="#" class="flex items-center px-4 py-2 hover:bg-blue-100 dark:hover:bg-gray-600 dark:hover:text-white" data-modal-target="ubah-password-modal" data-modal-toggle="ubah-password-modal">
+                <i class="fa fa-lock mr-3 w-4 text-center text-black dark:text-gray-300"></i>
+                Ubah Sandi
+            </a>
+        </li>
                     </ul>
                     <div class="py-2">
                         <a href="#"

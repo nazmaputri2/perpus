@@ -12,7 +12,7 @@
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
-            <div class="p-6 space-y-6">
+            <div class="pt-2 pb-6 px-6 space-y-6">
                 <form action="{{ route('petugas.datapetugas.store') }}" method="POST" class="space-y-4">
                     @csrf
                     <div>

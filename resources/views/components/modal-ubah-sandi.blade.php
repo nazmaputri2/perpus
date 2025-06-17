@@ -5,7 +5,7 @@
             <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-700">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     <i class="fas fa-key mr-2 text-blue-500"></i>
-                    Ubah Password
+                    Ubah Sandi
                 </h3>
                 <button type="button"
                     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -14,37 +14,37 @@
                     <span class="sr-only">Close modal</span>
                 </button>
             </div>
-            <div class="p-6 space-y-6">
+            <div class="pt-1 pb-6 px-6 space-y-6">
                 <form class="space-y-4" method="POST" action="{{ route('password.update') }}">
                     @csrf
                     <div>
-                        <label for="current_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Password Saat Ini</label>
+                        <label for="current_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sandi Saat Ini</label>
                         <div class="relative">
                             <input type="password" name="current_password" id="current_password"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="••••••••" required>
+                                placeholder="Isi sandi sebelumnya" required>
                             <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none toggle-password">
                                 <i class="fas fa-eye text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer"></i>
                             </button>
                         </div>
                     </div>
                     <div>
-                        <label for="new_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Password Baru</label>
+                        <label for="new_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sandi Baru</label>
                         <div class="relative">
                             <input type="password" name="new_password" id="new_password"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="••••••••" required>
+                                placeholder="Isi sandi terbaru" required>
                             <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none toggle-password">
                                 <i class="fas fa-eye text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer"></i>
                             </button>
                         </div>
                     </div>
                     <div>
-                        <label for="new_password_confirmation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Konfirmasi Password Baru</label>
+                        <label for="new_password_confirmation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Konfirmasi Sandi Baru</label>
                         <div class="relative">
                             <input type="password" name="new_password_confirmation" id="new_password_confirmation"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                placeholder="••••••••" required>
+                                placeholder="Isi sandi yang telah diperbarui" required>
                             <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none toggle-password">
                                 <i class="fas fa-eye text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 cursor-pointer"></i>
                             </button>
