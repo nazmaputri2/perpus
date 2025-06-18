@@ -1,4 +1,3 @@
-
 @extends('layouts.petugas')
 @section('title', 'Data Petugas')
 @push('modals')
@@ -6,6 +5,9 @@
     @include('components.modal-keluar')
     {{-- modal siswa --}}
     @include('components.datapetugas.modal-tambah-petugas')
+    @include('components.datapetugas.modal-edit-petugas')
+    @include('components.datapetugas.modal-hapus-petugas')
+
     {{-- @include('components.datasiswa.modal-edit-siswa')
     @include('components.datasiswa.modal-hapus-siswa') --}}
 @endpush
@@ -87,7 +89,7 @@
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            <div class="flex items-center justify-center space-x-1">
+                            <div class="flex items-center space-x-1">
                                 <span>Aksi</span>
                             </div>
                         </th>
@@ -95,29 +97,29 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     {{-- Menambahkan $index untuk penomoran --}}
-                    @foreach($petugas as $index => $staf)
+                    @foreach ($petugas as $index => $staf)
                         <tr
                             class="group hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300">
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2 text-sm font-medium text-gray-800">
                                     {{ $index + 1 }}
                                 </div>
-                            </td>   
+                            </td>
+                            {{-- NIP --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <i class="fas fa-id-card text-gray-800 text-sm"></i>
                                     <span class="text-sm font-medium text-gray-800">{{ $staf->nip }}</span>
                                 </div>
                             </td>
                             {{-- Isi dari Nama Petugas --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
-                                    <div
-                                        class="flex-shrink-0 h-10 w-10 flex items-center justify-center">
-                                        <i class="fas fa-user-shield text-gray-800"></i>
+                                    <div class="flex-shrink-0 h-5 w-10 flex items-center justify-center">
+                                        <i class="fas fa-user-tie text-gray-800"></i>
                                     </div>
                                     <div>
-                                        <h4
-                                            class="text-sm font-medium text-gray-800 transition-colors duration-200">
+                                        <h4 class="text-sm font-medium text-gray-800 transition-colors duration-200">
                                             {{ $staf->nama }}
                                         </h4>
                                     </div>
@@ -134,32 +136,26 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-map-marker-alt text-gray-800"></i>
-                                    <span class="text-sm font-medium text-gray-800">{{ Str::limit($staf->alamat, 25) }}</span>
+                                    <span
+                                        class="text-sm font-medium text-gray-800">{{ Str::limit($staf->alamat, 25) }}</span>
                                 </div>
                             </td>
                             {{-- Isi dari Aksi --}}
                             <td class="px-6 py-4">
-                                <div class="flex justify-center space-x-2">
-                                    {{-- Tombol Aksi: Disesuaikan dengan gaya modern --}}
+                                <div class="flex space-x-2">
+                                    {{-- Tombol Edit --}}
                                     <button onclick="prepareEditModal({{ json_encode($staf) }})"
                                         data-modal-target="editDataModal" data-modal-toggle="editDataModal"
-                                        class="group/btn relative overflow-hidden bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                                        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                         title="Edit Petugas">
-                                        <i
-                                            class="fas fa-edit text-sm group-hover/btn:scale-110 transition-transform duration-200"></i>
-                                        <div
-                                            class="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300">
-                                        </div>
+                                        <i class="fas fa-edit text-sm"></i>
                                     </button>
+                                    {{-- Tombol Hapus --}}
                                     <button onclick="setDeleteId({{ $staf->nip }})" data-modal-target="deleteModal"
                                         data-modal-toggle="deleteModal"
-                                        class="group/btn relative overflow-hidden bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                                        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                         title="Hapus Petugas">
-                                        <i
-                                            class="fas fa-trash text-sm group-hover/btn:scale-110 transition-transform duration-200"></i>   
-                                        <div
-                                            class="absolute inset-0 bg-white opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300">
-                                        </div>
+                                        <i class="fas fa-trash text-sm"></i>
                                     </button>
                                 </div>
                             </td>
@@ -168,7 +164,7 @@
                 </tbody>
             </table>
             {{-- BLOK DATA KOSONG: Disesuaikan dengan gaya modern --}}
-            @if($petugas->isEmpty())
+            @if ($petugas->isEmpty())
                 <div class="text-center py-16">
                     <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-user-shield text-gray-400 text-3xl"></i>

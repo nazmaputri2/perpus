@@ -17,23 +17,28 @@ class PetugasController extends Controller
 
     public function store(Request $request)
     {
-             \Log::info('Request masuk ke store:', $request->all());
+        \Log::info('Request masuk ke store:', $request->all());
 
         // Validasi data petugas + username/password
         $request->validate([
             'nip' => 'required|unique:petugas,nip',
+            // ...
+        ], [
+            'nip.unique' => 'NIP ini sudah terdaftar. Harap gunakan NIP yang lain.',
             'nama' => 'required',
-            'nohp' => 'nullable',
             'alamat' => 'required',
+            'nohp' => ['required', 'regex:/^0[0-9]{9,11}$/'],
+        ], [
+            'nohp.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
             // 'username' => 'required|unique:pengguna,username',
             // 'password' => 'required|min:6',
         ]);
-         \Log::info('Validasi sukses');
+        \Log::info('Validasi sukses');
 
 
         $baseUsername = strtolower(str_replace(' ', '', $request->nama));
         $username = $baseUsername . rand(100, 999); // Tambahkan angka acak untuk memastikan unik
-        
+
         $defaultPassword = 'petugas123'; // Password default, bisa diubah sesuai kebutuhan
         $hashedPassword = Hash::make($defaultPassword); // Enkripsi password
 
@@ -58,14 +63,16 @@ class PetugasController extends Controller
 
     public function update(Request $request, $nip)
     {
-         $petugas = Petugas::where('nip', $nip)->findOrFail($nip);
+        $petugas = Petugas::where('nip', $nip)->findOrFail($nip);
 
         // Validasi data petugas
         $request->validate([
             'nip' => 'required|unique:petugas,nip' . $petugas->nip . ',nip',
-            'nama'=> 'required',
-            'nohp' => 'nullable',
+            'nama' => 'required',
             'alamat' => 'required',
+            'nohp' => ['required', 'regex:/^0[0-9]{9,11}$/'],
+        ], [
+            'nohp_siswa.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
         ]);
 
         $petugas->update([
@@ -74,7 +81,7 @@ class PetugasController extends Controller
             'nohp' => $request->nohp,
             'alamat' => $request->alamat,
         ]);
-           $pengguna = $petugas->pengguna;
+        $pengguna = $petugas->pengguna;
         if ($request->username && $request->username !== $pengguna->username) {
             $request->validate([
                 'username' => 'unique:pengguna,username,' . $pengguna->id_user . ',id_user',
@@ -92,8 +99,8 @@ class PetugasController extends Controller
         return redirect()->back()->with('success', 'Data petugas berhasil diperbarui!');
         // Temukan petugas berdasarkan NIP        
         // Update data petugas
-}
- public function destroy($nip)
+    }
+    public function destroy($nip)
     {
         $petugas = Petugas::findOrFail($nip);
         $pengguna = $petugas->pengguna;

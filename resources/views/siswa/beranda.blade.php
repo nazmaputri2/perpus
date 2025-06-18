@@ -35,7 +35,7 @@
                 placeholder="Cari buku...">
         </div>
 
-        <select id="filter-kategori" class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+        <select id="filter-kategori" class="w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
             <option value="">Semua Kategori</option>
             @foreach($kategoriOptions as $kategori)
             <option value="{{ $kategori }}">{{ $kategori }}</option>
@@ -43,7 +43,7 @@
         </select>
 
         <select id="filter-kelas"
-            class="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+            class="w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
             <option value="">Semua Kelas</option>
             @foreach($kelasOptions as $kelas)
             <option value="{{ $kelas }}">Kelas {{ $kelas }}</option>

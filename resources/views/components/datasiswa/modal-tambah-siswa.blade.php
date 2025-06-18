@@ -57,8 +57,10 @@
                     <div>
                         <label for="nohp_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No
                             HP</label>
-                        <input type="text" id="nohp_siswa" name="nohp_siswa" required minlength="12" maxlength="12"
-                            oninput="validateExactLength(this, 12, 'No HP harus tepat 12 digit')"
+                        <input type="text" id="nohp_siswa" name="nohp_siswa" required minlength="10" maxlength="12"
+                            pattern="0[0-9]{9,11}"
+                            title="No HP harus dimulai dengan angka 0 dan terdiri dari 10–12 digit"
+                            oninput="this.setCustomValidity(''); if (!this.checkValidity()) this.setCustomValidity(this.title);"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     </div>
                     <button type="submit"

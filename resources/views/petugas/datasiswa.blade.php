@@ -59,7 +59,7 @@
                 </button>
             </div>
         </div>
-    </div>    <!-- Modern Table Container -->
+    </div> <!-- Modern Table Container -->
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         <!-- Table Header -->
         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
@@ -111,47 +111,58 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach($students as $index => $student)
+                    @foreach ($students as $index => $student)
                         <tr
                             class="group hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300">
 
                             <td class="px-6 py-4">
-                                <div
-                                    class="flex items-center space-x-2 text-sm font-medium text-gray-800">
+                                <div class="flex items-center space-x-2 text-sm font-medium text-gray-800">
                                     {{ $index + 1 }}
                                 </div>
                             </td>
 
+                            {{-- NIS --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <i class="fas fa-id-card text-gray-800 text-sm"></i>
                                     <span class="text-sm font-medium text-gray-800">{{ $student->nis_siswa }}</span>
                                 </div>
                             </td>
 
+                            {{-- Nama --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <i class="fas fa-user-graduate text-gray-800 text-sm"></i>
                                     <span class="text-sm font-medium text-gray-800">{{ $student->nama_siswa }}</span>
                                 </div>
                             </td>
 
-
+                            {{-- Jenis Kelamin --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm font-medium text-gray-800">
-                                        {{ $student->kelamin_siswa == 'Laki-laki' || $student->kelamin_siswa == 'L' ? 'Laki-laki' : 'Perempuan' }}
-                                    </span>
+                                    @if ($student->kelamin_siswa == 'Laki-laki' || $student->kelamin_siswa == 'L')
+                                        <i class="fas fa-mars text-gray-800 text-sm"></i>
+                                        <span class="text-sm font-medium text-gray-800">Laki-laki</span>
+                                    @else
+                                        <i class="fas fa-venus text-gray-800 text-sm"></i>
+                                        <span class="text-sm font-medium text-gray-800">Perempuan</span>
+                                    @endif
                                 </div>
                             </td>
 
 
+                            {{-- Kelas --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <i class="fas fa-chalkboard-teacher text-gray-800 text-sm"></i>
                                     <span class="text-sm font-medium text-gray-800">Kelas {{ $student->kelas_siswa }}</span>
                                 </div>
                             </td>
 
+                            {{-- No Hp --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <i class="fas fa-phone text-gray-800 text-sm"></i>
                                     <span class="text-sm font-medium text-gray-800">{{ $student->nohp_siswa }}</span>
                                 </div>
                             </td>
@@ -180,7 +191,7 @@
                 </tbody>
             </table>
 
-            @if($students->isEmpty())
+            @if ($students->isEmpty())
                 <div class="text-center py-16">
                     <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-users text-gray-400 text-3xl"></i>

@@ -51,16 +51,36 @@
                             <option value="6">Kelas 6</option>
                         </select>
                     </div>
-                    <label for="edit-nohp_siswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No
-                        HP</label>
-                    <input type="text" id="edit-nohp_siswa" name="nohp_siswa" required
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <div>
+                        <label for="edit-nohp_siswa"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No HP</label>
+                        <input type="text" id="edit-nohp_siswa" name="nohp_siswa" required minlength="10"
+                            maxlength="12" pattern="0[0-9]{9,11}"
+                            title="No HP harus dimulai dengan angka 0 dan terdiri dari 10–12 digit"
+                            oninput="this.setCustomValidity(''); if (!this.checkValidity()) this.setCustomValidity(this.title);"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    </div>
+
+                    <!-- Pindahkan tombol simpan ke sini -->
+                    <div>
+                        <button type="submit"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+                <script>
+                    function validateExactLength(input, requiredLength, message) {
+                        if (input.value.length !== requiredLength) {
+                            input.setCustomValidity(message);
+                        } else {
+                            input.setCustomValidity('');
+                        }
+                    }
+                </script>
+                </button>
+                </form>
             </div>
-            <button type="submit"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan
-                Perubahan</button>
-            </form>
         </div>
     </div>
-</div>
 </div>
