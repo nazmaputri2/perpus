@@ -53,7 +53,7 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     // Route::put('datapeminjaman/{id}', [PeminjamanController::class, 'update'])->name('petugas.datapeminjaman.update');
     // Route::delete('datapeminjaman/{id}', [PeminjamanController::class, 'destroy'])->name('petugas.datapeminjaman.destroy');
 
-    Route::get('/siswa/import', [ImportSiswaController::class, 'form'])->name('siswa.import.form');
+    Route::get('/siswa/import', [ImportSiswaController::class, 'form'])->name('siswa.import');
 Route::post('/siswa/import', [ImportSiswaController::class, 'upload'])->name('siswa.import.upload');
 
 

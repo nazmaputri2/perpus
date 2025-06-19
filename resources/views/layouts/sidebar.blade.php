@@ -10,6 +10,14 @@
                     <span class="ms-3">Beranda</span>
                 </a>
             </li>
+                        <li>
+                <a href="#"
+                    class="flex items-center p-2 text-black-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-black-700 group">
+                    <i class="fas fa-book shrink-0 w-5 h-5 text-black-500 transition duration-75 dark:text-black-400 group-hover:text-black-900 dark:group-hover:text-white"></i>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Koleksi Buku</span>
+                </a>
+            </li>
+
             <li>
                 <a href="{{ route('petugas.datasiswa') }}"
                     class="flex items-center p-2 text-black-900 rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-black-700 group">

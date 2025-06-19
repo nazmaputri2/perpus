@@ -35,12 +35,12 @@ class SiswaImport implements ToCollection, WithHeadingRow{
 
                 // Cek jika siswa sudah ada berdasarkan NIS
                 Siswa::updateOrCreate(
-                    ['nis' => $row['nis']],
+                    ['nis_siswa' => $row['nis']],
                     [
-                        'nama' => $row['nama_siswa'],
-                        'kelamin' => $row['kelamin'],
-                        'kelas' => $row['kelas'],
-                        'no_hp' => $row['no_hp'] ?? null,
+                        'nama_siswa' => $row['nama_siswa'],
+                        'kelamin_siswa' => $row['kelamin'],
+                        'kelas_siswa' => $row['kelas'],
+                        'nohp_siswa' => $row['no_hp'] ?? null,
                         'id_user' => $pengguna->id_user,
                     ]
                 );

@@ -13,7 +13,7 @@
                     <span class="sr-only">Tutup modal</span>
                 </button>
             </div>
-            <form action="{{-- route('siswa.import') --}}" method="POST" enctype="multipart/form-data" class="p-4 md:p-5">
+            <form action="{{ route('siswa.import') }}" method="POST" enctype="multipart/form-data" class="p-4 md:p-5">
                 @csrf
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-2">
