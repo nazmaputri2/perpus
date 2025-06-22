@@ -14,21 +14,34 @@ return new class extends Migration
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id('id_peminjaman'); // Primary Key
 
-            // Relasi ke siswa
-            $table->string('nis_siswa'); // FK
-            $table->string('nama_siswa');
+            // Foreign Key ke tabel siswa (nis_siswa string)
+            $table->string('nis_siswa');
+            // Hapus nama_siswa karena bisa diambil dari relasi ke tabel siswa
+            // $table->string('nama_siswa'); 
 
-            // Relasi ke buku
-            $table->string('isbn'); // FK
-            $table->string('judul');
+            // Foreign Key ke tabel buku (isbn string)
+            $table->string('isbn');
+            // Hapus judul karena bisa diambil dari relasi ke tabel buku
+            // $table->string('judul');
 
             $table->date('tanggal_peminjaman');
             $table->date('tanggal_pengembalian')->nullable();
             $table->enum('status_peminjaman', ['Proses','Dipinjam', 'Dikembalikan', 'Terlambat'])->default('Proses');
 
-            // Foreign Key Constraints
+            // Tambahkan foreign key untuk petugas yang meminjamkan
+            // Asumsi id_petugas di sini merujuk ke id_user di tabel 'pengguna'
+            // yang merupakan ID dari petugas yang sedang login.
+            $table->unsignedBigInteger('id_petugas')->nullable(); 
+
+            $table->timestamps();
+
+            // Definisi Foreign Key Constraints
             $table->foreign('nis_siswa')->references('nis_siswa')->on('siswa')->onDelete('cascade');
             $table->foreign('isbn')->references('isbn')->on('buku')->onDelete('cascade');
+            
+            // Foreign key ke tabel 'pengguna' (untuk id_petugas)
+            // Asumsi primary key di tabel 'pengguna' adalah 'id_user' dan bertipe unsignedBigInteger
+            $table->foreign('id_petugas')->references('id_user')->on('pengguna')->onDelete('set null');
         });
     }
 
@@ -37,6 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjaman_');
+        Schema::dropIfExists('peminjaman');
     }
 };
