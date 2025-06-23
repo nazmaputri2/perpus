@@ -52,6 +52,8 @@ class DataBukuController extends Controller
             'gambar' => $gambar, // Simpan URL publik ke database
         ]);
 
+ catatRiwayat('buku', 'menambah', 'Menambahkan buku berjudul: ' . $request->judul);
+
         return redirect()->route('petugas.databuku')->with('success', 'Data buku berhasil ditambahkan');
     }
 
@@ -101,6 +103,8 @@ class DataBukuController extends Controller
             'gambar' => $gambar, // Simpan URL publik yang diperbarui
         ]);
 
+        catatRiwayat('buku', 'mengubah', 'Mengubah data buku: ' . $request->judul);
+
         return redirect()->route('petugas.databuku')->with('success', 'Buku berhasil diperbarui');
     }
 
@@ -116,6 +120,8 @@ class DataBukuController extends Controller
         }
 
         $buku->delete();
+
+         catatRiwayat('buku', 'menghapus', 'Menghapus buku berjudul: ' . $buku->judul);
 
         return redirect()->route('petugas.databuku')->with('success', 'Buku berhasil dihapus');
     }

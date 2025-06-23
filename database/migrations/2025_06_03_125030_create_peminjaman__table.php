@@ -27,6 +27,7 @@ return new class extends Migration
             $table->date('tanggal_peminjaman');
             $table->date('tanggal_pengembalian')->nullable();
             $table->enum('status_peminjaman', ['Proses','Dipinjam', 'Dikembalikan', 'Terlambat'])->default('Proses');
+            $table->string('keterangan')->nullable(); // Keterangan tambahan jika diperlukan
 
             // Tambahkan foreign key untuk petugas yang meminjamkan
             // Asumsi id_petugas di sini merujuk ke id_user di tabel 'pengguna'

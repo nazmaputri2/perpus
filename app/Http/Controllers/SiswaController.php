@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Siswa;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\catatRiwayat;
 
 use Illuminate\Http\Request;
 
@@ -57,6 +58,10 @@ class SiswaController extends Controller
             'id_user' => $pengguna->id_user,
         ]);
 
+        catatRiwayat('siswa', 'tambah', 'Menambahkan data siswa: ' . $request);
+
+
+
         return redirect()->back()->with('success', 'Data siswa  berhasil dibuat! Username: ' . $username . ', Password: ' . $defaultPassword);
     }
 
@@ -96,6 +101,9 @@ class SiswaController extends Controller
         }
         $pengguna->save();
 
+        catatRiwayat('siswa', 'ubah', 'Mengubah data siswa: ' . $siswa->nama_siswa);
+
+
         return redirect()->back()->with('success', 'Data siswa berhasil diperbarui!');
     }
 
@@ -109,6 +117,9 @@ class SiswaController extends Controller
         if ($pengguna) {
             $pengguna->delete();
         }
+
+        catatRiwayat('siswa', 'hapus', 'Menghapus data siswa: ' . $siswa->nama_siswa);
+
 
         return redirect()->back()->with('success', 'Data siswa berhasil dihapus!');
     }

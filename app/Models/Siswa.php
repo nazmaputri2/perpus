@@ -23,4 +23,9 @@ class Siswa extends Model
     {
         return $this->belongsTo(Pengguna::class, 'id_user', 'id_user');
     }
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'nis_siswa', 'nis_siswa');
+    }
 }

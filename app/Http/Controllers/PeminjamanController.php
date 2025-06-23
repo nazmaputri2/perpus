@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Siswa;
 use App\Models\Peminjaman;
+
 use App\Models\Pengguna; // Tambahkan ini jika model Pengguna digunakan untuk petugas
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,11 +65,14 @@ class PeminjamanController extends Controller
                 'isbn' => $buku->isbn, // *** PERUBAHAN PENTING DI SINI: GUNAKAN 'isbn' BUKAN 'isbn_buku' ***
                 'nis_siswa' => $siswa->nis_siswa,
                 'tanggal_peminjaman' => now(),
+                'tanggal_pengembalian' => now()->addDays(14),
                 'status_peminjaman' => 'Dipinjam', // Status awal, sesuai enum di migrasi
                 'id_petugas' => $idPetugas, 
             ]);
 
             DB::commit();
+
+            catatRiwayat('peminjaman', 'meminjam', 'Petugas meminjamkan buku "' . $buku->judul . '" kepada siswa: ' . $siswa->nama_siswa);
 
             return response()->json([
                 'success' => true,

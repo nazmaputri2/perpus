@@ -43,4 +43,10 @@ class Pengguna extends Authenticatable // PENTING: Extends Authenticatable
         // 'id_user' pada tabel 'pengguna' adalah primary key
         return $this->hasOne(Petugas::class, 'id_user', 'id_user');
     }
+
+    public function riwayat()
+{
+    return $this->hasMany(Riwayat::class, 'id_user', 'id_user');
+}
+
 }

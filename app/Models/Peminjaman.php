@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Peminjaman extends Model
 {
@@ -21,6 +22,15 @@ class Peminjaman extends Model
         'status_peminjaman',
         'id_petugas', // Tambahkan ini jika Anda sudah menambahkan di migrasi
     ];
+
+    public function getStatusPeminjamanAttribute($value)
+{
+    if ($value === 'Dipinjam' && Carbon::now()->gt(Carbon::parse($this->tanggal_pengembalian))) {
+        return 'Terlambat';
+    }
+
+    return $value;
+}
 
     // Relasi dengan model Buku
     public function buku()
