@@ -22,7 +22,8 @@
                     <div>
                         <label for="isbn"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ISBN</label>
-                        <input type="text" id="isbn" name="isbn" required
+                        <input type="text" id="isbn" name="isbn" required minlength="10" maxlength="10"
+                            oninput=" validateExactLength(this, 10, 'ISBN harus tepat 10 digit' )"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
                     </div>
                     <div>
@@ -119,6 +120,15 @@
                         class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">Simpan</button>
                 </div>
             </form>
+            <script>
+                    function validateExactLength(input, requiredLength, message) {
+                        if (input.value.length !== requiredLength) {
+                            input.setCustomValidity(message);
+                        } else {
+                            input.setCustomValidity('');
+                        }
+                    }
+                </script>
         </div>
     </div>
 </div>

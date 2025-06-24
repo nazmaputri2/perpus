@@ -1,4 +1,3 @@
-
 @extends('layouts.petugas')
 @section('title', 'Statistik')
 @push('modals')
@@ -58,21 +57,23 @@
         <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
             <!-- Navigation Pills -->
             <div class="flex bg-gray-100 rounded-2xl p-2">
-                <a href="{{ route('petugas.datapeminjaman') }}" 
+                <a href="{{ route('petugas.datapeminjaman') }}"
                     class="px-6 py-3 text-gray-600 hover:text-gray-900 rounded-xl font-medium transition-colors">
                     <i class="fas fa-list mr-2"></i>Peminjaman
                 </a>
-                <a href="{{ route('petugas.statistik') }}" 
+                <a href="{{ route('petugas.statistik') }}"
                     class="px-6 py-3 bg-green-600 text-white rounded-xl font-medium shadow-md">
                     <i class="fas fa-chart-line mr-2"></i>Statistik
                 </a>
             </div>
             <!-- Search & Actions -->
             <div class="flex items-center gap-4">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <div class="relative flex items-center w-80">
+                    <span class="absolute left-4 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </span>
                     <input type="text" id="search"
-                        class="pl-12 pr-4 py-3 w-80 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        class="pl-12 pr-4 py-3 w-full bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         placeholder="Cari statistik...">
                 </div>
                 <button
@@ -93,7 +94,7 @@
                 <div class="flex gap-4">
                     <!-- Filter Kelas -->
                     <select id="filter-kelas"
-                        class="px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        class="w-28 px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <option selected disabled>Pilih Kelas</option>
                         <option value="1">Kelas 1</option>
                         <option value="2">Kelas 2</option>
@@ -104,7 +105,7 @@
                     </select>
                     <!-- Filter Bulan -->
                     <select id="filter-bulan"
-                        class="px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        class="w-28 px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
                         <option selected disabled>Pilih Bulan</option>
                         <option value="januari">Januari</option>
                         <option value="februari">Februari</option>
@@ -125,16 +126,16 @@
         <!-- Ranking Cards -->
         <div class="space-y-4">
             <!-- Rank 1 - Gold -->
-            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl shadow-lg border border-yellow-200 p-6 hover:shadow-xl transition-all duration-300">
+            <div
+                class="bg-gradient-to-r from-gray-50 to-orange-50 rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
                 <div class="flex items-center gap-6">
                     <!-- Rank Badge -->
                     <div class="relative">
-                        <div class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-crown text-white text-2xl"></i>
+                        <div
+                            class="w-16 h-16 bg-gradient-to-r bg-gray-100 rounded-2xl flex items-center justify-center shadow-lg">
+                            <img src="/images/gold.png" alt="Rank 1" class="w-8 h-8 object-contain">
                         </div>
-                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">1</span>
-                        </div>
+                        
                     </div>
                     <!-- Student Info -->
                     <div class="flex-1">
@@ -142,34 +143,31 @@
                             <div>
                                 <h4 class="text-xl font-bold text-gray-900 mb-1">Muhamad Aulia</h4>
                                 <div class="flex items-center gap-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                                         Kelas 6
                                     </span>
                                     <span class="text-gray-600">NIS: 3312411086</span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-bold text-yellow-600 mb-1">10</p>
+                                <p class="text-3xl font-bold text-gray-600 mb-1">10</p>
                                 <p class="text-sm text-gray-600">Buku Dipinjam</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Trophy Icon -->
-                    <div class="w-12 h-12">
-                        <img src="{{ asset('images/gold.png') }}" alt="Gold Trophy" class="w-full h-full object-contain">
-                    </div>
+
                 </div>
             </div>
             <!-- Rank 2 - Silver -->
-            <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
+            <div
+                class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
                 <div class="flex items-center gap-6">
                     <!-- Rank Badge -->
                     <div class="relative">
-                        <div class="w-16 h-16 bg-gradient-to-r from-gray-400 to-slate-400 rounded-2xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-medal text-white text-2xl"></i>
-                        </div>
-                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">2</span>
+                        <div
+                            class="w-16 h-16 bg-gradient-to-r bg-gray-100 rounded-2xl flex items-center justify-center shadow-lg">
+                            <img src="/images/silver.png" alt="Rank 1" class="w-8 h-8 object-contain">
                         </div>
                     </div>
                     <!-- Student Info -->
@@ -178,7 +176,8 @@
                             <div>
                                 <h4 class="text-xl font-bold text-gray-900 mb-1">Putri Nazma</h4>
                                 <div class="flex items-center gap-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                                         Kelas 6
                                     </span>
                                     <span class="text-gray-600">NIS: 3312411087</span>
@@ -190,22 +189,18 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Trophy Icon -->
-                    <div class="w-12 h-12">
-                        <img src="{{ asset('images/silver.png') }}" alt="Silver Trophy" class="w-full h-full object-contain">
-                    </div>
+
                 </div>
             </div>
             <!-- Rank 3 - Bronze -->
-            <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl shadow-lg border border-orange-200 p-6 hover:shadow-xl transition-all duration-300">
+            <div
+                class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl shadow-lg border border-orange-200 p-6 hover:shadow-xl transition-all duration-300">
                 <div class="flex items-center gap-6">
                     <!-- Rank Badge -->
                     <div class="relative">
-                        <div class="w-16 h-16 bg-gradient-to-r from-orange-400 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg">
-                            <i class="fas fa-award text-white text-2xl"></i>
-                        </div>
-                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">3</span>
+                        <div
+                            class="w-16 h-16 bg-gradient-to-r bg-gray-100 rounded-2xl flex items-center justify-center shadow-lg">
+                            <img src="/images/bronze.png" alt="Rank 1" class="w-8 h-8 object-contain">
                         </div>
                     </div>
                     <!-- Student Info -->
@@ -214,26 +209,25 @@
                             <div>
                                 <h4 class="text-xl font-bold text-gray-900 mb-1">Yulia Nabila</h4>
                                 <div class="flex items-center gap-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                                         Kelas 5
                                     </span>
                                     <span class="text-gray-600">NIS: 3312411088</span>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-bold text-orange-600 mb-1">5</p>
+                                <p class="text-3xl font-bold text-gray-600 mb-1">5</p>
                                 <p class="text-sm text-gray-600">Buku Dipinjam</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Trophy Icon -->
-                    <div class="w-12 h-12">
-                        <img src="{{ asset('images/bronze.png') }}" alt="Bronze Trophy" class="w-full h-full object-contain">
-                    </div>
+
                 </div>
             </div>
             <!-- Other Rankings -->
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300">
+            <div
+                class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300">
                 <div class="flex items-center gap-6">
                     <!-- Rank Badge -->
                     <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center">
@@ -245,7 +239,8 @@
                             <div>
                                 <h4 class="text-xl font-semibold text-gray-900 mb-1">Nur Alfi Syahrin</h4>
                                 <div class="flex items-center gap-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                                         Kelas 5
                                     </span>
                                     <span class="text-gray-600">NIS: 3312411089</span>
@@ -259,7 +254,8 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300">
+            <div
+                class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300">
                 <div class="flex items-center gap-6">
                     <!-- Rank Badge -->
                     <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center">
@@ -271,7 +267,8 @@
                             <div>
                                 <h4 class="text-xl font-semibold text-gray-900 mb-1">Putra Maulana</h4>
                                 <div class="flex items-center gap-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                    <span
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                                         Kelas 5
                                     </span>
                                     <span class="text-gray-600">NIS: 3312411090</span>
@@ -310,7 +307,7 @@
             console.log('Filter bulan:', this.value);
         });
         // Search functionality
-        document.getElementById('search').addEventListener('input', function (e) {
+        document.getElementById('search').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.space-y-4 > div:not(.text-center)');
             cards.forEach(card => {
@@ -324,4 +321,3 @@
         });
     </script>
 @endsection
-       

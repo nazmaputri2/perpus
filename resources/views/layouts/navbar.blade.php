@@ -9,7 +9,7 @@
                     <i class="fas fa-bars w-6 h-6"></i>
                 </button>
                 <a href="" class="flex ms-2 md:me-24">
-                    <img src="{{ asset('images/logopbl.png') }}" class="h-8 me-3" alt="" />
+                    <img src="{{ asset('images/sdit.jpg') }}" class="h-8 me-3" alt="" />
                     <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-black">PUSTAKALAYA</span>
                 </a>
             </div>

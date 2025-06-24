@@ -44,7 +44,7 @@
                     <p class="text-4xl font-extrabold text-yellow-600">16</p>
                 </div>
                 <div class="w-14 h-14 bg-yellow-500/10 rounded-full flex items-center justify-center shadow-inner">
-                    <i class="fas fa-users-viewfinder text-yellow-600 text-2xl"></i>
+                    <i class="fas fa-users text-yellow-600 text-2xl"></i>
                 </div>
             </div>
             <p class="text-sm text-gray-400 mt-3">Sedang dalam peminjaman aktif</p>

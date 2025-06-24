@@ -24,7 +24,7 @@
                         @endif
 
                         <div class="mb-4">
-                            <img src="{{ asset('images/logopbl.png') }}" alt="Logo" class="mb-4 img-fluid" style="max-width: 200px;">
+                            <img src="{{ asset('images/sdit.jpg') }}" alt="Logo" class="mb-4 img-fluid" style="max-width: 200px;">
                             <form method="POST" action="{{ route('auth.login') }}">
                                 @csrf
 
