@@ -8,11 +8,10 @@ use App\Http\Controllers\BerandaSiswaController;
 use App\Http\Controllers\BerandaPetugasController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\DataBukuController;
-use App\Http\Controllers\DataPeminjamanController; // <-- Pastikan ini diimpor jika digunakan di rute petugas
+use App\Http\Controllers\DataPeminjamanController; // <-- Pastikan ini diimpor
 use App\Http\Controllers\GantiPasswordController;
-use App\Http\Controllers\ImportSiswaController; // <-- Pastikan ini diimpor jika digunakan di rute petugas
-use App\Http\Controllers\PeminjamanController; // <-- Pastikan ini diimpor jika digunakan di rute petugas
-// use App\Http\Middleware\CekLogin; // Middleware sudah otomatis dikenali via Kernel
+use App\Http\Controllers\ImportSiswaController;
+use App\Http\Controllers\PeminjamanController;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.login');
 Route::post('/', [AuthController::class, 'login']);
@@ -23,7 +22,6 @@ Route::middleware('auth.custom')->group(function () {
     // Route umum yang perlu autentikasi
     Route::get('/petugas-beranda',[BerandaPetugasController::class, 'index'])->name('petugas.beranda');
     
-
     Route::get('/siswa-beranda', function () {
         return view('siswa.beranda');
     })->name('siswa.beranda');
@@ -48,10 +46,11 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     Route::put('databuku/{id}', [DataBukuController::class, 'update'])->name('petugas.databuku.update');
     Route::delete('databuku/{id}', [DataBukuController::class, 'destroy'])->name('petugas.databuku.destroy');
 
-    Route::get('/datapeminjaman', function () {
-        return view('petugas.datapeminjaman');
-    })->name('petugas.datapeminjaman');
-     Route::get('/statistik', function () {
+    // Route Data Peminjaman yang diperbarui untuk menerima parameter status opsional
+    // Menghapus route sebelumnya yang hanya me-return view
+    Route::get('/datapeminjaman', [DataPeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
+    
+    Route::get('/statistik', function () {
         return view('petugas.statistik');
     })->name('petugas.statistik');
 
@@ -59,14 +58,10 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     Route::post('/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
     Route::get('/siswa/import', [ImportSiswaController::class, 'form'])->name('siswa.import');
-Route::post('/siswa/import', [ImportSiswaController::class, 'upload'])->name('siswa.import.upload');
+    Route::post('/siswa/import', [ImportSiswaController::class, 'upload'])->name('siswa.import.upload');
 
-Route::get('/petugas/datapeminjaman', [DataPeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
-// web.php
-Route::put('/petugas/peminjaman/{id}/status', [DataPeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
-
-// Route::patch('/petugas/datapeminjaman/{id}/status', [DataPeminjamanController::class, 'updateStatus'])->name('petugas.datapeminjamana.status');
-
+    // Route untuk update status peminjaman
+    Route::put('/peminjaman/{id}/status', [DataPeminjamanController::class, 'updateStatus'])->name('peminjaman.updateStatus');
 
     Route::get('riwayat', [RiwayatAktivitasController::class, 'index'])->name('petugas.riwayat');
 });
@@ -83,3 +78,4 @@ Route::middleware('auth.custom')->prefix('siswa')->group(function () {
         return view('siswa.profile');
     })->name('siswa.profile');
 });
+
