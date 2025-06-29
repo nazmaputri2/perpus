@@ -13,7 +13,7 @@
     <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-8 mb-10 shadow-lg relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
         <div class="relative z-10">
-            <h1 class="text-4xl font-extrabold mb-2">Selamat Datang Kembali!</h1>
+            <h1 class="text-4xl font-extrabold mb-2">Selamat Datang Pustakawan!</h1>
             <p class="text-blue-100 text-lg">Pantau aktivitas perpustakaan Anda dengan mudah.</p>
             <div class="mt-6">
                 <a href="{{ route('petugas.koleksibuku') }}" class="inline-flex items-center px-6 py-3 bg-white text-blue-700 rounded-full font-semibold shadow-md hover:bg-gray-100 transition-colors duration-300">
@@ -24,44 +24,49 @@
         </div>
     </div>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-        <div class="bg-white rounded-3xl p-7 shadow-xl border border-blue-50 hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-md font-semibold text-gray-500 mb-1">Total Buku</p>
-                    <p class="text-4xl font-extrabold text-blue-700">42</p>
-                </div>
-                <div class="w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center shadow-inner">
-                    <i class="fas fa-book-open text-blue-600 text-2xl"></i>
-                </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+    <!-- Total Buku -->
+    <div class="bg-white rounded-3xl p-7 shadow-xl border border-blue-50 hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-1">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-md font-semibold text-gray-500 mb-1">Total Buku</p>
+                <p class="text-4xl font-extrabold text-blue-700">{{ $totalBuku }}</p>
             </div>
-            <p class="text-sm text-gray-400 mt-3">Jumlah keseluruhan koleksi</p>
-        </div>
-        <div class="bg-white rounded-3xl p-7 shadow-xl border border-yellow-50 hover:border-yellow-200 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-md font-semibold text-gray-500 mb-1">Buku Dipinjam</p>
-                    <p class="text-4xl font-extrabold text-yellow-600">16</p>
-                </div>
-                <div class="w-14 h-14 bg-yellow-500/10 rounded-full flex items-center justify-center shadow-inner">
-                    <i class="fas fa-users text-yellow-600 text-2xl"></i>
-                </div>
+            <div class="w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center shadow-inner">
+                <i class="fas fa-book-open text-blue-600 text-2xl"></i>
             </div>
-            <p class="text-sm text-gray-400 mt-3">Sedang dalam peminjaman aktif</p>
         </div>
-        <div class="bg-white rounded-3xl p-7 shadow-xl border border-green-50 hover:border-green-200 transition-all duration-300 transform hover:-translate-y-1">
-            <div class="flex items-start justify-between">
-                <div>
-                    <p class="text-md font-semibold text-gray-500 mb-1">Buku Dikembalikan</p>
-                    <p class="text-4xl font-extrabold text-green-600">8</p>
-                </div>
-                <div class="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center shadow-inner">
-                    <i class="fas fa-circle-check text-green-600 text-2xl"></i>
-                </div>
-            </div>
-            <p class="text-sm text-gray-400 mt-3">Telah berhasil dikembalikan</p>
-        </div>
+        <p class="text-sm text-gray-400 mt-3">Jumlah keseluruhan koleksi</p>
     </div>
+
+    <!-- Buku Dipinjam -->
+    <div class="bg-white rounded-3xl p-7 shadow-xl border border-yellow-50 hover:border-yellow-200 transition-all duration-300 transform hover:-translate-y-1">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-md font-semibold text-gray-500 mb-1">Buku Dipinjam</p>
+                <p class="text-4xl font-extrabold text-yellow-600">{{ $bukuDipinjam }}</p>
+            </div>
+            <div class="w-14 h-14 bg-yellow-500/10 rounded-full flex items-center justify-center shadow-inner">
+                <i class="fas fa-users text-yellow-600 text-2xl"></i>
+            </div>
+        </div>
+        <p class="text-sm text-gray-400 mt-3">Sedang dalam peminjaman aktif</p>
+    </div>
+
+    <!-- Buku Dikembalikan -->
+    <div class="bg-white rounded-3xl p-7 shadow-xl border border-green-50 hover:border-green-200 transition-all duration-300 transform hover:-translate-y-1">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-md font-semibold text-gray-500 mb-1">Buku Dikembalikan</p>
+                <p class="text-4xl font-extrabold text-green-600">{{ $bukuDikembalikan }}</p>
+            </div>
+            <div class="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center shadow-inner">
+                <i class="fas fa-circle-check text-green-600 text-2xl"></i>
+            </div>
+        </div>
+        <p class="text-sm text-gray-400 mt-3">Telah berhasil dikembalikan</p>
+    </div>
+</div>
     
     <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-10">
         <div class="flex items-center justify-between mb-8">

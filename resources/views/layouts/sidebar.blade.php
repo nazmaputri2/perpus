@@ -23,7 +23,7 @@
         </div>
         
         <div class="mb-6">
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 dark:text-gray-400">Data Management</h3>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 dark:text-gray-400">Manajemen Data</h3>
             <ul class="space-y-1">
                 <li>
                     <a href="{{ route('petugas.datasiswa') }}"

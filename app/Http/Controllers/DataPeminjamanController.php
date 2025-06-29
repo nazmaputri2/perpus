@@ -42,8 +42,8 @@ class DataPeminjamanController extends Controller
             'dipinjam' => Peminjaman::where('status_peminjaman', 'Dipinjam')->count(),
             'terlambat' => Peminjaman::where('status_peminjaman', 'Terlambat')->count(),
             'selesaiHariIni' => Peminjaman::where('status_peminjaman', 'Dikembalikan')
-                                ->whereDate('updated_at', Carbon::today())
-                                ->count(),
+                ->whereDate('updated_at', Carbon::today())
+                ->count(),
         ];
 
         // Mulai query utama yang akan difilter
@@ -51,10 +51,10 @@ class DataPeminjamanController extends Controller
 
         // Filter berdasarkan status dari request (klik stats card)
         $statusFilter = $request->input('status');
-        
+
         // Debug: Log parameter yang diterima
         \Log::info('Status Filter: ' . $statusFilter);
-        
+
         // Aplikasikan filter berdasarkan status
         if ($statusFilter && $statusFilter !== 'total') {
             switch ($statusFilter) {
@@ -67,7 +67,7 @@ class DataPeminjamanController extends Controller
                 case 'SelesaiHariIni':
                     // Filter berdasarkan status 'Dikembalikan' dan tanggal update hari ini
                     $query->where('status_peminjaman', 'Dikembalikan')
-                          ->whereDate('updated_at', Carbon::today());
+                        ->whereDate('updated_at', Carbon::today());
                     break;
                 case 'Dikembalikan':
                     $query->where('status_peminjaman', 'Dikembalikan');
@@ -82,14 +82,14 @@ class DataPeminjamanController extends Controller
         // Filter berdasarkan pencarian (search input)
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
-            $query->where(function($q) use ($searchTerm) {
-                $q->whereHas('siswa', function($qr) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereHas('siswa', function ($qr) use ($searchTerm) {
                     $qr->where('nama_siswa', 'like', '%' . $searchTerm . '%')
-                       ->orWhere('nis_siswa', 'like', '%' . $searchTerm . '%')
-                       ->orWhere('kelas_siswa', 'like', '%' . $searchTerm . '%');
-                })->orWhereHas('buku', function($qr) use ($searchTerm) {
-                    $qr->where('judul', 'like', '%' . $searchTerm . '%')
-                       ->orWhere('pengarang', 'like', '%' . $searchTerm . '%');
+                        ->orWhere('nis_siswa', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('kelas_siswa', 'like', '%' . $searchTerm . '%');
+                })->orWhereHas('buku', function ($qr) use ($searchTerm) {
+                    $qr->where('isbn', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('judul', 'like', '%' . $searchTerm . '%');
                 })->orWhere('status_peminjaman', 'like', '%' . $searchTerm . '%');
             });
         }
@@ -147,11 +147,11 @@ class DataPeminjamanController extends Controller
 
         } elseif ($aksi === 'selesai') {
             $peminjaman->status_peminjaman = 'Dikembalikan';
-            
+
             // Hitung batas waktu pengembalian
             $batasKembali = Carbon::parse($peminjaman->tanggal_peminjaman)->addDays(14);
             $tanggalKembali = now();
-            
+
             if ($tanggalKembali->gt($batasKembali)) {
                 $hariTerlambat = $tanggalKembali->diffInDays($batasKembali);
                 $peminjaman->keterangan = 'Terlambat dikembalikan (' . $hariTerlambat . ' hari)';
@@ -213,11 +213,61 @@ class DataPeminjamanController extends Controller
         // Bisa ditambahkan logic untuk export berdasarkan filter yang aktif
         $statusFilter = $request->input('status');
         $searchTerm = $request->input('search');
-        
+
         return response()->json([
             'message' => 'Fitur ekspor belum diimplementasikan.',
             'filter' => $statusFilter,
             'search' => $searchTerm
         ]);
+    }
+
+
+    public function statistik(Request $request)
+    {
+        $kelas = $request->input('kelas');
+        $bulan = $request->input('bulan');
+        $daftarKelas = DB::table('siswa')->select('kelas_siswa')->distinct()->orderBy('kelas_siswa')->pluck('kelas_siswa');
+        $query = DB::table('peminjaman')
+            ->join('siswa', 'peminjaman.nis_siswa', '=', 'siswa.nis_siswa')
+            ->select('siswa.nama_siswa', 'siswa.kelas_siswa', 'siswa.nis_siswa', DB::raw('COUNT(*) as jumlah'))
+            ->where('peminjaman.status_peminjaman', '!=', 'Proses')
+            ->groupBy('siswa.nama_siswa', 'siswa.kelas_siswa', 'siswa.nis_siswa');
+        if ($kelas) {
+            $query->where('siswa.kelas_siswa', $kelas);
+        }
+        if ($bulan) {
+            try {
+                $bulanAngka = Carbon::createFromFormat('F', ucfirst($bulan))->format('m');
+            } catch (\Exception $e) {
+                $bulanAngka = Carbon::parse("1 " . $bulan)->format('m');
+            }
+            $query->whereMonth('tanggal_peminjaman', $bulanAngka);
+        }
+        $peminjamTerbanyak = $query->orderByDesc('jumlah')->limit(10)->get();
+        // Hitung statistik peminjaman
+        $statQuery = DB::table('peminjaman')
+            ->where('status_peminjaman', '!=', 'Proses');
+        if ($kelas) {
+            $statQuery->join('siswa', 'peminjaman.nis_siswa', '=', 'siswa.nis_siswa')
+                ->where('siswa.kelas_siswa', $kelas);
+        }
+        if (isset($bulanAngka)) {
+            $statQuery->whereMonth('tanggal_peminjaman', $bulanAngka);
+        }
+        $all = $statQuery->count();
+        $dipinjam = (clone $statQuery)->where('status_peminjaman', 'Dipinjam')->count();
+        $terlambat = (clone $statQuery)->where('status_peminjaman', 'Terlambat')->count();
+        $selesaiHariIni = (clone $statQuery)
+            ->where('status_peminjaman', 'Dikembalikan')
+            ->whereDate('peminjaman.updated_at', Carbon::today())
+            ->count(); // FIXED
+
+        $stats = [
+            'total' => $all,
+            'dipinjam' => $dipinjam,
+            'terlambat' => $terlambat,
+            'selesaiHariIni' => $selesaiHariIni,
+        ];
+        return view('petugas.statistik', compact('peminjamTerbanyak', 'kelas', 'bulan', 'stats', 'daftarKelas'));
     }
 }

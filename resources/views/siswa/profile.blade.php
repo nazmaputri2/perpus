@@ -1,5 +1,12 @@
 @extends('layouts.siswa')
 
+@section('title', 'Profil Siswa -')
+
+@push('modals')
+@include('components.modal-ubah-sandi')
+    @include('components.modal-keluar')
+@endpush
+
 @section('content')
     <div class="p-4 sm:ml-64">
         {{-- PENYESUAIAN: Menghapus 'max-w-5xl' dan 'mx-auto' untuk membuat layout full-width --}}
@@ -15,8 +22,8 @@
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mt-4">Nama Siswa</h1>
-                        <p class="text-md text-gray-500 dark:text-gray-400">XII RPL 1 - NISN: 1234567890</p>
+<h1 class="text-3xl font-bold text-gray-900 dark:text-white mt-4">{{ $siswa->nama_siswa }}</h1>
+<p class="text-md text-gray-500 dark:text-gray-400">{{ $siswa->kelas_siswa }} - NISN: {{ $siswa->nis_siswa }}</p>
 
                         <button type="button"
                             class="mt-4 text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center transition-all duration-200 hover:shadow-lg hover:scale-105">
@@ -28,17 +35,15 @@
 
                     <div class="flex justify-around text-center">
                         <div>
-                            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">1</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 tracking-wide">Buku Dipinjam</p>
+<p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $peminjamanAktif }}</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">Buku Dipinjam</p>
                         </div>
                         <div>
-                            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">15</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 tracking-wide">Total Peminjaman</p>
-                        </div>
+<p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $totalPeminjaman }}</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">Total Peminjaman</p>                        </div>
                         <div>
-                            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">2023</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 tracking-wide">Bergabung Sejak</p>
-                        </div>
+<p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $siswa->created_at->year }}</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">Bergabung Sejak</p>                        </div>
                     </div>
                 </div>
 
@@ -48,8 +53,7 @@
                     <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
                         <div>
                             <dt class="font-medium text-gray-500 dark:text-gray-400 text-sm">Nama Lengkap</dt>
-                            <dd class="mt-1 text-gray-900 dark:text-white font-semibold">Nama Siswa Lengkap</dd>
-                        </div>
+<dd class="mt-1 text-gray-900 dark:text-white font-semibold">{{ $siswa->nama_siswa }}</dd>                        </div>
                         <div>
                             <dt class="font-medium text-gray-500 dark:text-gray-400 text-sm">Email</dt>
                             <dd class="mt-1 text-gray-900 dark:text-white font-semibold">siswa@example.com</dd>
@@ -60,8 +64,7 @@
                         </div>
                         <div>
                             <dt class="font-medium text-gray-500 dark:text-gray-400 text-sm">Nomor Telepon</dt>
-                            <dd class="mt-1 text-gray-900 dark:text-white font-semibold">-</dd>
-                        </div>
+<dd class="mt-1 text-gray-900 dark:text-white font-semibold">{{ $siswa->nohp_siswa ?? '-' }}</dd>                        </div>
                         <div class="lg:col-span-2">
                             <dt class="font-medium text-gray-500 dark:text-gray-400 text-sm">Alamat</dt>
                             <dd class="mt-1 text-gray-900 dark:text-white font-semibold">Jl. Pendidikan No. 123, Kelurahan
@@ -76,48 +79,24 @@
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Riwayat Peminjaman</h3>
                     <div class="space-y-2">
-                        <div
-                            class="flex p-3 -m-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors duration-150">
-                            <div
-                                class="flex-shrink-0 w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center mr-4">
-                                <i class="fa-solid fa-book-open text-yellow-600 dark:text-yellow-300"></i>
-                            </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">Meminjam buku "Algoritma dan Struktur
-                                    Data"</p>
-                                <time class="text-sm font-normal text-gray-500 dark:text-gray-400">Dipinjam pada 1 Juni
-                                    2025</time>
-                            </div>
-                        </div>
-                        <div
-                            class="flex p-3 -m-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors duration-150">
-                            <div
-                                class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-4">
-                                <i class="fa-solid fa-check text-green-600 dark:text-green-300"></i>
-                            </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">Mengembalikan buku "Dasar-Dasar
-                                    Pemrograman"</p>
-                                <time class="text-sm font-normal text-gray-500 dark:text-gray-400">Dikembalikan pada 17 Mei
-                                    2025</time>
-                            </div>
-                        </div>
-                        <div
-                            class="flex p-3 -m-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors duration-150">
-                            <div
-                                class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-4">
-                                <i class="fa-solid fa-check text-green-600 dark:text-green-300"></i>
-                            </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">Mengembalikan buku "Clean Code"</p>
-                                <time class="text-sm font-normal text-gray-500 dark:text-gray-400">Dikembalikan pada 10 Mei
-                                    2025</time>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+@forelse($riwayat as $r)
+    <div class="flex p-3 -m-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors duration-150">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full 
+            {{ $r->status == 'Dipinjam' ? 'bg-yellow-100 dark:bg-yellow-900' : 'bg-green-100 dark:bg-green-900' }} 
+            flex items-center justify-center mr-4">
+            <i class="fa-solid {{ $r->status == 'Dipinjam' ? 'fa-book-open text-yellow-600 dark:text-yellow-300' : 'fa-check text-green-600 dark:text-green-300' }}"></i>
+        </div>
+        <div>
+            <p class="font-semibold text-gray-900 dark:text-white">
+               {{ $r->status == 'Dipinjam' ? 'Meminjam buku' : 'Mengembalikan buku' }} "{{ $r->buku->judul ?? '-' }}"
 
+            </p>
+            <time class="text-sm text-gray-500 dark:text-gray-400">
+                {{ $r->status == 'Dipinjam' ? 'Dipinjam pada' : 'Dikembalikan pada' }} {{ \Carbon\Carbon::parse($r->created_at)->translatedFormat('d F Y') }}
+            </time>
         </div>
     </div>
-@endsection
+@empty
+    <p class="text-center text-sm text-gray-500 dark:text-gray-400">Belum ada riwayat peminjaman.</p>
+@endforelse
+

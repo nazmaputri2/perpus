@@ -48,11 +48,14 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
 
     // Route Data Peminjaman yang diperbarui untuk menerima parameter status opsional
     // Menghapus route sebelumnya yang hanya me-return view
-    Route::get('/datapeminjaman', [DataPeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
+    Route::get('/datapeminjaman', action: [DataPeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
     
-    Route::get('/statistik', function () {
-        return view('petugas.statistik');
-    })->name('petugas.statistik');
+  Route::get('/petugas/datapeminjaman/export', [DataPeminjamanController::class, 'exportPeminjaman'])->name('petugas.datapeminjaman.export');
+
+Route::get('/petugas/statistik', [DataPeminjamanController::class, 'statistik'])->name('petugas.statistik');
+Route::get('/petugas/statistik/export', [DataPeminjamanController::class, 'exportStatistik'])->name('petugas.statistik.export');
+
+
 
     Route::get('/petugas/koleksi-buku', [PeminjamanController::class, 'index'])->name('petugas.koleksibuku');
     Route::post('/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
@@ -74,8 +77,6 @@ Route::middleware('auth.custom')->prefix('siswa')->group(function () {
     // Route untuk pinjam buku
     Route::post('pinjam-buku', [BerandaSiswaController::class, 'pinjamBuku'])->name('siswa.pinjam.buku');
     
-    Route::get('/profil', function () {
-        return view('siswa.profile');
-    })->name('siswa.profile');
+    Route::get('/profil', [SiswaController::class, 'profil'])->name('siswa.profile');
 });
 

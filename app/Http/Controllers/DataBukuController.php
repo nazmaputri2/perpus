@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +13,11 @@ class DataBukuController extends Controller
     public function index()
     {
         $buku = Buku::all();
-        return view('petugas.databuku', compact('buku'));
+        $siswa = Siswa::select('nis_siswa', 'nama_siswa', 'kelas_siswa')->orderBy('kelas_siswa')->orderBy('nama_siswa')->get();
+        $kategoriOptions = Buku::select('jenis_buku')->distinct()->pluck('jenis_buku')->filter()->sort()->values()->all();
+        $kelasOptions = Buku::select('kelas')->distinct()->pluck('kelas')->filter()->sort()->values()->all();
+
+        return view('petugas.databuku', compact('buku', 'siswa', 'kategoriOptions', 'kelasOptions'));
     }
 
     public function store(Request $request)

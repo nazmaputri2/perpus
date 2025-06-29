@@ -21,6 +21,7 @@ class ImportSiswaController extends Controller
 
         try {
             Excel::import(new SiswaImport, $request->file('file'));
+            catatRiwayat('siswa', 'menambah', 'Mengimpor data siswa dari file Excel: ' . $request->file('file')->getClientOriginalName());
             return redirect()->back()->with('success', 'Data siswa berhasil diimpor.');
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             // Tangkap error validasi dari Excel

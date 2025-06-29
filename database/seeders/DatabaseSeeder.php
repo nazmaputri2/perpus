@@ -38,8 +38,16 @@ class DatabaseSeeder extends Seeder
                 'id_user' => $penggunaPetugas->id_user, // Mengaitkan dengan pengguna Rafif
             ]
         );
+
+        // Buat pengguna siswa
+        $penggunaSiswa = Pengguna::firstOrCreate(
+            ['username' => 'nazma'],
+            [
+                'password' => Hash::make('siswa123'),
+                'role' => 'siswa'
+            ]
+        );
         
-        // Panggil BukuSeeder
-        $this->call(BukuSeeder::class);
+       
     }
 }

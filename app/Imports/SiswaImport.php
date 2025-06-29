@@ -28,7 +28,7 @@ class SiswaImport implements ToCollection, WithHeadingRow{
                 $pengguna = Pengguna::firstOrCreate(
                     ['username' => $row['nis']],
                     [
-                        'password' => Hash::make('defaultpassword'),
+                        'password' => Hash::make('siswa123'),
                         'role' => 'siswa',
                     ]
                 );

@@ -139,7 +139,8 @@
             </div>
             <!-- Search & Actions -->
             <div class="flex items-center gap-4">
-                <form method="GET" class="relative flex items-center w-80">
+                <form method="GET" action="{{ route('petugas.datapeminjaman') }}" class="relative flex items-center w-80">
+
                     <!-- Pertahankan filter status jika ada -->
                     @if($currentFilter)
                         <input type="hidden" name="status" value="{{ $currentFilter }}">
@@ -149,7 +150,7 @@
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}"
                         class="pl-12 pr-4 py-3 w-full bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Cari peminjaman..."
+                        placeholder="Cari peminjam / siswa / buku"
                         onkeypress="if(event.key === 'Enter') this.form.submit();">
                 </form>
                 <button onclick="exportData()"
@@ -288,9 +289,12 @@
                                         <i class="fas {{ $status['icon'] }} mr-2"></i>
                                         {{ $data->status_peminjaman }}
                                     </span>
-                                    @if ($data->keterangan)
-                                        <p class="text-sm text-red-600 mt-1">{{ $data->keterangan }}</p>
-                                    @endif
+@if ($data->keterangan)
+    <p class="text-sm mt-1 
+        {{ strtolower($data->keterangan) == 'terlambat' ? 'text-red-600' : 'text-blue-600' }}">
+        {{ $data->keterangan }}
+    </p>
+@endif
                                 </div>
                                 <div class="flex gap-3">
                                     @if ($data->status_peminjaman === 'Proses')

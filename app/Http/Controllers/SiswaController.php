@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Siswa;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
-use App\Helpers\catatRiwayat;
-
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
 class SiswaController extends Controller
@@ -58,11 +57,11 @@ class SiswaController extends Controller
             'id_user' => $pengguna->id_user,
         ]);
 
-        catatRiwayat('siswa', 'tambah', 'Menambahkan data siswa: ' . $request);
+        catatRiwayat('siswa', 'tambah', 'Menambahkan data siswa: ' . $request->nama_siswa);
 
 
 
-        return redirect()->back()->with('success', 'Data siswa  berhasil dibuat! Username: ' . $username . ', Password: ' . $defaultPassword);
+        return redirect()->back()->with('success', 'Data siswa  berhasil dibuat!');
     }
 
     public function update(Request $request, $nis_siswa)
@@ -123,5 +122,37 @@ class SiswaController extends Controller
 
         return redirect()->back()->with('success', 'Data siswa berhasil dihapus!');
     }
+
+
+public function profil()
+{
+    $user = auth()->user();
+
+    // Cek apakah user ini adalah siswa
+    $siswa = $user->siswa;
+
+if (auth()->user()->role !== 'siswa') {
+    abort(403, 'Akun ini bukan siswa.');
+}
+
+if (!$siswa) {
+    abort(403, 'Data siswa tidak ditemukan untuk pengguna ini.');
+}
+
+
+    $peminjamanAktif = Peminjaman::where('nis_siswa', $siswa->nis_siswa)->where('status_peminjaman', 'Dipinjam')->count();
+    $totalPeminjaman = Peminjaman::where('nis_siswa', $siswa->nis_siswa)->count();
+
+  $riwayat = Peminjaman::with('buku') // pastikan relasi sudah ada
+    ->where('nis_siswa', $siswa->nis_siswa)
+    ->orderByDesc('created_at')
+    ->limit(5)
+    ->get();
+
+
+    return view('siswa.profile', compact('siswa', 'peminjamanAktif', 'totalPeminjaman', 'riwayat'));
+}
+
+
 
 }

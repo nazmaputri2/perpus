@@ -22,8 +22,8 @@
                     <div>
                         <label for="isbn"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ISBN</label>
-                        <input type="text" id="isbn" name="isbn" required minlength="10" maxlength="10"
-                            oninput=" validateExactLength(this, 10, 'ISBN harus tepat 10 digit' )"
+                        <input type="text" id="isbn" name="isbn" required minlength="13" maxlength="13"
+                            oninput=" validateExactLength(this, 13, 'ISBN harus tepat 13 digit' )"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
                     </div>
                     <div>
