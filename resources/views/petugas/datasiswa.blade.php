@@ -38,14 +38,19 @@
 
         <div class="flex flex-col lg:flex-row lg:items-center gap-4 w-full justify-between mb-6">
             <div class="flex-grow">
-                <div class="relative w-full lg:w-80">
+                {{-- Form Pencarian --}}
+                <form action="{{ route('petugas.datasiswa') }}" method="GET" class="relative w-64">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
-                    <input type="text" id="search"
+                    <input type="text" id="search" name="search"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block w-full pl-12 pr-4 py-3 shadow-sm transition-all duration-200 placeholder-gray-400"
-                        placeholder="Cari siswa berdasarkan...">
-                </div>
+                        placeholder="Cari siswa berdasarkan NIS, Nama, Kelas..." value="{{ request('search') }}">
+                    {{-- Tambahkan tombol submit jika belum ada, atau enter akan submit form --}}
+                    <button type="submit" class="absolute inset-y-0 right-0 px-4 flex items-center bg-blue-500 text-white rounded-r-xl hover:bg-blue-600 transition-colors duration-200" style="display:none;">
+                        Cari
+                    </button>
+                </form>
             </div>
 
             <div class="flex items-center gap-4">
@@ -59,16 +64,13 @@
                 </button>
             </div>
         </div>
-    </div> <!-- Modern Table Container -->
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-        <!-- Table Header -->
+    </div> <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <h4 class="text-lg font-semibold text-gray-800">Daftar Siswa</h4>
                 <span class="text-sm text-gray-500">{{ count($students) }} siswa terdaftar</span>
             </div>
         </div>
-        <!-- Table Content -->
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
@@ -169,7 +171,6 @@
 
                             <td class="px-6 py-4">
                                 <div class="flex space-x-2">
-                                    <!-- Tombol Edit -->
                                     <button onclick="prepareEditModal({{ json_encode($student) }})"
                                         data-modal-target="editDataModal" data-modal-toggle="editDataModal"
                                         class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
@@ -177,7 +178,6 @@
                                         <i class="fas fa-edit text-sm"></i>
                                     </button>
 
-                                    <!-- Tombol Hapus -->
                                     <button onclick="setDeleteId({{ $student->nis_siswa }})" data-modal-target="deleteModal"
                                         data-modal-toggle="deleteModal"
                                         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
@@ -218,7 +218,6 @@
             document.getElementById('edit-kelas_siswa').value = student.kelas_siswa;
             document.getElementById('edit-nohp_siswa').value = student.nohp_siswa;
 
-
             const form = document.getElementById('edit-form');
             form.action = `/petugas/datasiswa/${student.nis_siswa}`;
             const editModal = new Flowbite.Modal(document.getElementById('editDataModal'));
@@ -229,5 +228,25 @@
         function setDeleteId(nis_siswa) {
             document.getElementById('delete-form').action = '/petugas/datasiswa/' + nis_siswa;
         }
+
+        // Script untuk mempertahankan nilai pencarian setelah refresh halaman
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search');
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchTerm = urlParams.get('search');
+            if (searchTerm) {
+                searchInput.value = searchTerm;
+            }
+        });
+
+        // Auto submit form ketika user mengetik (opsional - dengan debounce)
+        let searchTimeout;
+        document.getElementById('search').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.form.submit();
+            }, 500); // Submit setelah 500ms user berhenti mengetik
+        });
+
     </script>
 @endpush

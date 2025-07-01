@@ -9,11 +9,23 @@ use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request) // Tambahkan Request $request
     {
-        $students = Siswa::all();
+        $students = Siswa::query(); // Mulai dengan query builder
+
+        // Tambahkan logika filter
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $students->where('nis_siswa', 'like', '%' . $searchTerm . '%')
+                     ->orWhere('nama_siswa', 'like', '%' . $searchTerm . '%')
+                     ->orWhere('kelas_siswa', 'like', '%' . $searchTerm . '%');
+        }
+
+        $students = $students->get(); // Ambil data setelah filter diterapkan
+
         return view('petugas.datasiswa', compact('students'));
     }
+    
     public function store(Request $request)
     {
         \Log::info('Request masuk ke store:', $request->all());
