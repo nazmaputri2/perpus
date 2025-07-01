@@ -58,7 +58,7 @@ class PetugasController extends Controller
             'id_user' => $pengguna->id_user,
         ]);
 
-        return redirect()->back()->with('success', 'Data petugas berhasil dibuat! Username: ' . $username . ', Password: ' . $defaultPassword);
+        return redirect()->back()->with('success', 'Data petugas berhasil dibuat!');
     }
 
     public function update(Request $request, $nip)
