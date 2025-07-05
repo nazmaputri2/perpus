@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DataPeminjamanExport;
 use Carbon\Carbon;
 use App\Models\Buku;
 use App\Models\Siswa;
@@ -145,30 +147,36 @@ class DataPeminjamanController extends Controller
                 catatRiwayat('peminjaman', 'menyetujui', 'Menyetujui peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
             }
 
-        } elseif ($aksi === 'selesai') {
-            $peminjaman->status_peminjaman = 'Dikembalikan';
+} elseif ($aksi === 'selesai') {
+    $peminjaman->status_peminjaman = 'Dikembalikan';
 
-            // Hitung batas waktu pengembalian
-            $batasKembali = Carbon::parse($peminjaman->tanggal_peminjaman)->addDays(14);
-            $tanggalKembali = now();
+    // Simpan tanggal pengembalian sebagai hari ini
+    $tanggalKembali = now();
+    $peminjaman->tanggal_pengembalian = $tanggalKembali;
 
-            if ($tanggalKembali->gt($batasKembali)) {
-                $hariTerlambat = $tanggalKembali->diffInDays($batasKembali);
-                $peminjaman->keterangan = 'Terlambat dikembalikan (' . $hariTerlambat . ' hari)';
-            } else {
-                $peminjaman->keterangan = 'Dikembalikan tepat waktu';
-            }
+    // Hitung batas waktu pengembalian
+    $batasKembali = Carbon::parse($peminjaman->tanggal_peminjaman)->addDays(14);
 
-            // Tambah stok buku
-            if ($buku) {
-                $buku->stok += 1;
-                $buku->save();
-            }
+    if ($tanggalKembali->gt($batasKembali)) {
+        $hariTerlambat = $tanggalKembali->diffInDays($batasKembali);
+        $peminjaman->keterangan = 'Terlambat dikembalikan (' . $hariTerlambat . ' hari)';
+    } else {
+        $peminjaman->keterangan = 'Dikembalikan tepat waktu';
+    }
 
-            // Asumsi catatRiwayat adalah helper function
-            if (function_exists('catatRiwayat')) {
-                catatRiwayat('peminjaman', 'mengembalikan', 'Menyelesaikan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
-            }
+    // Tambah stok buku
+    if ($buku) {
+        $buku->stok += 1;
+        $buku->save();
+    }
+
+    // Simpan data peminjaman yang sudah diperbarui
+    $peminjaman->save();
+
+    // Catat riwayat pengembalian
+    if (function_exists('catatRiwayat')) {
+        catatRiwayat('peminjaman', 'mengembalikan', 'Menyelesaikan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
+    }
 
         } elseif ($aksi === 'batal') {
             // Jika status sedang dipinjam atau terlambat, kembalikan stok
@@ -203,23 +211,15 @@ class DataPeminjamanController extends Controller
         }
     }
 
-    /**
-     * Placeholder untuk fitur ekspor data.
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function export(Request $request)
-    {
-        // Placeholder fitur ekspor (Excel / PDF)
-        // Bisa ditambahkan logic untuk export berdasarkan filter yang aktif
-        $statusFilter = $request->input('status');
-        $searchTerm = $request->input('search');
-
-        return response()->json([
-            'message' => 'Fitur ekspor belum diimplementasikan.',
-            'filter' => $statusFilter,
-            'search' => $searchTerm
-        ]);
-    }
+/**
+ * Placeholder untuk fitur ekspor data.
+ * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+ */
+             public function exportPeminjaman()
+{
+    $peminjaman = Peminjaman::with(['siswa', 'buku'])->latest()->get();
+    return Excel::download(new DataPeminjamanExport($peminjaman), 'data_peminjaman.xlsx');
+}
 
 
     public function statistik(Request $request)

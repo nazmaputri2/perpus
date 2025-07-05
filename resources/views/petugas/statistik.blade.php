@@ -85,7 +85,7 @@
     </div>
     <!-- Statistik Cards Layout -->
     <div class="space-y-6">
-        <h3 class="text-2xl font-bold text-gray-900 mb-6">Peminjam Terbanyak - Januari 2025</h3>
+        <h3 class="text-2xl font-bold text-gray-900 mb-6">Peminjam Terbanyak</h3>
         <!-- Filter Section -->
         <form method="GET" action="{{ route('petugas.statistik') }}">
             <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">

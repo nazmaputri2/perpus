@@ -9,19 +9,23 @@ use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function index(Request $request) // Tambahkan Request $request
-    {
-        $students = Siswa::query(); // Mulai dengan query builder
+   public function index(Request $request)
+{
+    $siswa = Siswa::query();
 
-        // Tambahkan logika filter
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $students->where('nis_siswa', 'like', '%' . $searchTerm . '%')
-                     ->orWhere('nama_siswa', 'like', '%' . $searchTerm . '%')
-                     ->orWhere('kelas_siswa', 'like', '%' . $searchTerm . '%');
-        }
+    if ($request->has('search') && $request->filled('search')) {
+        $search = $request->search;
 
-        $students = $students->get(); // Ambil data setelah filter diterapkan
+        $siswa->where(function ($query) use ($search) {
+            $query->where('nis_siswa', 'like', "%{$search}%")
+                  ->orWhere('nama_siswa', 'like', "%{$search}%")
+                  ->orWhere('kelas_siswa', 'like', "%{$search}%");
+        });
+    }
+
+    // Ambil 10 data terbaru dan paginasi
+    $students = $siswa->latest()->orderBy('created_at', 'desc')->paginate(25)->withQueryString();
+
 
         return view('petugas.datasiswa', compact('students'));
     }

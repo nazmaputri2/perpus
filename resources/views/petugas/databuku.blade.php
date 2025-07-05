@@ -93,7 +93,7 @@
                 <tr class="buku-row" data-kategori="{{ $bukus->jenis_buku }}" data-kelas="{{ $bukus->kelas }}">
                     <td class="px-6 py-4">
                         <div class="flex items-center justify-center w-8 h-8 bg-gradient-to-r text-black rounded-full text-sm font-semibold">
-                            {{ $index + 1 }}
+                             {{ $buku->firstItem() + $index }}
                         </div>
                     </td>
                     <td class="px-6 py-4">
@@ -152,6 +152,85 @@
                 @endforeach
             </tbody>
         </table>
+
+        {{-- Pagination --}}
+@if ($buku->hasPages())
+    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-t border-gray-200">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            {{-- Info Halaman --}}
+            <div class="text-sm text-gray-600">
+                <span class="font-medium">Menampilkan {{ $buku->firstItem() ?? 0 }}-{{ $buku->lastItem() ?? 0 }}</span>
+                dari
+                <span class="font-medium">{{ $buku->total() }} buku</span>
+            </div>
+
+            {{-- Navigasi --}}
+            <nav class="flex items-center space-x-1">
+                {{-- Tombol Sebelumnya --}}
+                @if ($buku->onFirstPage())
+                    <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-l-xl cursor-not-allowed shadow-sm">
+                        <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
+                    </span>
+                @else
+                    <a href="{{ $buku->previousPageUrl() }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-xl hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
+                        <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
+                    </a>
+                @endif
+
+                {{-- Nomor Halaman --}}
+                @php
+                    $start = max(1, $buku->currentPage() - 2);
+                    $end = min($buku->lastPage(), $buku->currentPage() + 2);
+                @endphp
+
+                @if ($start > 1)
+                    <a href="{{ $buku->url(1) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
+                        1
+                    </a>
+                    @if ($start > 2)
+                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">...</span>
+                    @endif
+                @endif
+
+                @for ($page = $start; $page <= $end; $page++)
+                    @if ($page == $buku->currentPage())
+                        <span class="px-4 py-2 text-sm font-semibold text-white bg-blue-500 shadow-md scale-110 rounded-md">{{ $page }}</span>
+                    @else
+                        <a href="{{ $buku->url($page) }}"
+                           class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
+                            {{ $page }}
+                        </a>
+                    @endif
+                @endfor
+
+                @if ($end < $buku->lastPage())
+                    @if ($end < $buku->lastPage() - 1)
+                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">...</span>
+                    @endif
+                    <a href="{{ $buku->url($buku->lastPage()) }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
+                        {{ $buku->lastPage() }}
+                    </a>
+                @endif
+
+                {{-- Tombol Berikutnya --}}
+                @if ($buku->hasMorePages())
+                    <a href="{{ $buku->nextPageUrl() }}"
+                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-xl hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
+                        Berikutnya<i class="fas fa-chevron-right ml-1"></i>
+                    </a>
+                @else
+                    <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-r-xl cursor-not-allowed shadow-sm">
+                        Berikutnya<i class="fas fa-chevron-right ml-1"></i>
+                    </span>
+                @endif
+            </nav>
+        </div>
+    </div>
+@endif
+
         
         {{-- Pesan jika filter tidak menemukan hasil --}}
         <div id="no-results" class="text-center py-16 hidden">

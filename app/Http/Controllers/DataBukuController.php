@@ -10,16 +10,24 @@ use Illuminate\Support\Facades\Log; // Tambahkan ini untuk debugging
 
 class DataBukuController extends Controller
 {
-    public function index()
-    {
-        $buku = Buku::all();
-        $siswa = Siswa::select('nis_siswa', 'nama_siswa', 'kelas_siswa')->orderBy('kelas_siswa')->orderBy('nama_siswa')->get();
-        $kategoriOptions = Buku::select('jenis_buku')->distinct()->pluck('jenis_buku')->filter()->sort()->values()->all();
-        $kelasOptions = Buku::select('kelas')->distinct()->pluck('kelas')->filter()->sort()->values()->all();
+public function index()
+{
+    // Ambil 10 data buku terbaru (urut dari yang terbaru berdasarkan created_at atau id)
+    $buku = Buku::latest()->paginate(10); // <-- ini pagination utama
 
-        return view('petugas.databuku', compact('buku', 'siswa', 'kategoriOptions', 'kelasOptions'));
-    }
+    // Ambil data siswa untuk modal peminjaman
+    $siswa = Siswa::select('nis_siswa', 'nama_siswa', 'kelas_siswa')
+                ->orderBy('kelas_siswa')
+                ->orderBy('nama_siswa')
+                ->get();
 
+    // Ambil data unik kategori & kelas untuk keperluan filter dropdown
+    $kategoriOptions = Buku::select('jenis_buku')->distinct()->pluck('jenis_buku')->filter()->sort()->values()->all();
+    $kelasOptions = Buku::select('kelas')->distinct()->pluck('kelas')->filter()->sort()->values()->all();
+
+    // Kirim semua data ke view
+    return view('petugas.databuku', compact('buku', 'siswa', 'kategoriOptions', 'kelasOptions'));
+}
     public function store(Request $request)
     {
         $request->validate([

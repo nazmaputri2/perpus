@@ -123,7 +123,7 @@ class BerandaSiswaController extends Controller
                 'isbn' => $buku->isbn,
                 'judul' => $buku->judul,
                 'tanggal_peminjaman' => Carbon::now()->format('Y-m-d H:i:s'),
-                'tanggal_pengembalian' => now()->addDays(14),
+                'tanggal_pengembalian' => null,
                 'status_peminjaman' => 'proses'
             ]);
 

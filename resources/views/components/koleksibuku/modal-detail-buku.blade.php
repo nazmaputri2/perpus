@@ -20,7 +20,7 @@
             <div class="p-6 space-y-6">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="md:w-1/3 flex justify-center">
-                        <img id="modalImage" src="https://via.placeholder.com/150" class="-lg max-h-60"
+                        <img id="modalImage" src="{{ asset('images/default-book.png') }}" class="-lg max-h-60"
                             alt="Cover">
                     </div>
                     <div class="md:w-2/3">
@@ -44,7 +44,7 @@
 
             <!-- Footer -->
             <div class="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button id="pinjamBukuBtn" type="button"
+                <button id="pinjamBukuBtn" type="button" data-modal-target="pinjamBukuModal" data-modal-hide="detailModal"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Pinjam
                 </button>

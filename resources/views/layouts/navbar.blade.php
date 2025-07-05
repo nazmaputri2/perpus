@@ -24,7 +24,19 @@
 <!-- Dropdown menu - Enhanced Flowbite Style -->
 <div id="dropdown-user" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
     <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-        <div class="font-medium">Menu Pengguna</div>
+        <div class="font-medium">
+            @auth
+                @if(auth()->user()->role === 'siswa' && auth()->user()->siswa)
+                    {{ auth()->user()->siswa->nama_siswa }}
+                @elseif(auth()->user()->role === 'petugas' && auth()->user()->petugas)
+                    {{ auth()->user()->petugas->nama }}
+                @else
+                    {{ auth()->user()->username }} {{-- Fallback jika role lain atau data terkait tidak ditemukan --}}
+                @endif
+            @else
+                Pengguna
+            @endauth
+        </div>
     </div>
     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-user">
         <li>
@@ -40,8 +52,7 @@
             </a>
         </li>
     </ul>
-</div>
-                </div>
+</div>                </div>
             </div>
         </div>
     </div>

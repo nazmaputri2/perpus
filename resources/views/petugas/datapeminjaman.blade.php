@@ -153,11 +153,12 @@
                         placeholder="Cari peminjam / siswa / buku"
                         onkeypress="if(event.key === 'Enter') this.form.submit();">
                 </form>
-                <button onclick="exportData()"
-                    class="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-medium transition-colors shadow-md">
-                    <i class="fas fa-download"></i>
-                    Export Data
-                </button>
+               <a href="{{ route('petugas.datapeminjaman.export') }}"
+   class="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-medium transition-colors shadow-md">
+    <i class="fas fa-download"></i>
+    Export Peminjaman
+</a>
+
             </div>
         </div>
     </div>

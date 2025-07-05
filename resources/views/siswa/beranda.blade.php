@@ -102,33 +102,23 @@
 @endsection
 
 @push('scripts')
+@push('scripts')
 <script>
-const bukuData = @json($buku);
+document.addEventListener('DOMContentLoaded', function() {
+    const bukuData = @json($buku);
 
-function getBookById(isbn) {
-    console.log('getBookById: Looking for book with ISBN:', isbn);
-    if (!bukuData || !Array.isArray(bukuData)) {
-        console.error('getBookById: bukuData not available or not an array.');
-        return null;
-    }
-    const book = bukuData.find(book => book.isbn === isbn);
-    console.log('getBookById: Found book:', book);
-    return book;
-}
+    // --- Element References ---
+    const searchInput = document.getElementById('search');
+    const filterKategori = document.getElementById('filter-kategori');
+    const filterKelas = document.getElementById('filter-kelas');
+    const resetButton = document.getElementById('reset-filter');
+    const noResults = document.getElementById('no-results');
+    const bukuContainer = document.getElementById('buku-container');
+    const detailModal = document.getElementById('detailModal');
+    const konfirmasiModal = document.getElementById('konfirmasiPinjamModal');
+    const toast = document.getElementById('toast-alert');
 
-function openDetailModal(bookIsbn) {
-    console.log('openDetailModal: Opening modal for book ISBN:', bookIsbn);
-
-    const data = getBookById(bookIsbn);
-
-    if (!data) {
-        console.error('openDetailModal: Book data not found for ISBN:', bookIsbn);
-        alert('Data buku tidak ditemukan');
-        return;
-    }
-
-    console.log('openDetailModal: Book data to fill modal:', data);
-
+    // --- Modal Element References ---
     const modalImage = document.getElementById('modalImage');
     const modalIsbn = document.getElementById('modalIsbn');
     const modalTitle = document.getElementById('modalTitle');
@@ -137,392 +127,247 @@ function openDetailModal(bookIsbn) {
     const modalYear = document.getElementById('modalYear');
     const modalStock = document.getElementById('modalStock');
     const modalDescription = document.getElementById('modalDescription');
-
-    if (modalImage) {
-        modalImage.src = data.gambar_url || '{{ asset('images/default-book.png') }}';
-        modalImage.alt = data.judul || 'Cover Buku';
-        modalImage.onerror = function() {
-            console.error('Image failed to load (fallback to default):', this.src);
-            this.src = '{{ asset('images/default-book.png') }}';
-        };
-    }
-
-    if (modalIsbn) modalIsbn.textContent = data.isbn || '-';
-    if (modalTitle) modalTitle.textContent = data.judul || '-';
-    if (modalAuthor) modalAuthor.textContent = data.penulis || '-';
-    if (modalPublisher) modalPublisher.textContent = data.penerbit || '-';
-    if (modalYear) modalYear.textContent = data.tahun_terbit || '-';
-    if (modalStock) modalStock.textContent = data.stok || '0';
-    if (modalDescription) modalDescription.textContent = data.sinopsis || 'Tidak ada sinopsis tersedia';
-
-    const pinjamBtn = document.getElementById('pinjamBukuBtn');
-
-    if (pinjamBtn) {
-        const newPinjamBtn = pinjamBtn.cloneNode(true);
-        pinjamBtn.parentNode.replaceChild(newPinjamBtn, pinjamBtn);
-
-        if (data.stok <= 0) {
-            newPinjamBtn.disabled = true;
-            newPinjamBtn.textContent = 'Stok Habis';
-            newPinjamBtn.className = 'w-full px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed';
-        } else {
-            newPinjamBtn.disabled = false;
-            newPinjamBtn.textContent = 'Pinjam Buku';
-            newPinjamBtn.className = 'w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors';
-
-            newPinjamBtn.onclick = function() {
-                console.log('Pinjam button clicked with data:', data);
-                showKonfirmasiPinjam(data);
-            };
-        }
-    }
-
-    const detailModal = document.getElementById('detailModal');
-    if (detailModal) {
-        if (typeof Flowbite !== 'undefined' && Flowbite.Modal) {
-            const modalInstance = Flowbite.Modal.getInstance(detailModal) || new Flowbite.Modal(detailModal);
-            modalInstance.show();
-        } else {
-            detailModal.classList.remove('hidden');
-            detailModal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-}
-
-function showKonfirmasiPinjam(data) {
-    console.log('showKonfirmasiPinjam received data:', data);
-
-    if (!data || typeof data !== 'object' || !data.isbn) {
-        console.error('Data buku tidak valid atau ISBN tidak ditemukan:', data);
-        alert('Data buku tidak valid');
-        return;
-    }
+    const pinjamBukuBtn = document.getElementById('pinjamBukuBtn');
 
     const konfirmasiBukuJudul = document.getElementById('konfirmasiBukuJudul');
     const konfirmasiBukuPenulis = document.getElementById('konfirmasiBukuPenulis');
     const konfirmasiBukuISBN = document.getElementById('konfirmasiBukuISBN');
     const konfirmasiBukuStok = document.getElementById('konfirmasiBukuStok');
-    const konfirmasiPinjamBtn = document.getElementById('konfirmasiPinjamBtn');
+    let konfirmasiPinjamBtn = document.getElementById('konfirmasiPinjamBtn'); // Use 'let' to allow reassignment
 
-    if (konfirmasiBukuJudul) konfirmasiBukuJudul.textContent = data.judul || 'Judul tidak tersedia';
-    if (konfirmasiBukuPenulis) konfirmasiBukuPenulis.textContent = `Penulis: ${data.penulis || 'Tidak diketahui'}`;
-    if (konfirmasiBukuISBN) konfirmasiBukuISBN.textContent = `ISBN: ${data.isbn || 'N/A'}`;
-    if (konfirmasiBukuStok) konfirmasiBukuStok.textContent = `Stok: ${data.stok || 0}`;
+    // --- Utility Functions ---
+    const getBookById = (isbn) => bukuData.find(book => book.isbn === isbn);
 
-    if (konfirmasiPinjamBtn) {
-        const newBtn = konfirmasiPinjamBtn.cloneNode(true);
-        konfirmasiPinjamBtn.parentNode.replaceChild(newBtn, konfirmasiPinjamBtn);
+    const updateBookStockInUI = (bukuIsbn, newStock) => {
+        // Update stock in detail modal
+        if (modalStock) modalStock.textContent = newStock;
 
-        newBtn.onclick = function() {
-            console.log('Confirmation button clicked with data:', data);
-            processPinjamBuku(data);
-        };
-    }
+        // Update stock on the book card
+        const card = document.querySelector(`.buku-card[data-book-id="${bukuIsbn}"]`);
+        if (card) {
+            const stockElement = card.querySelector('.stok-value');
+            if (stockElement) stockElement.textContent = newStock;
+        }
 
-    closeDetailModal();
-    showKonfirmasiModal();
-}
-
-function processPinjamBuku(data) {
-    console.log('processPinjamBuku called with:', data);
-
-    const konfirmasiPinjamBtn = document.getElementById('konfirmasiPinjamBtn');
-
-    if (!data || typeof data !== 'object' || !data.isbn) {
-        console.error('Data is null, undefined, or ISBN is missing:', data);
-        alert('Data buku tidak tersedia atau ISBN-nya hilang.');
-        return;
-    }
-
-    const bukuISBN = data.isbn;
-    console.log('Using ISBN as identifier for request:', bukuISBN);
-
-    if (konfirmasiPinjamBtn) {
-        konfirmasiPinjamBtn.disabled = true;
-        konfirmasiPinjamBtn.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Memproses...
-        `;
-    }
-
-    const requestData = {
-        buku_id: bukuISBN
+        // Update pinjam button state
+        if (pinjamBukuBtn) {
+            if (newStock <= 0) {
+                pinjamBukuBtn.disabled = true;
+                pinjamBukuBtn.textContent = 'Stok Habis';
+                pinjamBukuBtn.className = 'w-full px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed';
+            } else {
+                pinjamBukuBtn.disabled = false;
+                pinjamBukuBtn.textContent = 'Pinjam';
+                pinjamBukuBtn.className = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800';
+            }
+        }
     };
 
-    console.log('Sending borrow request to backend:', requestData);
+    // --- Modal Management ---
+    const showModal = (modalElement) => {
+        if (!modalElement) return;
+        modalElement.classList.remove('hidden');
+        modalElement.classList.add('flex', 'items-center', 'justify-center');
+        modalElement.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        document.body.classList.add('overflow-hidden');
+    };
 
-    fetch("/siswa/pinjam-buku", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-    })
-    .then(response => {
-        console.log('Response status:', response.status);
-        if (!response.ok) {
-            return response.text().then(text => {
-                console.log('Error response body:', text);
-                throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
-            });
+    const hideModal = (modalElement) => {
+        if (!modalElement) return;
+        modalElement.classList.add('hidden');
+        modalElement.classList.remove('flex', 'items-center', 'justify-center');
+        modalElement.style.backgroundColor = '';
+        // Only remove overflow-hidden if no other modals are open
+        if (!detailModal.classList.contains('flex') && !konfirmasiModal.classList.contains('flex')) {
+            document.body.classList.remove('overflow-hidden');
         }
-        return response.json();
-    })
-    .then(responseData => {
-        console.log('Response data:', responseData);
-        if(responseData.success) {
-            alert(responseData.message || 'Buku berhasil dipinjam!');
+    };
 
-            const bookIndex = bukuData.findIndex(book => book.isbn === bukuISBN);
-            if (bookIndex !== -1) {
-                bukuData[bookIndex].stok = responseData.data.new_stock;
-            }
-
-            updateBookStockInUI(bukuISBN, responseData.data.new_stock);
-
-            closeAllModals();
-
-        } else {
-            alert(responseData.message || 'Gagal meminjam buku');
+    const openDetailModal = (bookIsbn) => {
+        const data = getBookById(bookIsbn);
+        if (!data) {
+            alert('Data buku tidak ditemukan');
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Error detail:', error);
 
-        let alertMessage = 'Terjadi kesalahan saat meminjam buku.';
-        try {
-            const errorBodyMatch = error.message.match(/body: (.*)$/);
-            if (errorBodyMatch && errorBodyMatch[1]) {
-                const errorBody = JSON.parse(errorBodyMatch[1]);
-                if (errorBody.message) {
-                    alertMessage = errorBody.message;
-                } else if (errorBody.errors) {
-                    const validationErrors = Object.values(errorBody.errors).flat();
-                    alertMessage = 'Validasi gagal: ' + validationErrors.join(', ');
+        // Populate modal content
+        if(modalImage) {
+            modalImage.src = data.gambar_url || '{{ asset('images/default-book.png') }}';
+            modalImage.onerror = () => { modalImage.src = '{{ asset('images/default-book.png') }}'; };
+        }
+        if(modalIsbn) modalIsbn.textContent = data.isbn || '-';
+        if(modalTitle) modalTitle.textContent = data.judul || '-';
+        if(modalAuthor) modalAuthor.textContent = data.penulis || '-';
+        if(modalPublisher) modalPublisher.textContent = data.penerbit || '-';
+        if(modalYear) modalYear.textContent = data.tahun_terbit || '-';
+        if(modalStock) modalStock.textContent = data.stok || '0';
+        if(modalDescription) modalDescription.textContent = data.sinopsis || 'Tidak ada sinopsis tersedia';
+
+        // Setup pinjam button
+        updateBookStockInUI(data.isbn, data.stok); // Initial setup
+        pinjamBukuBtn.onclick = (e) => {
+            e.stopPropagation();
+            showKonfirmasiPinjam(data);
+        };
+
+        showModal(detailModal);
+    };
+
+    const showKonfirmasiPinjam = (data) => {
+        if (!data || !data.isbn) {
+            alert('Data buku tidak valid');
+            return;
+        }
+        
+        // Populate confirmation modal
+        if (konfirmasiBukuJudul) konfirmasiBukuJudul.textContent = data.judul || 'Judul tidak tersedia';
+        if (konfirmasiBukuPenulis) konfirmasiBukuPenulis.textContent = `Penulis: ${data.penulis || 'Tidak diketahui'}`;
+        if (konfirmasiBukuISBN) konfirmasiBukuISBN.textContent = `ISBN: ${data.isbn || 'N/A'}`;
+        if (konfirmasiBukuStok) konfirmasiBukuStok.textContent = `Stok: ${data.stok || 0}`;
+
+        // Re-attach event listener to avoid stale closures
+        const newBtn = konfirmasiPinjamBtn.cloneNode(true);
+        konfirmasiPinjamBtn.parentNode.replaceChild(newBtn, konfirmasiPinjamBtn);
+        konfirmasiPinjamBtn = newBtn; // Update reference
+        
+        konfirmasiPinjamBtn.onclick = (e) => {
+            e.preventDefault();
+            processPinjamBuku(data);
+        };
+
+        hideModal(detailModal);
+        setTimeout(() => showModal(konfirmasiModal), 150); // Delay for smoother transition
+    };
+    
+    // --- Book Borrowing Process ---
+    const processPinjamBuku = (data) => {
+        if (!data || !data.isbn) {
+            alert('Data buku tidak tersedia.');
+            return;
+        }
+
+        // Show loading state
+        konfirmasiPinjamBtn.disabled = true;
+        konfirmasiPinjamBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...`;
+
+        fetch("/siswa/pinjam-buku", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ buku_id: data.isbn })
+        })
+        .then(response => response.json().then(json => ({ ok: response.ok, data: json })))
+        .then(({ ok, data: responseData }) => {
+            if (ok && responseData.success) {
+                alert(responseData.message || 'Buku berhasil dipinjam!');
+                
+                // Update local data and UI
+                const bookIndex = bukuData.findIndex(book => book.isbn === data.isbn);
+                if (bookIndex !== -1) {
+                    bukuData[bookIndex].stok = responseData.data.new_stock;
                 }
+                updateBookStockInUI(data.isbn, responseData.data.new_stock);
+                
+                hideModal(konfirmasiModal);
+            } else {
+                throw new Error(responseData.message || 'Gagal meminjam buku.');
             }
-        } catch (e) {
-            alertMessage = error.message;
-        }
-
-        if (error.message.includes('401')) {
-            alertMessage = 'Anda harus login terlebih dahulu. Silakan refresh halaman dan login kembali.';
-            window.location.href = '/';
-        } else if (error.message.includes('422')) {
-            alertMessage = 'Data tidak valid. Periksa format data yang dikirim.';
-        }
-
-        alert(alertMessage);
-    })
-    .finally(() => {
-        if (konfirmasiPinjamBtn) {
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message);
+        })
+        .finally(() => {
+            // Reset button state
             konfirmasiPinjamBtn.disabled = false;
-            konfirmasiPinjamBtn.innerHTML = `
-                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                </svg>
-                Ya, Pinjam Buku
-            `;
-        }
-    });
-}
+            konfirmasiPinjamBtn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Ya, Pinjam Buku`;
+        });
+    };
+    
+    // --- Filtering Logic ---
+    const filterBooks = () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedKategori = filterKategori.value;
+        const selectedKelas = filterKelas.value;
+        const bukuCards = document.querySelectorAll('.buku-card');
+        let visibleCount = 0;
 
-function showKonfirmasiModal() {
-    const modal = document.getElementById('konfirmasiPinjamModal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-    }
-}
+        bukuCards.forEach(card => {
+            const title = card.dataset.judul || '';
+            const author = card.dataset.penulis || '';
+            const kategori = card.dataset.kategori || '';
+            const kelas = card.dataset.kelas || '';
 
-function closeKonfirmasiModal() {
-    const modal = document.getElementById('konfirmasiPinjamModal');
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = 'auto';
-    }
-}
+            const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm);
+            const matchesKategori = !selectedKategori || kategori === selectedKategori;
+            const matchesKelas = !selectedKelas || kelas == selectedKelas;
 
-function closeDetailModal() {
-    const modal = document.getElementById('detailModal');
-    if (modal) {
-        if (typeof Flowbite !== 'undefined' && Flowbite.Modal) {
-            const modalInstance = Flowbite.Modal.getInstance(modal);
-            if (modalInstance) {
-                modalInstance.hide();
-                return;
+            if (matchesSearch && matchesKategori && matchesKelas) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
             }
-        }
-        modal.classList.add('hidden');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = 'auto';
-    }
-}
+        });
 
-function closeAllModals() {
-    closeDetailModal();
-    closeKonfirmasiModal();
-}
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    };
 
-function updateBookStockInUI(bukuIsbn, newStock) {
-    const modalStock = document.getElementById('modalStock');
-    if (modalStock) {
-        modalStock.textContent = newStock;
-    }
-
-    const card = document.querySelector(`[data-book-id="${bukuIsbn}"]`);
-    if (card) {
-        const stockElement = card.querySelector('.stok-value');
-        if (stockElement) {
-            stockElement.textContent = newStock;
-        }
-    }
-
-    const pinjamBtn = document.getElementById('pinjamBukuBtn');
-    if (pinjamBtn) {
-        if (newStock <= 0) {
-            pinjamBtn.disabled = true;
-            pinjamBtn.textContent = 'Stok Habis';
-            pinjamBtn.className = 'text-white bg-gray-400 cursor-not-allowed font-medium rounded-lg text-sm px-4 py-2 text-center';
-        } else {
-            pinjamBtn.disabled = false;
-            pinjamBtn.textContent = 'Pinjam Buku';
-            pinjamBtn.className = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800';
-        }
-    }
-}
-
-function filterBooks() {
-    const searchTerm = document.getElementById('search').value.toLowerCase().trim();
-    const selectedJenisBuku = document.getElementById('filter-kategori').value;
-    const selectedKelas = document.getElementById('filter-kelas').value;
-    const bukuCards = document.querySelectorAll('.buku-card');
-    const noResults = document.getElementById('no-results');
-
-    let visibleCount = 0;
-
-    console.log('Filtering with:', { searchTerm, selectedJenisBuku, selectedKelas });
-
-    bukuCards.forEach(card => {
-        const title = card.getAttribute('data-judul') || '';
-        const author = card.getAttribute('data-penulis') || '';
-        const cardJenisBuku = card.getAttribute('data-kategori') || '';
-        const kelas = card.getAttribute('data-kelas') || '';
-
-        const matchesSearch = !searchTerm ||
-                               title.includes(searchTerm) ||
-                               author.includes(searchTerm);
-        const matchesJenisBuku = !selectedJenisBuku || cardJenisBuku === selectedJenisBuku;
-        const matchesKelas = !selectedKelas || kelas == selectedKelas;
-
-        if (matchesSearch && matchesJenisBuku && matchesKelas) {
-            card.style.display = 'flex';
-            visibleCount++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    console.log('Visible count:', visibleCount);
-
-    if (visibleCount === 0 && bukuCards.length > 0) {
-        if (noResults) {
-            noResults.style.display = 'block';
-            noResults.classList.remove('hidden');
-        }
-    } else {
-        if (noResults) {
-            noResults.style.display = 'none';
-            noResults.classList.add('hidden');
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, bukuData:', bukuData);
-
-    const searchInput = document.getElementById('search');
-    const filterKategori = document.getElementById('filter-kategori');
-    const filterKelas = document.getElementById('filter-kelas');
-    const resetButton = document.getElementById('reset-filter');
-
-    if (searchInput) {
-        searchInput.addEventListener('input', filterBooks);
-    }
-
-    if (filterKategori) {
-        filterKategori.addEventListener('change', filterBooks);
-    }
-
-    if (filterKelas) {
-        filterKelas.addEventListener('change', filterBooks);
-    }
-
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            if (searchInput) searchInput.value = '';
-            if (filterKategori) filterKategori.value = '';
-            if (filterKelas) filterKelas.value = '';
+    // --- Event Listeners ---
+    if(searchInput) searchInput.addEventListener('input', filterBooks);
+    if(filterKategori) filterKategori.addEventListener('change', filterBooks);
+    if(filterKelas) filterKelas.addEventListener('change', filterBooks);
+    
+    if(resetButton) {
+        resetButton.addEventListener('click', () => {
+            if(searchInput) searchInput.value = '';
+            if(filterKategori) filterKategori.value = '';
+            if(filterKelas) filterKelas.value = '';
             filterBooks();
         });
     }
 
-    const allModalHideButtons = document.querySelectorAll('[data-modal-hide]');
-    allModalHideButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const targetModalId = button.getAttribute('data-modal-hide');
-            const targetModal = document.getElementById(targetModalId);
-            if (targetModal) {
-                if (targetModalId === 'detailModal') {
-                    closeDetailModal();
-                } else if (targetModalId === 'konfirmasiPinjamModal') {
-                    closeKonfirmasiModal();
-                }
-            }
+    // Assign click events to book cards
+    document.querySelectorAll('.buku-card').forEach(card => {
+        card.addEventListener('click', () => {
+            openDetailModal(card.dataset.bookId);
         });
     });
 
-    const detailModal = document.getElementById('detailModal');
-    if (detailModal) {
-        detailModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeDetailModal();
-            }
+    // Handle modal closing
+    document.querySelectorAll('[data-modal-hide]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const modalId = button.getAttribute('data-modal-hide');
+            const modalToHide = document.getElementById(modalId);
+            hideModal(modalToHide);
         });
-    }
+    });
 
-    const konfirmasiModal = document.getElementById('konfirmasiPinjamModal');
-    if (konfirmasiModal) {
-        konfirmasiModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeKonfirmasiModal();
-            }
-        });
-    }
+    // Handle backdrop clicks to close
+    if (detailModal) detailModal.addEventListener('click', (e) => { if (e.target === detailModal) hideModal(detailModal); });
+    if (konfirmasiModal) konfirmasiModal.addEventListener('click', (e) => { if (e.target === konfirmasiModal) hideModal(konfirmasiModal); });
 
-    document.addEventListener('keydown', function(e) {
+    // Handle 'Escape' key to close
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeAllModals();
+            if (konfirmasiModal.classList.contains('flex')) {
+                hideModal(konfirmasiModal);
+            } else if (detailModal.classList.contains('flex')) {
+                hideModal(detailModal);
+            }
         }
     });
 
-    const toast = document.getElementById('toast-alert');
+    // --- Initial Toast Animation ---
     if (toast) {
         setTimeout(() => {
             toast.classList.remove('opacity-0', '-translate-y-4');
-            toast.classList.add('opacity-100', 'translate-y-0');
         }, 100);
-
         setTimeout(() => {
-            toast.classList.remove('opacity-100', 'translate-y-0');
             toast.classList.add('opacity-0', '-translate-y-4');
             setTimeout(() => toast.remove(), 500);
         }, 4000);

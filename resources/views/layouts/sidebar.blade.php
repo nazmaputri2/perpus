@@ -1,5 +1,5 @@
 <aside id="logo-sidebar"
-    class="fixed top-0 left-0 z-0 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-gray-900"
+    class="fixed top-0 left-0 z-30 w-64 h-full pt-20 transition-transform -translate-x-full bg-white shadow-md sm:translate-x-0 dark:bg-gray-900"
     aria-label="Sidebar">
     <div class="h-full px-4 pb-4 overflow-y-auto">
         <div class="mb-6">
@@ -70,3 +70,21 @@
         </div>
     </div>
 </aside>
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden sm:hidden"></div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("logo-sidebar");
+        const toggleBtn = document.querySelector("[data-drawer-toggle='logo-sidebar']");
+        const overlay = document.getElementById("sidebar-overlay");
+
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("-translate-x-full");
+            overlay.classList.toggle("hidden");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.add("-translate-x-full");
+            overlay.classList.add("hidden");
+        });
+    });
+</script>
