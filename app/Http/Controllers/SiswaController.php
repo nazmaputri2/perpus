@@ -140,34 +140,7 @@ class SiswaController extends Controller
     }
 
 
-public function profil()
-{
-    $user = auth()->user();
 
-    // Cek apakah user ini adalah siswa
-    $siswa = $user->siswa;
-
-if (auth()->user()->role !== 'siswa') {
-    abort(403, 'Akun ini bukan siswa.');
-}
-
-if (!$siswa) {
-    abort(403, 'Data siswa tidak ditemukan untuk pengguna ini.');
-}
-
-
-    $peminjamanAktif = Peminjaman::where('nis_siswa', $siswa->nis_siswa)->where('status_peminjaman', 'Dipinjam')->count();
-    $totalPeminjaman = Peminjaman::where('nis_siswa', $siswa->nis_siswa)->count();
-
-  $riwayat = Peminjaman::with('buku') // pastikan relasi sudah ada
-    ->where('nis_siswa', $siswa->nis_siswa)
-    ->orderByDesc('created_at')
-    ->limit(5)
-    ->get();
-
-
-    return view('siswa.profile', compact('siswa', 'peminjamanAktif', 'totalPeminjaman', 'riwayat'));
-}
 
 
 
