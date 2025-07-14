@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Siswa;
 use App\Models\Peminjaman;
-
 use App\Models\Pengguna; // Tambahkan ini jika model Pengguna digunakan untuk petugas
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,10 +47,10 @@ class PeminjamanController extends Controller
             // Dapatkan ID petugas yang sedang login
             // Asumsi model Auth::user() adalah Pengguna dan memiliki kolom 'id_user' sebagai primary key.
             // Atau jika primary key nya 'id', gunakan Auth::id()
-            $idPetugas = Auth::user()->id_user ?? Auth::id(); 
+            $idUser = Auth::user()->id_user ?? Auth::id(); 
             
             // Cek apakah id_petugas tersedia. Jika tidak, mungkin user belum login atau sesi bermasalah.
-            if (!$idPetugas) {
+            if (!$idUser) {
                 return response()->json(['success' => false, 'message' => 'Petugas tidak terautentikasi atau ID tidak ditemukan.'], 401);
             }
 
@@ -67,7 +66,7 @@ class PeminjamanController extends Controller
                 'tanggal_peminjaman' => now(),
                 'tanggal_pengembalian' => now()->addDays(14),
                 'status_peminjaman' => 'Dipinjam', // Status awal, sesuai enum di migrasi
-                'id_petugas' => $idPetugas, 
+                'id_user' => $idUser, 
             ]);
 
             DB::commit();

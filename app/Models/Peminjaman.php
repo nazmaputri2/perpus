@@ -20,7 +20,7 @@ class Peminjaman extends Model
         'tanggal_peminjaman', // Sesuaikan dengan nama kolom di migrasi Anda
         'tanggal_pengembalian',
         'status_peminjaman',
-        'id_petugas', // Tambahkan ini jika Anda sudah menambahkan di migrasi
+        'id_user', // Tambahkan ini jika Anda sudah menambahkan di migrasi
     ];
 
     public function getStatusPeminjamanAttribute($value)

@@ -77,6 +77,6 @@ Route::middleware('auth.custom')->prefix('siswa')->group(function () {
     // Route untuk pinjam buku
     Route::post('pinjam-buku', [BerandaSiswaController::class, 'pinjamBuku'])->name('siswa.pinjam.buku');
     
-    Route::get('/profil', [SiswaController::class, 'profil'])->name('siswa.profile');
+    Route::get('/profil', [BerandaSiswaController::class, 'profil'])->name('siswa.profile');
 });
 

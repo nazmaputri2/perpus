@@ -32,7 +32,7 @@ return new class extends Migration
             // Tambahkan foreign key untuk petugas yang meminjamkan
             // Asumsi id_petugas di sini merujuk ke id_user di tabel 'pengguna'
             // yang merupakan ID dari petugas yang sedang login.
-            $table->unsignedBigInteger('id_petugas')->nullable(); 
+            $table->unsignedBigInteger('id_user')->nullable(); 
 
             $table->timestamps();
 
@@ -42,7 +42,7 @@ return new class extends Migration
             
             // Foreign key ke tabel 'pengguna' (untuk id_petugas)
             // Asumsi primary key di tabel 'pengguna' adalah 'id_user' dan bertipe unsignedBigInteger
-            $table->foreign('id_petugas')->references('id_user')->on('pengguna')->onDelete('set null');
+            $table->foreign('id_user')->references('id_user')->on('pengguna')->onDelete('set null');
         });
     }
 
