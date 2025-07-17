@@ -189,7 +189,7 @@ class DataPeminjamanController extends Controller
 
             // Asumsi catatRiwayat adalah helper function
             if (function_exists('catatRiwayat')) {
-                catatRiwayat('peminjaman', 'menghapus', 'Membatalkan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
+                catatRiwayat('peminjaman', 'membatalkan', 'Membatalkan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
             }
 
             $peminjaman->delete();
@@ -235,14 +235,21 @@ class DataPeminjamanController extends Controller
         if ($kelas) {
             $query->where('siswa.kelas_siswa', $kelas);
         }
-        if ($bulan) {
-            try {
-                $bulanAngka = Carbon::createFromFormat('F', ucfirst($bulan))->format('m');
-            } catch (\Exception $e) {
-                $bulanAngka = Carbon::parse("1 " . $bulan)->format('m');
-            }
-            $query->whereMonth('tanggal_peminjaman', $bulanAngka);
-        }
+       if ($bulan) {
+    try {
+        // Pakai Carbon::createFromLocaleFormat jika bulan lokal seperti "Januari"
+        Carbon::setLocale('id');
+        \Locale::setDefault('id_ID');
+
+        // Parse nama bulan lokal seperti "januari", "februari"
+        $bulanCarbon = Carbon::createFromFormat('!j F', '1 ' . $bulan);
+        $bulanAngka = $bulanCarbon->format('m');
+        $query->whereMonth('tanggal_peminjaman', $bulanAngka);
+    } catch (\Exception $e) {
+        // Fallback: Abaikan filter bulan jika gagal parsing
+        $bulanAngka = null;
+    }
+}
         $peminjamTerbanyak = $query->orderByDesc('jumlah')->limit(10)->get();
         // Hitung statistik peminjaman
         $statQuery = DB::table('peminjaman')

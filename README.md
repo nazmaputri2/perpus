@@ -2,6 +2,10 @@
 
 <h2 align="center">Aplikasi web Laravel untuk sistem perpustakaan yang dapat diakses oleh petugas dan siswa.</h2>
 
+## 📄 Laporan
+- [Video Presentasi](https://youtu.be/ysBpC8ufy8g)
+- [Video Demo](https://youtu.be/mymDlrgEgS8)
+- [Laporan Akhir PBL Kelompok 1 ](Laporan_AAS_PBL_IF1-3_KELOMPOK_1.pdf)
 
 ## 👥 TEAM 
 

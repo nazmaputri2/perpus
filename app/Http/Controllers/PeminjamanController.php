@@ -71,7 +71,7 @@ class PeminjamanController extends Controller
 
             DB::commit();
 
-            catatRiwayat('peminjaman', 'meminjam', 'Petugas meminjamkan buku "' . $buku->judul . '" kepada siswa: ' . $siswa->nama_siswa);
+            catatRiwayat('buku', 'meminjam', 'Petugas meminjamkan buku "' . $buku->judul . '" kepada siswa: ' . $siswa->nama_siswa);
 
             return response()->json([
                 'success' => true,

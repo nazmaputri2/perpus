@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('nis_siswa')->primary();
             $table->string('nama_siswa');
             $table->enum('kelamin_siswa', ['Laki-laki', 'Perempuan']);
-            $table->string('kelas_siswa');
+            $table->enum('kelas_siswa', ['1', '2', '3', '4', '5', '6']); // Kelas siswa, bisa diubah sesuai kebutuhan
             $table->string('nohp_siswa')->nullable(); // Nomor HP siswa, bisa null jika tidak diisi
             $table->unsignedBigInteger('id_user'); // foreign key ke tabel pengguna
             $table->foreign('id_user')->references('id_user')->on('pengguna')->onDelete('cascade');
