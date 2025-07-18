@@ -123,9 +123,14 @@ class SiswaController extends Controller
     }
 
 
-    public function destroy($nis)
+    public function destroy($nis_siswa)
     {
-        $siswa = Siswa::findOrFail($nis);
+        $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
+    
+    if (!$siswa) {
+        return redirect()->back()->with('error', 'Data petugas tidak ditemukan!');
+    }
+    
         $pengguna = $siswa->pengguna;
 
         $siswa->delete();

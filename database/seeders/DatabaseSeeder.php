@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         // Buat pengguna petugas
         $penggunaPetugas = Pengguna::firstOrCreate(
-            ['username' => 'rafif'],
+            ['username' => 'petugas'],
             [
                 'password' => Hash::make('petugas123'),
                 'role' => 'petugas'
@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
 
         // Buat pengguna siswa
         $penggunaSiswa = Pengguna::firstOrCreate(
-            ['username' => 'nazma'],
+            ['username' => 'siswa'],
             [
                 'password' => Hash::make('siswa123'),
                 'role' => 'siswa'

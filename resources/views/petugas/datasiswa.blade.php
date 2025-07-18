@@ -178,7 +178,7 @@
                                         <i class="fas fa-edit text-sm"></i>
                                     </button>
 
-                                    <button onclick="setDeleteId({{ $student->nis_siswa }})" data-modal-target="deleteModal"
+                                    <button onclick="setDeleteId('{{ $student->nis_siswa }}')" data-modal-target="deleteModal"
                                         data-modal-toggle="deleteModal"
                                         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                         title="Hapus Siswa">

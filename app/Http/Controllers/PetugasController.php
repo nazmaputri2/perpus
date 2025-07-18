@@ -9,25 +9,27 @@ use Illuminate\Http\Request;
 
 class PetugasController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Petugas::query();
-        
-        // Filter berdasarkan parameter pencarian
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('nip', 'LIKE', "%{$search}%")
-                  ->orWhere('nama', 'LIKE', "%{$search}%")
-                  ->orWhere('nohp', 'LIKE', "%{$search}%")
-                  ->orWhere('alamat', 'LIKE', "%{$search}%");
-            });
-        }
-        
-        $petugas = $query->get();
-        return view('petugas.datapetugas', compact('petugas'));
+public function index(Request $request)
+{
+    $query = Petugas::query();
+
+    // Filter pencarian
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('nip', 'like', "%{$search}%")
+              ->orWhere('nama', 'like', "%{$search}%")
+              ->orWhere('nohp', 'like', "%{$search}%")
+              ->orWhere('alamat', 'like', "%{$search}%");
+        });
     }
 
+    // Paginate 10 data per halaman dan sertakan query string agar search tetap terbawa
+    $petugas = $query->orderBy('nama')->paginate(10)->withQueryString();
+
+    return view('petugas.datapetugas', compact('petugas'));
+}
     public function store(Request $request)
     {
         \Log::info('Request masuk ke store:', $request->all());
@@ -66,29 +68,33 @@ class PetugasController extends Controller
             'id_user' => $pengguna->id_user,
         ]);
 
+         catatRiwayat('petugas', 'tambah', 'Menambahkan data petugas: ' . $request->nama);
+
+
         return redirect()->back()->with('success', 'Data petugas berhasil dibuat!');
     }
 
-    public function update(Request $request, $nip)
-    {
-        $petugas = Petugas::where('nip', $nip)->findOrFail($nip);
+   public function update(Request $request, $nip)
+{
+    $petugas = Petugas::where('nip', $nip)->firstOrFail();
 
-        // Validasi data petugas
-        $request->validate([
-            'nip' => 'required|unique:petugas,nip' . $petugas->nip . ',nip',
-            'nama' => 'required',
-            'alamat' => 'required',
-            'nohp' => ['required', 'regex:/^0[0-9]{9,11}$/'],
-        ], [
-            'nohp.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
-        ]);
+    // Validasi tanpa unique (seperti siswa)
+    $request->validate([
+        'nip' => 'required',
+        'nama' => 'required',
+        'alamat' => 'required',
+        'nohp' => ['required', 'regex:/^0[0-9]{9,11}$/'],
+    ], [
+        'nohp.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
+    ]);
 
-        $petugas->update([
-            'nip' => $request->nip,
-            'nama' => $request->nama,
-            'nohp' => $request->nohp,
-            'alamat' => $request->alamat,
-        ]);
+    $petugas->update([
+        'nip' => $request->nip,
+        'nama' => $request->nama,
+        'nohp' => $request->nohp,
+        'alamat' => $request->alamat,
+    ]);
+
         
         $pengguna = $petugas->pengguna;
         if ($request->username && $request->username !== $pengguna->username) {
@@ -106,20 +112,30 @@ class PetugasController extends Controller
         }
         
         $pengguna->save();
+                catatRiwayat('petugas', 'ubah', 'Mengubah data petugas: ' . $petugas->nama);
+
 
         return redirect()->back()->with('success', 'Data petugas berhasil diperbarui!');
     }
     
     public function destroy($nip)
-    {
-        $petugas = Petugas::findOrFail($nip);
-        $pengguna = $petugas->pengguna;
-
-        $petugas->delete();
-        if ($pengguna) {
-            $pengguna->delete();
-        }
-
-        return redirect()->back()->with('success', 'Data petugas berhasil dihapus!');
+{
+    // Cari berdasarkan NIP dengan where, bukan findOrFail
+    $petugas = Petugas::where('nip', $nip)->first();
+    
+    if (!$petugas) {
+        return redirect()->back()->with('error', 'Data petugas tidak ditemukan!');
     }
+    
+    $pengguna = $petugas->pengguna;
+    
+    $petugas->delete();
+    if ($pengguna) {
+        $pengguna->delete();
+    }
+            catatRiwayat('petugas', 'hapus', 'Menghapus data petugas: ' . $petugas->nama);
+
+    
+    return redirect()->back()->with('success', 'Data petugas berhasil dihapus!');
+}
 }

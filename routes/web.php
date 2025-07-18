@@ -9,6 +9,7 @@ use App\Http\Controllers\BerandaPetugasController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\DataBukuController;
 use App\Http\Controllers\DataPeminjamanController; // <-- Pastikan ini diimpor
+use App\Http\Controllers\StatistikController;
 use App\Http\Controllers\GantiPasswordController;
 use App\Http\Controllers\ImportSiswaController;
 use App\Http\Controllers\PeminjamanController;
@@ -52,8 +53,9 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     
   Route::get('/petugas/datapeminjaman/export', [DataPeminjamanController::class, 'exportPeminjaman'])->name('petugas.datapeminjaman.export');
 
-Route::get('/petugas/statistik', [DataPeminjamanController::class, 'statistik'])->name('petugas.statistik');
-Route::get('/petugas/statistik/export', [DataPeminjamanController::class, 'exportStatistik'])->name('petugas.statistik.export');
+Route::get('/petugas/statistik', [StatistikController::class, 'statistik'])->name('petugas.statistik');
+Route::get('/petugas/statistik/export', [StatistikController::class, 'exportStatistik'])->name('petugas.statistik.export');
+ Route::get('/statistik/search', [StatistikController::class, 'searchPeminjam'])->name('statistik.search');
 
 
 

@@ -66,20 +66,24 @@
                     <i class="fas fa-chart-line mr-2"></i>Statistik
                 </a>
             </div>
-            <!-- Search & Actions -->
+ <!-- Search & Actions -->
             <div class="flex items-center gap-4">
-                <div class="relative flex items-center">
-                    <i class="fas fa-search text-gray-400 absolute left-4 text-base h-5 w-5"></i>
-                    <input type="text" id="search"
-                        class="pl-12 pr-4 py-3 w-80 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Cari statistik...">
-                </div>
+                <form method="GET" action="{{ route('petugas.statistik') }}" class="relative flex items-center w-80">
 
-                <a href="{#}"
-                    class="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-medium transition-colors shadow-md">
-                    <i class="fas fa-download"></i>
-                    Export Data
-                </a>
+                    <!-- Pertahankan filter status jika ada -->
+                    @if($search)
+                        <input type="hidden" name="status" value="{{ $search }}">
+                    @endif
+                    <span class="absolute left-4 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        class="pl-12 pr-4 py-3 w-full bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        placeholder="Cari siswa.."
+                        onkeypress="if(event.key === 'Enter') this.form.submit();">
+                </form>
+
+               
             </div>
         </div>
     </div>
