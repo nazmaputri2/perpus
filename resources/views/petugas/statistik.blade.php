@@ -66,12 +66,12 @@
                     <i class="fas fa-chart-line mr-2"></i>Statistik
                 </a>
             </div>
- <!-- Search & Actions -->
+            <!-- Search & Actions -->
             <div class="flex items-center gap-4">
                 <form method="GET" action="{{ route('petugas.statistik') }}" class="relative flex items-center w-80">
 
                     <!-- Pertahankan filter status jika ada -->
-                    @if($search)
+                    @if ($search)
                         <input type="hidden" name="status" value="{{ $search }}">
                     @endif
                     <span class="absolute left-4 text-gray-400">
@@ -79,11 +79,10 @@
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}"
                         class="pl-12 pr-4 py-3 w-full bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Cari siswa.."
-                        onkeypress="if(event.key === 'Enter') this.form.submit();">
+                        placeholder="Cari siswa.." onkeypress="if(event.key === 'Enter') this.form.submit();">
                 </form>
 
-               
+
             </div>
         </div>
     </div>
@@ -101,7 +100,8 @@
                             class="w-28 px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
                             <option disabled {{ request('kelas') ? '' : 'selected' }}>Pilih Kelas</option>
                             @foreach ($daftarKelas as $kls)
-                                <option value="{{ $kls }}" {{ request('kelas') == $kls ? 'selected' : '' }}>Kelas {{ $kls }}
+                                <option value="{{ $kls }}" {{ request('kelas') == $kls ? 'selected' : '' }}>Kelas
+                                    {{ $kls }}
                                 </option>
                             @endforeach
                         </select>
@@ -109,8 +109,9 @@
                         <select name="bulan" onchange="this.form.submit()"
                             class="w-28 px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
                             <option disabled {{ request('bulan') ? '' : 'selected' }}>Pilih Bulan</option>
-                            @foreach (["januari", "februari", "maret", "april", "mei", "juni", "juli", "agustus", "september", "oktober", "november", "desember"] as $bln)
-                                <option value="{{ $bln }}" {{ request('bulan') == $bln ? 'selected' : '' }}>{{ ucfirst($bln) }}
+                            @foreach (['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'] as $bln)
+                                <option value="{{ $bln }}" {{ request('bulan') == $bln ? 'selected' : '' }}>
+                                    {{ ucfirst($bln) }}
                                 </option>
                             @endforeach
                         </select>
@@ -118,67 +119,85 @@
                 </div>
             </div>
         </form>
-                    @forelse ($peminjamTerbanyak as $index => $siswa)
-                        @php
-                            $rank = $index + 1;
-                            $warna = match ($rank) {
-                                1 => ['bg' => 'from-yellow-50 to-orange-50', 'border' => 'border-yellow-200', 'text' => 'text-yellow-600', 'icon' => 'fa-crown', 'img' => 'gold.png'],
-                                2 => ['bg' => 'from-gray-50 to-slate-50', 'border' => 'border-gray-200', 'text' => 'text-gray-600', 'icon' => 'fa-medal', 'img' => 'silver.png'],
-                                3 => ['bg' => 'from-orange-50 to-amber-50', 'border' => 'border-orange-200', 'text' => 'text-orange-600', 'icon' => 'fa-award', 'img' => 'bronze.png'],
-                                default => ['bg' => 'white', 'border' => 'border-gray-100', 'text' => 'text-gray-700', 'icon' => null, 'img' => null]
-                            };
-                        @endphp
-                        <!-- Ranking Cards -->
-                        <div class="space-y-4">
-                            <!-- Rank 1 - Gold -->
-                            <div
-                                class="bg-gradient-to-r from-gray-50 to-orange-50 rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
-                                <div class="flex items-center gap-6">
-                                    <!-- Rank Badge -->
-                                    <div class="relative">
-                                        <div
-                                            class="w-16 h-16  {{ $rank <= 3 ? 'bg-gradient-to-r' : 'bg-gray-100' }} rounded-2xl flex items-center justify-center shadow-lg">
-                                            @if ($warna['icon'])
-                                                <i class="fa-solid {{ $warna['icon'] }} text-white text-2xl"></i>
-                                            @else
-                                                <span class="text-2xl font-bold text-gray-600">{{ $rank }}</span>
-                                            @endif
-                                        </div>
-                                        <div
-                                            class="absolute -top-2 -right-2 w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-bold text-sm">{{ $rank }}</span>
-                                        </div>
-                                    </div>
-                                    <!-- Student Info -->
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="text-xl font-bold text-gray-900 mb-1">{{ $siswa->nama_siswa }}</h4>
-                                                <div class="flex items-center gap-4">
-                                                    <span
-                                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                                                        Kelas {{ $siswa->kelas_siswa }}
-                                                    </span>
-                                                    <span class="text-gray-600">NIS: {{ $siswa->nis_siswa }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-3xl font-bold {{ $warna['text'] ?? 'text-gray-700' }} mb-1">
-                                                    {{ $siswa->jumlah }}
-                                                </p>
-                                                <p class="text-sm text-gray-600">Buku Dipinjam</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Trophy Icon -->
+        @forelse ($peminjamTerbanyak as $index => $siswa)
+            @php
+                $rank = $index + 1;
+                $warna = match ($rank) {
+                    1 => [
+                        'bg' => 'from-yellow-50 to-orange-50',
+                        'border' => 'border-yellow-200',
+                        'text' => 'text-yellow-600',
+                        'icon' => 'fa-crown',
+                        'img' => 'gold.png',
+                    ],
+                    2 => [
+                        'bg' => 'from-gray-50 to-slate-50',
+                        'border' => 'border-gray-200',
+                        'text' => 'text-gray-600',
+                        'icon' => 'fa-medal',
+                        'img' => 'silver.png',
+                    ],
+                    3 => [
+                        'bg' => 'from-orange-50 to-amber-50',
+                        'border' => 'border-orange-200',
+                        'text' => 'text-orange-600',
+                        'icon' => 'fa-award',
+                        'img' => 'bronze.png',
+                    ],
+                    default => [
+                        'bg' => 'white',
+                        'border' => 'border-gray-100',
+                        'text' => 'text-gray-700',
+                        'icon' => null,
+                        'img' => null,
+                    ],
+                };
+            @endphp
+                <!-- Ranking Cards -->
+                <div class="space-y-4">
+                    <!-- Rank 1 - Gold -->
+                    <div
+                        class="bg-gradient-to-r from-gray-50 to-orange-50 rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center gap-6">
+                            <!-- Rank Badge -->
+                            <div class="relative">
+                                <div
+                                    class="w-16 h-16  {{ $rank <= 3 ? 'bg-gradient-to-r' : 'bg-gray-100' }} rounded-2xl flex items-center justify-center shadow-lg">
                                     @if ($warna['img'])
-                                        <div class="w-12 h-12">
-                                            <img src="{{ asset('images/' . $warna['img']) }}" alt="Trophy" class="w-full h-full object-contain">
-                                        </div>
+                                        <img src="{{ asset('images/' . $warna['img']) }}" alt="Rank"
+                                            class="w-8 h-8 object-contain">
+                                    @else
+                                        <span class="text-2xl font-bold text-gray-600">{{ $rank }}</span>
                                     @endif
+
+                                </div>
+                                
+                            </div>
+                            <!-- Student Info -->
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="text-xl font-bold text-gray-900 mb-1">{{ $siswa->nama_siswa }}</h4>
+                                        <div class="flex items-center gap-4">
+                                            <span
+                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                                Kelas {{ $siswa->kelas_siswa }}
+                                            </span>
+                                            <span class="text-gray-600">NIS: {{ $siswa->nis_siswa }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-3xl font-bold {{ $warna['text'] ?? 'text-gray-700' }} mb-1">
+                                            {{ $siswa->jumlah }}
+                                        </p>
+                                        <p class="text-sm text-gray-600">Buku Dipinjam</p>
+                                    </div>
                                 </div>
                             </div>
-                    @empty
+                            
+                        </div>
+                    </div>
+                @empty
 
                 <!-- Empty State -->
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
@@ -193,30 +212,30 @@
                         Reset Filter
                     </a>
                 </div>
-            @endforelse
+        @endforelse
 
-            <script>
-                // Filter functionality
-                document.getElementById('filter-kelas').addEventListener('change', function () {
-                    // Add filter logic here
-                    console.log('Filter kelas:', this.value);
+        <script>
+            // Filter functionality
+            document.getElementById('filter-kelas').addEventListener('change', function() {
+                // Add filter logic here
+                console.log('Filter kelas:', this.value);
+            });
+            document.getElementById('filter-bulan').addEventListener('change', function() {
+                // Add filter logic here
+                console.log('Filter bulan:', this.value);
+            });
+            // Search functionality
+            document.getElementById('search').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.space-y-4 > div:not(.text-center)');
+                cards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
-                document.getElementById('filter-bulan').addEventListener('change', function () {
-                    // Add filter logic here
-                    console.log('Filter bulan:', this.value);
-                });
-                // Search functionality
-                document.getElementById('search').addEventListener('input', function (e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const cards = document.querySelectorAll('.space-y-4 > div:not(.text-center)');
-                    cards.forEach(card => {
-                        const text = card.textContent.toLowerCase();
-                        if (text.includes(searchTerm)) {
-                            card.style.display = '';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            </script>
-@endsection
+            });
+        </script>
+    @endsection
