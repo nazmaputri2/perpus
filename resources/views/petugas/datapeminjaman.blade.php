@@ -19,7 +19,7 @@
            class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer {{ $currentFilter === 'total' ? 'ring-2 ring-blue-500 border-blue-300' : '' }}">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-600">Total Peminjaman</p>
+                    <p class="text-sm font-medium text-gray-600">Sudah Dikembalikan</p>
                     <p class="text-3xl font-bold text-blue-600">{{ $stats['total'] }}</p>
                 </div>
                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">

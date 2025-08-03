@@ -290,19 +290,26 @@
             renderSiswaList(siswaData);
 
             // Isi opsi filter kelas siswa secara dinamis
-            if (filterKelasSiswaEl) {
-                filterKelasSiswaEl.innerHTML = '<option value="">Semua Kelas</option>';
-                const uniqueKelas = [...new Set(siswaData.map(siswa => siswa.kelas_siswa))].sort();
-                uniqueKelas.forEach(kelas => {
-                    if (kelas) {
-                        const option = document.createElement('option');
-                        option.value = kelas;
-                        option.textContent = `Kelas ${kelas}`;
-                        filterKelasSiswaEl.appendChild(option);
-                    }
-                });
+if (filterKelasSiswaEl) {
+    filterKelasSiswaEl.innerHTML = '<option value="">Cari Anggota</option>';
+    const uniqueKelas = [...new Set(siswaData.map(siswa => siswa.kelas_siswa))].sort();
+    
+    uniqueKelas.forEach(kelas => {
+        if (kelas) {
+            const option = document.createElement('option');
+            option.value = kelas;
+
+            // Jika kelas adalah Guru, tampilkan tanpa "Kelas"
+            if (kelas.toLowerCase() === 'guru') {
+                option.textContent = kelas; // tampilkan apa adanya
+            } else {
+                option.textContent = `Kelas ${kelas}`;
             }
 
+            filterKelasSiswaEl.appendChild(option);
+        }
+    });
+}
             // Tampilkan modal pilih siswa (menggunakan Flowbite atau manual)
             if (pilihSiswaModalTargetEl) {
                 if (isFlowbiteAvailable()) {

@@ -40,7 +40,7 @@ class DataPeminjamanController extends Controller
 
         // Hitung statistik untuk semua status, sebelum filter diterapkan
         $stats = [
-            'total' => Peminjaman::count(),
+            'total' => Peminjaman::where('status_peminjaman', 'Dikembalikan')->count(),
             'dipinjam' => Peminjaman::where('status_peminjaman', 'Dipinjam')->count(),
             'terlambat' => Peminjaman::where('status_peminjaman', 'Terlambat')->count(),
             'selesaiHariIni' => Peminjaman::where('status_peminjaman', 'Dikembalikan')
@@ -58,29 +58,32 @@ class DataPeminjamanController extends Controller
         \Log::info('Status Filter: ' . $statusFilter);
 
         // Aplikasikan filter berdasarkan status
-        if ($statusFilter && $statusFilter !== 'total') {
-            switch ($statusFilter) {
-                case 'Dipinjam':
-                    $query->where('status_peminjaman', 'Dipinjam');
-                    break;
-                case 'Terlambat':
-                    $query->where('status_peminjaman', 'Terlambat');
-                    break;
-                case 'SelesaiHariIni':
-                    // Filter berdasarkan status 'Dikembalikan' dan tanggal update hari ini
-                    $query->where('status_peminjaman', 'Dikembalikan')
-                        ->whereDate('updated_at', Carbon::today());
-                    break;
-                case 'Dikembalikan':
-                    $query->where('status_peminjaman', 'Dikembalikan');
-                    break;
-                case 'Proses':
-                    $query->where('status_peminjaman', 'Proses');
-                    break;
-            }
+if ($statusFilter) {
+    if ($statusFilter === 'total') {
+        // ✅ Jika filter total dipilih, tampilkan hanya Dikembalikan
+        $query->where('status_peminjaman', 'Dikembalikan');
+    } else {
+        // ✅ Filter lain tetap seperti semula
+        switch ($statusFilter) {
+            case 'Dipinjam':
+                $query->where('status_peminjaman', 'Dipinjam');
+                break;
+            case 'Terlambat':
+                $query->where('status_peminjaman', 'Terlambat');
+                break;
+            case 'SelesaiHariIni':
+                $query->where('status_peminjaman', 'Dikembalikan')
+                    ->whereDate('updated_at', Carbon::today());
+                break;
+            case 'Dikembalikan':
+                $query->where('status_peminjaman', 'Dikembalikan');
+                break;
+            case 'Proses':
+                $query->where('status_peminjaman', 'Proses');
+                break;
         }
-        // Jika status filter adalah 'total' atau tidak ada, tampilkan semua data (tidak ada filter tambahan)
-
+    }
+}
         // Filter berdasarkan pencarian (search input)
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
@@ -98,10 +101,11 @@ class DataPeminjamanController extends Controller
 
         // Debug: Log query SQL yang akan dijalankan
         \Log::info('Query SQL: ' . $query->toSql());
+
         \Log::info('Query Bindings: ', $query->getBindings());
 
         // Urutkan data terbaru dan lakukan paginasi, dengan mempertahankan query string
-        $peminjaman = $query->latest('created_at')->paginate(10)->withQueryString();
+        $peminjaman = $query->latest('created_at')->paginate(30)->withQueryString();
 
         // Debug: Log jumlah data yang ditemukan
         \Log::info('Jumlah data ditemukan: ' . $peminjaman->total());

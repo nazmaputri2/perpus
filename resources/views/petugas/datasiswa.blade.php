@@ -157,9 +157,11 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-chalkboard-teacher text-gray-800 text-sm"></i>
-                                    <span class="text-sm font-medium text-gray-800">Kelas {{ $student->kelas_siswa }}</span>
+                                    <span class="text-sm font-medium text-gray-800">
+                                        {{ strtolower($student->kelas_siswa) === 'guru' ? 'Guru' : 'Kelas ' . $student->kelas_siswa }}
+                                    </span>
                                 </div>
-                            </td>
+                </td>
 
                             {{-- No Hp --}}
                             <td class="px-6 py-4">

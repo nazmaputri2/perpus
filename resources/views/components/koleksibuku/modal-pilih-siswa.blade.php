@@ -19,9 +19,9 @@
                 <p class="text-sm text-gray-500 mb-4">Buku: <span id="pilihSiswaBukuJudul" class="font-semibold text-gray-700"></span></p>
 
                 <div class="mb-4">
-                    <label for="filterKelasSiswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Filter Kelas:</label>
+                    <label for="filterKelasSiswa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Filter :</label>
                     <select id="filterKelasSiswa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                        <option value="">Semua Kelas</option>
+                        <option value=""></option>
                         {{-- Opsi kelas akan dimuat secara dinamis oleh JavaScript --}}
                     </select>
                 </div>
