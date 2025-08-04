@@ -71,7 +71,7 @@
                 <span class="text-sm text-gray-500">{{ count($students) }} siswa terdaftar</span>
             </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto pb-6">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
@@ -193,90 +193,107 @@
                 </tbody>
             </table>
 
-            {{-- Improved Pagination --}}
-            @if ($students->hasPages())
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-t border-gray-200">
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        {{-- Info Halaman --}}
-                        <div class="text-sm text-gray-600">
-                            <span class="font-medium">Menampilkan {{ $students->firstItem() ?? 0 }}-{{ $students->lastItem() ?? 0 }}</span>
-                            dari
-                            <span class="font-medium">{{ $students->total() }} siswa</span>
-                        </div>
+{{-- Pagination Modern --}}
+@if ($students->hasPages())
+    <div class="flex flex-col items-center mt-8 space-y-1">
+        {{-- Info Halaman --}}
+        <div class="text-sm text-gray-600">
+            Menampilkan <span class="font-medium">{{ $students->firstItem() ?? 0 }}-{{ $students->lastItem() ?? 0 }}</span>
+            dari <span class="font-medium">{{ $students->total() }}</span> siswa
+        </div>
 
-                        {{-- Navigation Buttons --}}
-                        <nav class="flex items-center space-x-1">
-                            {{-- Previous Button --}}
-                            @if ($students->onFirstPage())
-                                <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-l-xl cursor-not-allowed shadow-sm">
-                                    <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
-                                </span>
-                            @else
-                                <a href="{{ $students->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                                   class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
-                                    <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
-                                </a>
-                            @endif
+        {{-- Navigasi Desktop --}}
+        <nav class="flex items-center justify-center">
+            <div class="flex items-center  space-x-1">
+                {{-- Tombol Sebelumnya --}}
+                @if ($students->onFirstPage())
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        ← Sebelumnya
+                    </span>
+                @else
+                    <a href="{{ $students->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        ← Sebelumnya
+                    </a>
+                @endif
 
-                            {{-- Page Numbers --}}
-                            <div class="flex">
-                                @php
-                                    $start = max(1, $students->currentPage() - 2);
-                                    $end = min($students->lastPage(), $students->currentPage() + 2);
-                                @endphp
+                {{-- Nomor Halaman --}}
+                <div class="flex items-center space-x-1 mx-4">
+                    @php
+                        $start = max(1, $students->currentPage() - 2);
+                        $end = min($students->lastPage(), $students->currentPage() + 2);
+                    @endphp
 
-                                {{-- First page if not in range --}}
-                                @if ($start > 1)
-                                    <a href="{{ $students->url(1) }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
-                                        1
-                                    </a>
-                                    @if ($start > 2)
-                                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">...</span>
-                                    @endif
-                                @endif
+                    @if ($start > 1)
+                        <a href="{{ $students->url(1) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition">
+                            1
+                        </a>
+                        @if ($start > 2)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                    @endif
 
-                                {{-- Page range --}}
-                                @for ($page = $start; $page <= $end; $page++)
-                                    @if ($page == $students->currentPage())
-                                        <span class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r bg-blue-500 hover:bg-blue-600 shadow-lg transform scale-110 z-10 relative">
-                                            {{ $page }}
-                                        </span>
-                                    @else
-                                        <a href="{{ $students->url($page) }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                                           class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
-                                            {{ $page }}
-                                        </a>
-                                    @endif
-                                @endfor
+                    @for ($page = $start; $page <= $end; $page++)
+                        @if ($page == $students->currentPage())
+                            <span class="w-8 h-8 flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $students->url($page) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                               class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endfor
 
-                                {{-- Last page if not in range --}}
-                                @if ($end < $students->lastPage())
-                                    @if ($end < $students->lastPage() - 1)
-                                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">...</span>
-                                    @endif
-                                    <a href="{{ $students->url($students->lastPage()) }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
-                                        {{ $students->lastPage() }}
-                                    </a>
-                                @endif
-                            </div>
-
-                            {{-- Next Button --}}
-                            @if ($students->hasMorePages())
-                                <a href="{{ $students->nextPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                                   class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
-                                    Berikutnya<i class="fas fa-chevron-right ml-1"></i>
-                                </a>
-                            @else
-                                <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-r-xl cursor-not-allowed shadow-sm">
-                                    Berikutnya<i class="fas fa-chevron-right ml-1"></i>
-                                </span>
-                            @endif
-                        </nav>
-                    </div>
+                    @if ($end < $students->lastPage())
+                        @if ($end < $students->lastPage() - 1)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                        <a href="{{ $students->url($students->lastPage()) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition">
+                            {{ $students->lastPage() }}
+                        </a>
+                    @endif
                 </div>
+
+                {{-- Tombol Berikutnya --}}
+                @if ($students->hasMorePages())
+                    <a href="{{ $students->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        Berikutnya →
+                    </a>
+                @else
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        Berikutnya →
+                    </span>
+                @endif
+            </div>
+        </nav>
+
+        {{-- Navigasi Mobile --}}
+        <div class="sm:hidden flex items-center justify-center space-x-4">
+            @if (!$students->onFirstPage())
+                <a href="{{ $students->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    ←
+                </a>
             @endif
+
+            <span class="text-sm text-gray-600 px-4 py-2 bg-gray-100 rounded-full">
+                {{ $students->currentPage() }} / {{ $students->lastPage() }}
+            </span>
+
+            @if ($students->hasMorePages())
+                <a href="{{ $students->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    →
+                </a>
+            @endif
+        </div>
+    </div>
+@endif
 
             {{-- Empty State --}}
             @if ($students->isEmpty())

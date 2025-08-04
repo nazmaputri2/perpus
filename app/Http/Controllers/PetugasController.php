@@ -26,7 +26,7 @@ public function index(Request $request)
     }
 
     // Paginate 10 data per halaman dan sertakan query string agar search tetap terbawa
-    $petugas = $query->orderBy('nama')->paginate(10)->withQueryString();
+    $petugas = $query->orderBy('nama')->paginate(25)->withQueryString();
 
     return view('petugas.datapetugas', compact('petugas'));
 }

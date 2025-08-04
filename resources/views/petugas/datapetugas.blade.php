@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto pb-6">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
@@ -195,81 +195,108 @@
                     @endforelse
                 </tbody>
             </table>
-            {{-- Pagination Modern --}}
+{{-- Pagination --}}
 @if ($petugas->hasPages())
-    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-t border-gray-200">
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-            {{-- Info Halaman --}}
-            <div class="text-sm text-gray-600">
-                <span class="font-medium">Menampilkan {{ $petugas->firstItem() ?? 0 }} - {{ $petugas->lastItem() ?? 0 }}</span>
-                dari
-                <span class="font-medium">{{ $petugas->total() }} petugas</span>
-            </div>
+    <div class="flex flex-col items-center mt-8 space-y-1">
+        {{-- Info Halaman --}}
+        <div class="text-sm text-gray-600">
+            Menampilkan <span class="font-medium">{{ $petugas->firstItem() ?? 0 }} - {{ $petugas->lastItem() ?? 0 }}</span>
+            dari <span class="font-medium">{{ $petugas->total() }}</span> petugas
+        </div>
 
-            {{-- Navigation --}}
-            <nav class="flex items-center space-x-1">
+        {{-- Navigation --}}
+        <nav class="flex items-center justify-center">
+            <div class="flex items-center space-x-1">
                 {{-- Tombol Sebelumnya --}}
                 @if ($petugas->onFirstPage())
-                    <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-l-xl cursor-not-allowed shadow-sm">
-                        <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        ← Sebelumnya
                     </span>
                 @else
-                    <a href="{{ $petugas->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-xl hover:bg-blue-100 transition">
-                        <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
+                    <a href="{{ $petugas->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        ← Sebelumnya
                     </a>
                 @endif
 
                 {{-- Nomor Halaman --}}
-                @php
-                    $start = max(1, $petugas->currentPage() - 2);
-                    $end = min($petugas->lastPage(), $petugas->currentPage() + 2);
-                @endphp
+                <div class="flex items-center space-x-1 mx-4">
+                    @php
+                        $start = max(1, $petugas->currentPage() - 2);
+                        $end = min($petugas->lastPage(), $petugas->currentPage() + 2);
+                    @endphp
 
-                @if ($start > 1)
-                    <a href="{{ $petugas->url(1) }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-blue-100 transition">1</a>
-                    @if ($start > 2)
-                        <span class="px-3 py-2 text-sm text-gray-400">...</span>
+                    @if ($start > 1)
+                        <a href="{{ $petugas->url(1) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition">
+                            1
+                        </a>
+                        @if ($start > 2)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
                     @endif
-                @endif
 
-                @for ($page = $start; $page <= $end; $page++)
-                    @if ($page == $petugas->currentPage())
-                        <span class="px-4 py-2 text-sm font-semibold text-white bg-blue-500 shadow-md rounded-md">{{ $page }}</span>
-                    @else
-                        <a href="{{ $petugas->url($page) }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                           class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-blue-100 transition">
-                            {{ $page }}
+                    @for ($page = $start; $page <= $end; $page++)
+                        @if ($page == $petugas->currentPage())
+                            <span class="w-8 h-8 flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $petugas->url($page) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                               class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endfor
+
+                    @if ($end < $petugas->lastPage())
+                        @if ($end < $petugas->lastPage() - 1)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                        <a href="{{ $petugas->url($petugas->lastPage()) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition">
+                            {{ $petugas->lastPage() }}
                         </a>
                     @endif
-                @endfor
-
-                @if ($end < $petugas->lastPage())
-                    @if ($end < $petugas->lastPage() - 1)
-                        <span class="px-3 py-2 text-sm text-gray-400">...</span>
-                    @endif
-                    <a href="{{ $petugas->url($petugas->lastPage()) }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-blue-100 transition">
-                        {{ $petugas->lastPage() }}
-                    </a>
-                @endif
+                </div>
 
                 {{-- Tombol Berikutnya --}}
                 @if ($petugas->hasMorePages())
-                    <a href="{{ $petugas->nextPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-xl hover:bg-blue-100 transition">
-                        Berikutnya<i class="fas fa-chevron-right ml-1"></i>
+                    <a href="{{ $petugas->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        Berikutnya →
                     </a>
                 @else
-                    <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-r-xl cursor-not-allowed shadow-sm">
-                        Berikutnya<i class="fas fa-chevron-right ml-1"></i>
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        Berikutnya →
                     </span>
                 @endif
-            </nav>
+            </div>
+        </nav>
+
+        {{-- Mobile Responsive --}}
+        <div class="sm:hidden flex items-center justify-center space-x-4">
+            @if (!$petugas->onFirstPage())
+                <a href="{{ $petugas->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    ←
+                </a>
+            @endif
+
+            <span class="text-sm text-gray-600 px-4 py-2 bg-gray-100 rounded-full">
+                {{ $petugas->currentPage() }} / {{ $petugas->lastPage() }}
+            </span>
+
+            @if ($petugas->hasMorePages())
+                <a href="{{ $petugas->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    →
+                </a>
+            @endif
         </div>
     </div>
 @endif
+
 
         </div>
     </div>

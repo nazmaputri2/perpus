@@ -105,7 +105,7 @@ if ($statusFilter) {
         \Log::info('Query Bindings: ', $query->getBindings());
 
         // Urutkan data terbaru dan lakukan paginasi, dengan mempertahankan query string
-        $peminjaman = $query->latest('created_at')->paginate(30)->withQueryString();
+        $peminjaman = $query->latest('created_at')->paginate(25)->withQueryString();
 
         // Debug: Log jumlah data yang ditemukan
         \Log::info('Jumlah data ditemukan: ' . $peminjaman->total());
@@ -219,10 +219,12 @@ if ($statusFilter) {
  * Placeholder untuk fitur ekspor data.
  * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
  */
-             public function exportPeminjaman()
+             public function export(Request $request)
 {
-    $peminjaman = Peminjaman::with(['siswa', 'buku'])->latest()->get();
-    return Excel::download(new DataPeminjamanExport($peminjaman), 'data_peminjaman.xlsx');
+    $bulan = $request->bulan;
+    $status = $request->status;
+
+    return Excel::download(new DataPeminjamanExport($bulan, $status), 'data_peminjaman.xlsx');
 }
 
 

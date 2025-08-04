@@ -74,7 +74,7 @@
             <span id="buku-count" class="text-sm text-gray-500">{{ count($buku) }} buku ditemukan</span>
         </div>
     </div>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto pb-6">
         <table class="w-full">
             <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -153,80 +153,104 @@
             </tbody>
         </table>
 
-        {{-- Pagination --}}
+{{-- Pagination --}}
 @if ($buku->hasPages())
-    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-6 border-t border-gray-200">
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-            {{-- Info Halaman --}}
-            <div class="text-sm text-gray-600">
-                <span class="font-medium">Menampilkan {{ $buku->firstItem() ?? 0 }}-{{ $buku->lastItem() ?? 0 }}</span>
-                dari
-                <span class="font-medium">{{ $buku->total() }} buku</span>
-            </div>
+    <div class="flex flex-col items-center mt-8 space-y-1">
+        {{-- Info Halaman --}}
+        <div class="text-sm text-gray-600">
+            Menampilkan <span class="font-medium">{{ $buku->firstItem() ?? 0 }}-{{ $buku->lastItem() ?? 0 }}</span>
+            dari <span class="font-medium">{{ $buku->total() }}</span> buku
+        </div>
 
-            {{-- Navigasi --}}
-            <nav class="flex items-center space-x-1">
+        {{-- Navigation --}}
+        <nav class="flex items-center justify-center">
+            <div class="flex items-center space-x-1">
                 {{-- Tombol Sebelumnya --}}
                 @if ($buku->onFirstPage())
-                    <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-l-xl cursor-not-allowed shadow-sm">
-                        <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        ← Sebelumnya
                     </span>
                 @else
-                    <a href="{{ $buku->previousPageUrl() }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-xl hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
-                        <i class="fas fa-chevron-left mr-1"></i>Sebelumnya
+                    <a href="{{ $buku->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        ← Sebelumnya
                     </a>
                 @endif
 
                 {{-- Nomor Halaman --}}
-                @php
-                    $start = max(1, $buku->currentPage() - 2);
-                    $end = min($buku->lastPage(), $buku->currentPage() + 2);
-                @endphp
+                <div class="flex items-center space-x-1 mx-4">
+                    @php
+                        $start = max(1, $buku->currentPage() - 2);
+                        $end = min($buku->lastPage(), $buku->currentPage() + 2);
+                    @endphp
 
-                @if ($start > 1)
-                    <a href="{{ $buku->url(1) }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
-                        1
-                    </a>
-                    @if ($start > 2)
-                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">...</span>
+                    @if ($start > 1)
+                        <a href="{{ $buku->url(1) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
+                            1
+                        </a>
+                        @if ($start > 2)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
                     @endif
-                @endif
 
-                @for ($page = $start; $page <= $end; $page++)
-                    @if ($page == $buku->currentPage())
-                        <span class="px-4 py-2 text-sm font-semibold text-white bg-blue-500 shadow-md scale-110 rounded-md">{{ $page }}</span>
-                    @else
-                        <a href="{{ $buku->url($page) }}"
-                           class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
-                            {{ $page }}
+                    @for ($page = $start; $page <= $end; $page++)
+                        @if ($page == $buku->currentPage())
+                            <span class="w-8 h-8 flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $buku->url($page) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                               class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endfor
+
+                    @if ($end < $buku->lastPage())
+                        @if ($end < $buku->lastPage() - 1)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                        <a href="{{ $buku->url($buku->lastPage()) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
+                            {{ $buku->lastPage() }}
                         </a>
                     @endif
-                @endfor
-
-                @if ($end < $buku->lastPage())
-                    @if ($end < $buku->lastPage() - 1)
-                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">...</span>
-                    @endif
-                    <a href="{{ $buku->url($buku->lastPage()) }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
-                        {{ $buku->lastPage() }}
-                    </a>
-                @endif
+                </div>
 
                 {{-- Tombol Berikutnya --}}
                 @if ($buku->hasMorePages())
-                    <a href="{{ $buku->nextPageUrl() }}"
-                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-xl hover:bg-blue-50 hover:text-blue-700 transition transform hover:scale-105 shadow-sm">
-                        Berikutnya<i class="fas fa-chevron-right ml-1"></i>
+                    <a href="{{ $buku->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        Berikutnya →
                     </a>
                 @else
-                    <span class="px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-r-xl cursor-not-allowed shadow-sm">
-                        Berikutnya<i class="fas fa-chevron-right ml-1"></i>
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        Berikutnya →
                     </span>
                 @endif
-            </nav>
+            </div>
+        </nav>
+
+        {{-- Mobile Responsive --}}
+        <div class="sm:hidden flex items-center justify-center space-x-4">
+            @if (!$buku->onFirstPage())
+                <a href="{{ $buku->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    ←
+                </a>
+            @endif
+
+            <span class="text-sm text-gray-600 px-4 py-2 bg-gray-100 rounded-full">
+                {{ $buku->currentPage() }} / {{ $buku->lastPage() }}
+            </span>
+
+            @if ($buku->hasMorePages())
+                <a href="{{ $buku->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    →
+                </a>
+            @endif
         </div>
     </div>
 @endif

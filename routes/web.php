@@ -51,7 +51,7 @@ Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     // Menghapus route sebelumnya yang hanya me-return view
     Route::get('/datapeminjaman', action: [DataPeminjamanController::class, 'index'])->name('petugas.datapeminjaman');
     
-  Route::get('/petugas/datapeminjaman/export', [DataPeminjamanController::class, 'exportPeminjaman'])->name('petugas.datapeminjaman.export');
+Route::get('/datapeminjaman/export', [DataPeminjamanController::class, 'export'])->name('peminjaman.export');
 
 Route::get('/petugas/statistik', [StatistikController::class, 'statistik'])->name('petugas.statistik');
 Route::get('/petugas/statistik/export', [StatistikController::class, 'exportStatistik'])->name('petugas.statistik.export');

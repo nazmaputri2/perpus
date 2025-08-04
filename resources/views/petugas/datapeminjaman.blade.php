@@ -3,6 +3,7 @@
 @push('modals')
     @include('components.modal-ubah-sandi')
     @include('components.modal-keluar')
+    @include('components.datapeminjaman.modal-export-data')
 @endpush
 @section('content')
     <!-- Stats Cards -->
@@ -153,11 +154,13 @@
                         placeholder="Cari peminjam / siswa / buku"
                         onkeypress="if(event.key === 'Enter') this.form.submit();">
                 </form>
-               <a href="{{ route('petugas.datapeminjaman.export') }}"
-   class="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-medium transition-colors shadow-md">
+               <button type="button"
+    data-modal-target="exportPeminjamanModal"
+    data-modal-toggle="exportPeminjamanModal"
+    class="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-medium transition-colors shadow-md">
     <i class="fas fa-download"></i>
     Export Peminjaman
-</a>
+</button>
 
             </div>
         </div>
@@ -359,13 +362,114 @@
             </div>
         @endforelse
     </div>
-
-    <!-- Pagination -->
-    {{-- @if (method_exists($peminjaman, 'links'))
-        <div class="mt-8">
-            {{ $peminjaman->links('components.pagination') }}
+    
+<!-- Pagination -->
+@if ($peminjaman->hasPages())
+    <div class="flex flex-col items-center mt-8 space-y-1">
+        {{-- Info Halaman --}}
+        <div class="text-sm text-gray-600">
+            Menampilkan <span class="font-medium">{{ $peminjaman->firstItem() ?? 0 }}-{{ $peminjaman->lastItem() ?? 0 }}</span>
+            dari <span class="font-medium">{{ $peminjaman->total() }}</span> peminjaman
         </div>
-    @endif --}}
+
+        {{-- Navigation --}}
+        <nav class="flex items-center justify-center">
+            <div class="flex items-center space-x-1">
+                {{-- Tombol Sebelumnya --}}
+                @if ($peminjaman->onFirstPage())
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        ← Sebelumnya
+                    </span>
+                @else
+                    <a href="{{ $peminjaman->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        ← Sebelumnya
+                    </a>
+                @endif
+
+                {{-- Nomor Halaman --}}
+                <div class="flex items-center space-x-1 mx-4">
+                    @php
+                        $start = max(1, $peminjaman->currentPage() - 2);
+                        $end = min($peminjaman->lastPage(), $peminjaman->currentPage() + 2);
+                    @endphp
+
+                    {{-- Halaman pertama jika tidak terlihat --}}
+                    @if ($start > 1)
+                        <a href="{{ $peminjaman->url(1) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
+                            1
+                        </a>
+                        @if ($start > 2)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                    @endif
+
+                    {{-- Halaman di sekitar halaman aktif --}}
+                    @for ($page = $start; $page <= $end; $page++)
+                        @if ($page == $peminjaman->currentPage())
+                            <span class="w-8 h-8 flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $peminjaman->url($page) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                               class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endfor
+
+                    {{-- Halaman terakhir jika tidak terlihat --}}
+                    @if ($end < $peminjaman->lastPage())
+                        @if ($end < $peminjaman->lastPage() - 1)
+                            <span class="px-2 text-gray-400">...</span>
+                        @endif
+                        <a href="{{ $peminjaman->url($peminjaman->lastPage()) }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                           class="w-8 h-8 flex items-center justify-center text-sm text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200">
+                            {{ $peminjaman->lastPage() }}
+                        </a>
+                    @endif
+                </div>
+
+                {{-- Tombol Berikutnya --}}
+                @if ($peminjaman->hasMorePages())
+                    <a href="{{ $peminjaman->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                       class="px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        Berikutnya →
+                    </a>
+                @else
+                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                        Berikutnya →
+                    </span>
+                @endif
+            </div>
+        </nav>
+
+        {{-- Mobile Responsive - Versi Sederhana untuk Layar Kecil --}}
+        <div class="sm:hidden flex items-center justify-center space-x-4">
+            {{-- Previous Mobile --}}
+            @if (!$peminjaman->onFirstPage())
+                <a href="{{ $peminjaman->previousPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    ←
+                </a>
+            @endif
+
+            {{-- Current Page Info --}}
+            <span class="text-sm text-gray-600 px-4 py-2 bg-gray-100 rounded-full">
+                {{ $peminjaman->currentPage() }} / {{ $peminjaman->lastPage() }}
+            </span>
+
+            {{-- Next Mobile --}}
+            @if ($peminjaman->hasMorePages())
+                <a href="{{ $peminjaman->nextPageUrl() }}{{ request()->getQueryString() ? '&' . http_build_query(request()->except('page')) : '' }}"
+                   class="w-10 h-10 flex items-center justify-center text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                    →
+                </a>
+            @endif
+        </div>
+    </div>
+@endif
 @endsection
 
 @push('scripts')
