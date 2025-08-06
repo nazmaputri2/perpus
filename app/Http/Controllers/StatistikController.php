@@ -72,7 +72,7 @@ class StatistikController extends Controller
             $statQuery->whereMonth('tanggal_peminjaman', $bulanAngka);
         }
 
-        $all = $statQuery->count();
+        $all = (clone $statQuery)->where('status_peminjaman', 'Dikembalikan')->count();
         $dipinjam = (clone $statQuery)->where('status_peminjaman', 'Dipinjam')->count();
         $terlambat = (clone $statQuery)->where('status_peminjaman', 'Terlambat')->count();
         $selesaiHariIni = (clone $statQuery)

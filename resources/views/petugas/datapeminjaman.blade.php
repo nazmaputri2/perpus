@@ -295,7 +295,7 @@
                                     </span>
 @if ($data->keterangan)
     <p class="text-sm mt-1 
-        {{ strtolower($data->keterangan) == 'terlambat' ? 'text-red-600' : 'text-blue-600' }}">
+        {{ str_contains(strtolower($data->keterangan), 'terlambat') ? 'text-red-600' : 'text-blue-600' }}">
         {{ $data->keterangan }}
     </p>
 @endif

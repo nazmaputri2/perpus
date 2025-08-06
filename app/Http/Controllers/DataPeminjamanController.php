@@ -58,32 +58,33 @@ class DataPeminjamanController extends Controller
         \Log::info('Status Filter: ' . $statusFilter);
 
         // Aplikasikan filter berdasarkan status
-if ($statusFilter) {
-    if ($statusFilter === 'total') {
-        // ✅ Jika filter total dipilih, tampilkan hanya Dikembalikan
-        $query->where('status_peminjaman', 'Dikembalikan');
-    } else {
-        // ✅ Filter lain tetap seperti semula
-        switch ($statusFilter) {
-            case 'Dipinjam':
-                $query->where('status_peminjaman', 'Dipinjam');
-                break;
-            case 'Terlambat':
-                $query->where('status_peminjaman', 'Terlambat');
-                break;
-            case 'SelesaiHariIni':
-                $query->where('status_peminjaman', 'Dikembalikan')
-                    ->whereDate('updated_at', Carbon::today());
-                break;
-            case 'Dikembalikan':
+        if ($statusFilter) {
+            if ($statusFilter === 'total') {
+                // ✅ Jika filter total dipilih, tampilkan hanya Dikembalikan
                 $query->where('status_peminjaman', 'Dikembalikan');
-                break;
-            case 'Proses':
-                $query->where('status_peminjaman', 'Proses');
-                break;
+            } else {
+                // ✅ Filter lain tetap seperti semula
+                switch ($statusFilter) {
+                    case 'Dipinjam':
+                        $query->where('status_peminjaman', 'Dipinjam');
+                        break;
+                    case 'Terlambat':
+                        $query->where('status_peminjaman', 'Terlambat');
+                        break;
+                    case 'SelesaiHariIni':
+                        $query->where('status_peminjaman', 'Dikembalikan')
+                            ->whereDate('updated_at', Carbon::today());
+                        break;
+                    case 'Dikembalikan':
+                        $query->where('status_peminjaman', 'Dikembalikan');
+                        break;
+                    case 'Proses':
+                        $query->where('status_peminjaman', 'Proses');
+                        break;
+                }
+            }
         }
-    }
-}
+        
         // Filter berdasarkan pencarian (search input)
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
@@ -151,36 +152,38 @@ if ($statusFilter) {
                 catatRiwayat('peminjaman', 'menyetujui', 'Menyetujui peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
             }
 
-} elseif ($aksi === 'selesai') {
-    $peminjaman->status_peminjaman = 'Dikembalikan';
+        } elseif ($aksi === 'selesai') {
+            $peminjaman->status_peminjaman = 'Dikembalikan';
 
-    // Simpan tanggal pengembalian sebagai hari ini
-    $tanggalKembali = now();
-    $peminjaman->tanggal_pengembalian = $tanggalKembali;
+            // Simpan tanggal pengembalian sebagai hari ini
+            $tanggalKembali = now();
+            $peminjaman->tanggal_pengembalian = $tanggalKembali;
 
-    // Hitung batas waktu pengembalian
-    $batasKembali = Carbon::parse($peminjaman->tanggal_peminjaman)->addDays(14);
+            // Hitung batas waktu pengembalian (14 hari dari tanggal peminjaman)
+            $batasKembali = Carbon::parse($peminjaman->tanggal_peminjaman)->addDays(14);
 
-    if ($tanggalKembali->gt($batasKembali)) {
-        $hariTerlambat = $tanggalKembali->diffInDays($batasKembali);
-        $peminjaman->keterangan = 'Terlambat dikembalikan (' . $hariTerlambat . ' hari)';
-    } else {
-        $peminjaman->keterangan = 'Dikembalikan tepat waktu';
-    }
+            // Cek apakah terlambat
+            if ($tanggalKembali->gt($batasKembali)) {
+                // Hitung hari keterlambatan menggunakan startOfDay untuk menghindari desimal
+                $hariTerlambat = $tanggalKembali->startOfDay()->diffInDays($batasKembali->startOfDay());
+                $peminjaman->keterangan = 'Terlambat dikembalikan ' . abs($hariTerlambat) . ' hari';
+            } else {
+                $peminjaman->keterangan = 'Dikembalikan tepat waktu';
+            }
 
-    // Tambah stok buku
-    if ($buku) {
-        $buku->stok += 1;
-        $buku->save();
-    }
+            // Tambah stok buku
+            if ($buku) {
+                $buku->stok += 1;
+                $buku->save();
+            }
 
-    // Simpan data peminjaman yang sudah diperbarui
-    $peminjaman->save();
+            // Simpan data peminjaman yang sudah diperbarui
+            $peminjaman->save();
 
-    // Catat riwayat pengembalian
-    if (function_exists('catatRiwayat')) {
-        catatRiwayat('peminjaman', 'mengembalikan', 'Menyelesaikan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
-    }
+            // Catat riwayat pengembalian
+            if (function_exists('catatRiwayat')) {
+                catatRiwayat('peminjaman', 'mengembalikan', 'Menyelesaikan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
+            }
 
         } elseif ($aksi === 'batal') {
             // Jika status sedang dipinjam atau terlambat, kembalikan stok
@@ -215,17 +218,15 @@ if ($statusFilter) {
         }
     }
 
-/**
- * Placeholder untuk fitur ekspor data.
- * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
- */
-             public function export(Request $request)
-{
-    $bulan = $request->bulan;
-    $status = $request->status;
+    /**
+     * Placeholder untuk fitur ekspor data.
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function export(Request $request)
+    {
+        $bulan = $request->bulan;
+        $status = $request->status;
 
-    return Excel::download(new DataPeminjamanExport($bulan, $status), 'data_peminjaman.xlsx');
-}
-
-
+        return Excel::download(new DataPeminjamanExport($bulan, $status), 'data_peminjaman.xlsx');
+    }
 }
