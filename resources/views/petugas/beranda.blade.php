@@ -247,12 +247,12 @@
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 mb-0.5">Nama Peminjam</p>
                                     {{-- Access nama_siswa from the nested 'siswa' relationship --}}
-                                    <p class="text-xl font-bold text-gray-900">{{ $borrower->siswa->nama_siswa ?? 'N/A' }}</p> 
+                                    <p class="text-xl font-bold text-gray-900">{{ $borrower->anggota->nama_anggota ?? 'N/A' }}</p> 
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 mb-0.5">Kelas</p>
+                                    <p class="text-sm text-gray-500 mb-0.5">Keanggotaan</p>
                                     <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-purple-100 text-purple-800">
-                                        <i class="fas fa-graduation-cap mr-2 text-purple-600" aria-hidden="true"></i>kelas {{ $borrower->siswa->kelas_siswa ?? 'N/A' }}
+                                        <i class="fas fa-graduation-cap mr-2 text-purple-600" aria-hidden="true"></i> {{ $borrower->anggota->keanggotaan ?? 'N/A' }}
                                     </span>
                                 </div>
                                 <div class="md:col-span-2">

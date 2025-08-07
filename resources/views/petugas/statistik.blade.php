@@ -79,7 +79,7 @@
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}"
                         class="pl-12 pr-4 py-3 w-full bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Cari siswa.." onkeypress="if(event.key === 'Enter') this.form.submit();">
+                        placeholder="Cari anggota.." onkeypress="if(event.key === 'Enter') this.form.submit();">
                 </form>
 
 
@@ -98,10 +98,10 @@
                         <!-- Filter Kelas -->
                         <select name="kelas" onchange="this.form.submit()"
                             class="w-28 px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                            <option disabled {{ request('kelas') ? '' : 'selected' }}>Pilih Kelas</option>
-                            @foreach ($daftarKelas as $kls)
-                                <option value="{{ $kls }}" {{ request('kelas') == $kls ? 'selected' : '' }}>Kelas
-                                    {{ $kls }}
+                            <option disabled {{ request('keanggotaan') ? '' : 'selected' }}>Pilih Keanggotaan</option>
+                            @foreach ($daftarKeanggotaan as $anggota)
+                                <option value="{{ $anggota }}" {{ request('keanggotaan') == $anggota ? 'selected' : '' }}>
+                                    {{ $anggota }}
                                 </option>
                             @endforeach
                         </select>
@@ -119,7 +119,7 @@
                 </div>
             </div>
         </form>
-        @forelse ($peminjamTerbanyak as $index => $siswa)
+        @forelse ($peminjamTerbanyak as $index => $anggota)
             @php
                 $rank = $index + 1;
                 $warna = match ($rank) {
@@ -177,18 +177,18 @@
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h4 class="text-xl font-bold text-gray-900 mb-1">{{ $siswa->nama_siswa }}</h4>
+                                        <h4 class="text-xl font-bold text-gray-900 mb-1">{{ $anggota->nama_anggota }}</h4>
                                         <div class="flex items-center gap-4">
                                             <span
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                                                Kelas {{ $siswa->kelas_siswa }}
+                                                Kelas {{ $anggota->keanggotaan }}
                                             </span>
-                                            <span class="text-gray-600">NIS: {{ $siswa->nis_siswa }}</span>
+                                            <span class="text-gray-600">No Anggota: {{ $anggota->no_anggota }}</span>
                                         </div>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-3xl font-bold {{ $warna['text'] ?? 'text-gray-700' }} mb-1">
-                                            {{ $siswa->jumlah }}
+                                            {{ $anggota->jumlah }}
                                         </p>
                                         <p class="text-sm text-gray-600">Buku Dipinjam</p>
                                     </div>
@@ -216,9 +216,9 @@
 
         <script>
             // Filter functionality
-            document.getElementById('filter-kelas').addEventListener('change', function() {
+            document.getElementById('filter-keanggotaan').addEventListener('change', function() {
                 // Add filter logic here
-                console.log('Filter kelas:', this.value);
+                console.log('Filter keanggotaan:', this.value);
             });
             document.getElementById('filter-bulan').addEventListener('change', function() {
                 // Add filter logic here

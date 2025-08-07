@@ -23,7 +23,7 @@ class StatistikExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Kelas',
+            'Keanggotaan',
             'Bulan',
             'Total Peminjaman',
             'Sedang Dipinjam',

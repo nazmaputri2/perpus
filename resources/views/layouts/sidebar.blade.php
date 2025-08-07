@@ -16,7 +16,7 @@
                     <a href="{{ route('petugas.koleksibuku') }}"
                         class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-700 transition-colors duration-200 dark:text-gray-300 dark:hover:bg-gray-800">
                         <i class="fas fa-book w-4 h-4 mr-3"></i>
-                        Koleksi Buku
+                        Koleksi Buku Perpustakaan
                     </a>
                 </li>
             </ul>
@@ -29,7 +29,7 @@
                     <a href="{{ route('petugas.datasiswa') }}"
                         class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-700 transition-colors duration-200 dark:text-gray-300 dark:hover:bg-gray-800">
                         <i class="fas fa-user w-4 h-4 mr-3"></i>
-                        Data Siswa
+                        Data Keanggotaan Perpustakaan
                     </a>
                 </li>
                 <li>
@@ -50,7 +50,7 @@
                     <a href="{{ route('petugas.datapeminjaman') }}"
                         class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-700 transition-colors duration-200 dark:text-gray-300 dark:hover:bg-gray-800">
                         <i class="fas fa-exchange-alt w-4 h-4 mr-3"></i>
-                        Data Peminjaman
+                        Data Peminjaman Anggota
                     </a>
                 </li>
             </ul>
@@ -63,7 +63,7 @@
                     <a href="{{ route('petugas.riwayat') }}"
                         class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 hover:text-blue-700 transition-colors duration-200 dark:text-gray-300 dark:hover:bg-gray-800">
                         <i class="fas fa-history w-4 h-4 mr-3"></i>
-                        Riwayat Aktivitas
+                        Riwayat Aktivitas Petugas
                     </a>
                 </li>
             </ul>

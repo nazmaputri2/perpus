@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Siswa;
+use App\Models\Anggota;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Peminjaman;
@@ -11,20 +11,20 @@ class SiswaController extends Controller
 {
    public function index(Request $request)
 {
-    $siswa = Siswa::query();
+    $anggota = Anggota::query();
 
     if ($request->has('search') && $request->filled('search')) {
         $search = $request->search;
 
-        $siswa->where(function ($query) use ($search) {
-            $query->where('nis_siswa', 'like', "%{$search}%")
-                  ->orWhere('nama_siswa', 'like', "%{$search}%")
-                  ->orWhere('kelas_siswa', 'like', "%{$search}%");
+        $anggota->where(function ($query) use ($search) {
+            $query->where('no_anggota', 'like', "%{$search}%")
+                  ->orWhere('nama_anggota', 'like', "%{$search}%")
+                  ->orWhere('keanggotaan', 'like', "%{$search}%");
         });
     }
 
     // Ambil 10 data terbaru dan paginasi
-    $students = $siswa->latest()->orderBy('created_at', 'desc')->paginate(25)->withQueryString();
+    $students = $anggota->latest()->orderBy('created_at', 'desc')->paginate(25)->withQueryString();
 
 
         return view('petugas.datasiswa', compact('students'));
@@ -35,73 +35,73 @@ class SiswaController extends Controller
         \Log::info('Request masuk ke store:', $request->all());
         // Validasi data siswa + username/password
         $request->validate([
-            'nis_siswa' => 'required|unique:siswa,nis_siswa',
+            'no_anggota' => 'required|unique:anggota,no_anggota',
             // ...
         ], [
-            'nis_siswa.unique' => 'NIS ini sudah terdaftar. Harap gunakan NIS yang lain.',
-            'nama_siswa' => 'required',
-            'kelamin_siswa' => 'required|in:Laki-laki,Perempuan',
-            'kelas_siswa' => 'required',
-            'nohp_siswa' => ['required', 'regex:/^0[0-9]{9,11}$/'],
+            'no_anggota.unique' => 'No anggota ini sudah terdaftar. Harap gunakan No anggota yang lain.',
+            'nama_anggota' => 'required',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'keanggotaan' => 'required',
+            'nohp_anggota' => ['required', 'regex:/^0[0-9]{9,11}$/'],
         ], [
-            'nohp_siswa.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
+            'nohp_anggota.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
         ]);
 
         \Log::info('Validasi sukses');
 
 
-        $baseUsername = strtolower(str_replace(' ', '', $request->nama_siswa));
+        $baseUsername = strtolower(str_replace(' ', '', $request->nama_anggota));
         $username = $baseUsername . rand(100, 999); // Tambahkan angka acak untuk memastikan unik
 
-        $defaultPassword = 'siswa123'; // Password default, bisa diubah sesuai kebutuhan
+        $defaultPassword = 'anggota123'; // Password default, bisa diubah sesuai kebutuhan
         $hashedPassword = Hash::make($defaultPassword); // Enkripsi password
 
         // Buat akun pengguna dulu
         $pengguna = Pengguna::create([
-            'username' => $request->nis_siswa,
+            'username' => $request->no_anggota,
             'password' => $hashedPassword, // Enkripsi password
-            'role' => 'siswa',
+            'role' => 'anggota',
         ]);
 
         // Buat data siswa dan hubungkan ke akun pengguna
-        Siswa::create([
-            'nis_siswa' => $request->nis_siswa,
-            'nama_siswa' => $request->nama_siswa,
-            'kelamin_siswa' => $request->kelamin_siswa,
-            'kelas_siswa' => $request->kelas_siswa,
-            'nohp_siswa' => $request->nohp_siswa ?? null, // Gunakan null jika tidak ada input
+        Anggota::create([
+            'no_anggota' => $request->no_anggota,
+            'nama_anggota' => $request->nama_anggota,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'keanggotaan' => $request->keanggotaan,
+            'nohp_anggota' => $request->nohp_anggota ?? null, // Gunakan null jika tidak ada input
             'id_user' => $pengguna->id_user,
         ]);
 
-        catatRiwayat('siswa', 'tambah', 'Menambahkan data siswa: ' . $request->nama_siswa);
+        catatRiwayat('anggota', 'tambah', 'Menambahkan data anggota: ' . $request->nama_anggota);
 
 
 
-        return redirect()->back()->with('success', 'Data siswa  berhasil dibuat!');
+        return redirect()->back()->with('success', 'Data keanggotaan berhasil dibuat!');
     }
 
-    public function update(Request $request, $nis_siswa)
+    public function update(Request $request, $no_anggota)
     {
-        $siswa = Siswa::where('nis_siswa', $nis_siswa)->findOrFail($nis_siswa);
+        $anggota = Anggota::where('no_anggota', $no_anggota)->findOrFail($no_anggota);
 
         $request->validate([
-            'nis_siswa' => 'required|unique:siswa,nis_siswa,' . $siswa->nis_siswa . ',nis_siswa',
-            'nama_siswa' => 'required',
-            'kelamin_siswa' => 'required|in:Laki-laki,Perempuan',
-            'kelas_siswa' => 'required',
-            'nohp_siswa' => ['required', 'regex:/^0[0-9]{9,11}$/'],
+            'no_anggota' => 'required|unique:anggota,no_anggota,' . $anggota->no_anggota . ',no_anggota',
+            'nama_anggota' => 'required',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'keanggotaan' => 'required',
+            'nohp_anggota' => ['required', 'regex:/^0[0-9]{9,11}$/'],
         ], [
-            'nohp_siswa.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
+            'nohp_anggota.regex' => 'Nomor HP harus dimulai dengan 0 dan terdiri dari 10–12 digit.'
         ]);
 
-        $siswa->update([
-            'nis_siswa' => $request->nis_siswa,
-            'nama_siswa' => $request->nama_siswa,
-            'kelamin_siswa' => $request->kelamin_siswa,
-            'kelas_siswa' => $request->kelas_siswa,
-            'nohp_siswa' => $request->nohp_siswa,
+        $anggota->update([
+            'no_anggota' => $request->no_anggota,
+            'nama_anggota' => $request->nama_anggota,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'keanggotaan' => $request->keanggotaan,
+            'nohp_anggota' => $request->nohp_anggota,
         ]);
-        $pengguna = $siswa->pengguna;
+        $pengguna = $anggota->pengguna;
         if ($request->username && $request->username !== $pengguna->username) {
             $request->validate([
                 'username' => 'unique:pengguna,username,' . $pengguna->id_user . ',id_user',
@@ -116,32 +116,32 @@ class SiswaController extends Controller
         }
         $pengguna->save();
 
-        catatRiwayat('siswa', 'ubah', 'Mengubah data siswa: ' . $siswa->nama_siswa);
+        catatRiwayat('anggota', 'ubah', 'Mengubah data anggota: ' . $anggota->nama_anggota);
 
 
-        return redirect()->back()->with('success', 'Data siswa berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Data keanggotaan berhasil diperbarui!');
     }
 
 
-    public function destroy($nis_siswa)
+    public function destroy($no_anggota)
     {
-        $siswa = Siswa::where('nis_siswa', $nis_siswa)->first();
+        $anggota = Anggota::where('no_anggota', $no_anggota)->first();
     
-    if (!$siswa) {
-        return redirect()->back()->with('error', 'Data petugas tidak ditemukan!');
+    if (!$anggota) {
+        return redirect()->back()->with('error', 'Data anggota tidak ditemukan!');
     }
     
-        $pengguna = $siswa->pengguna;
+        $pengguna = $anggota->pengguna;
 
-        $siswa->delete();
+        $anggota->delete();
         if ($pengguna) {
             $pengguna->delete();
         }
 
-        catatRiwayat('siswa', 'hapus', 'Menghapus data siswa: ' . $siswa->nama_siswa);
+        catatRiwayat('anggota', 'hapus', 'Menghapus data anggota: ' . $anggota->nama_anggota);
 
 
-        return redirect()->back()->with('success', 'Data siswa berhasil dihapus!');
+        return redirect()->back()->with('success', 'Data keanggotaan berhasil dihapus!');
     }
 
 

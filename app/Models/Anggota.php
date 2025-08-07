@@ -5,18 +5,18 @@ use App\Models\Pengguna;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Siswa extends Model
+class Anggota extends Model
 {
-    protected $table = 'siswa';
-    protected $primaryKey = 'nis_siswa';
+    protected $table = 'anggota';
+    protected $primaryKey = 'no_anggota';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'nis_siswa',
-        'nama_siswa',
-        'kelamin_siswa',
-        'kelas_siswa',
-        'nohp_siswa',
+        'no_anggota',
+        'nama_anggota',
+        'jenis_kelamin',
+        'keanggotaan',
+        'nohp_anggota',
         'id_user', // foreign key ke tabel pengguna
     ];
     public function pengguna()
@@ -26,6 +26,6 @@ class Siswa extends Model
 
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'nis_siswa', 'nis_siswa');
+        return $this->hasMany(Peminjaman::class, 'no_anggota', 'no_anggota');
     }
 }

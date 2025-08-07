@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Imports\SiswaImport;
+use App\Imports\AnggotaImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 
@@ -20,10 +20,10 @@ class ImportSiswaController extends Controller
         ]);
 
         try {
-            Excel::import(new SiswaImport, $request->file('file'));
-            catatRiwayat('siswa', 'menambah', 'Mengimpor data siswa dari file Excel: ' . $request->file('file')->getClientOriginalName());
+            Excel::import(new AnggotaImport, $request->file('file'));
+            catatRiwayat('anggota', 'menambah', 'Mengimpor data anggota dari file Excel: ' . $request->file('file')->getClientOriginalName());
 return redirect()->route('petugas.datasiswa')
-    ->with('success', 'Data siswa berhasil diimpor.');        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+    ->with('success', 'Data anggota berhasil diimpor.');        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             // Tangkap error validasi dari Excel
             $failures = $e->failures();
             

@@ -34,8 +34,8 @@ Route::middleware('auth.custom')->group(function () {
 Route::middleware('auth.custom')->prefix('petugas')->group(function () {
     Route::get('datasiswa', [SiswaController::class, 'index'])->name('petugas.datasiswa');
     Route::post('datasiswa', [SiswaController::class, 'store'])->name('petugas.datasiswa.store');
-    Route::put('datasiswa/{nis_siswa}', [SiswaController::class, 'update'])->name('petugas.datasiswa.update');
-    Route::delete('datasiswa/{nis_siswa}', [SiswaController::class, 'destroy'])->name('petugas.datasiswa.destroy');
+    Route::put('datasiswa/{no_anggota}', [SiswaController::class, 'update'])->name('petugas.datasiswa.update');
+    Route::delete('datasiswa/{no_anggota}', [SiswaController::class, 'destroy'])->name('petugas.datasiswa.destroy');
 
     Route::get('datapetugas', [PetugasController::class, 'index'])->name('petugas.datapetugas');
     Route::post('datapetugas', [PetugasController::class, 'store'])->name('petugas.datapetugas.store');

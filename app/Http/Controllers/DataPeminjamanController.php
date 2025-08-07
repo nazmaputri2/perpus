@@ -49,7 +49,7 @@ class DataPeminjamanController extends Controller
         ];
 
         // Mulai query utama yang akan difilter
-        $query = Peminjaman::with(['siswa', 'buku']);
+        $query = Peminjaman::with(['anggota', 'buku']);
 
         // Filter berdasarkan status dari request (klik stats card)
         $statusFilter = $request->input('status');
@@ -89,10 +89,10 @@ class DataPeminjamanController extends Controller
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
-                $q->whereHas('siswa', function ($qr) use ($searchTerm) {
-                    $qr->where('nama_siswa', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('nis_siswa', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('kelas_siswa', 'like', '%' . $searchTerm . '%');
+                $q->whereHas('anggota', function ($qr) use ($searchTerm) {
+                    $qr->where('nama_anggota', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('no_anggota', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('keanggotaan', 'like', '%' . $searchTerm . '%');
                 })->orWhereHas('buku', function ($qr) use ($searchTerm) {
                     $qr->where('isbn', 'like', '%' . $searchTerm . '%')
                         ->orWhere('judul', 'like', '%' . $searchTerm . '%');
@@ -129,7 +129,7 @@ class DataPeminjamanController extends Controller
         $aksi = $request->input('aksi');
 
         $buku = $peminjaman->buku;
-        $siswa = $peminjaman->siswa;
+        $anggota = $peminjaman->anggota;
 
         if ($aksi === 'setujui') {
             // Validasi stok buku sebelum menyetujui
@@ -149,7 +149,7 @@ class DataPeminjamanController extends Controller
 
             // Asumsi catatRiwayat adalah helper function
             if (function_exists('catatRiwayat')) {
-                catatRiwayat('peminjaman', 'menyetujui', 'Menyetujui peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
+                catatRiwayat('peminjaman', 'menyetujui', 'Menyetujui peminjaman buku "' . $buku->judul . '" oleh: ' . $anggota->nama_anggota);
             }
 
         } elseif ($aksi === 'selesai') {
@@ -182,7 +182,7 @@ class DataPeminjamanController extends Controller
 
             // Catat riwayat pengembalian
             if (function_exists('catatRiwayat')) {
-                catatRiwayat('peminjaman', 'mengembalikan', 'Menyelesaikan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
+                catatRiwayat('peminjaman', 'mengembalikan', 'Menyelesaikan peminjaman buku "' . $buku->judul . '" oleh: ' . $anggota->nama_anggota);
             }
 
         } elseif ($aksi === 'batal') {
@@ -196,7 +196,7 @@ class DataPeminjamanController extends Controller
 
             // Asumsi catatRiwayat adalah helper function
             if (function_exists('catatRiwayat')) {
-                catatRiwayat('peminjaman', 'membatalkan', 'Membatalkan peminjaman buku "' . $buku->judul . '" oleh siswa: ' . $siswa->nama_siswa);
+                catatRiwayat('peminjaman', 'membatalkan', 'Membatalkan peminjaman buku "' . $buku->judul . '" oleh: ' . $anggota->nama_anggota);
             }
 
             $peminjaman->delete();
@@ -214,7 +214,7 @@ class DataPeminjamanController extends Controller
     {
         $data = Peminjaman::with(['siswa', 'buku'])->get();
         foreach ($data as $item) {
-            echo "ID: {$item->id_peminjaman}, Status: {$item->status_peminjaman}, Siswa: {$item->siswa->nama_siswa}<br>";
+            echo "ID: {$item->id_peminjaman}, Status: {$item->status_peminjaman}, Siswa: {$item->anggota->nama_anggota}<br>";
         }
     }
 

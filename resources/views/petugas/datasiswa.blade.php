@@ -34,7 +34,7 @@
         </div>
     @endif
     <div class="mb-6">
-        <h3 class="text-3xl font-bold text-gray-900 mb-6">Data Siswa</h3>
+        <h3 class="text-3xl font-bold text-gray-900 mb-6">Data Keanggotaan Perpustakaan</h3>
 
         <div class="flex flex-col lg:flex-row lg:items-center gap-4 w-full justify-between mb-6">
             <div class="flex-grow">
@@ -45,7 +45,7 @@
                     </div>
                     <input type="text" id="search" name="search"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 block w-full pl-12 pr-4 py-3 shadow-sm transition-all duration-200 placeholder-gray-400"
-                        placeholder="Cari siswa berdasarkan NIS, Nama, Kelas..." value="{{ request('search') }}">
+                        placeholder="Cari siswa berdasarkan..." value="{{ request('search') }}">
                     {{-- Tambahkan tombol submit jika belum ada, atau enter akan submit form --}}
                     <button type="submit" class="absolute inset-y-0 right-0 px-4 flex items-center bg-blue-500 text-white rounded-r-xl hover:bg-blue-600 transition-colors duration-200" style="display:none;">
                         Cari
@@ -56,19 +56,19 @@
             <div class="flex items-center gap-4">
                 <button data-modal-target="importDataModal" data-modal-toggle="importDataModal" type="button"
                     class="bg-green-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                    <i class="fas fa-file-import mr-2"></i>Import Siswa
+                    <i class="fas fa-file-import mr-2"></i>Import Data Anggota
                 </button>
                 <button data-modal-target="tambahDataModal" data-modal-toggle="tambahDataModal" type="button"
                     class="bg-blue-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                    <i class="fas fa-plus mr-2"></i>Tambah Siswa
+                    <i class="fas fa-plus mr-2"></i>Tambah Data Anggota
                 </button>
             </div>
         </div>
     </div> <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
-                <h4 class="text-lg font-semibold text-gray-800">Daftar Siswa</h4>
-                <span class="text-sm text-gray-500">{{ count($students) }} siswa terdaftar</span>
+                <h4 class="text-lg font-semibold text-gray-800">Daftar Anggota</h4>
+                <span class="text-sm text-gray-500">{{ count($students) }} anggota terdaftar</span>
             </div>
         </div>
         <div class="overflow-x-auto pb-6">
@@ -82,12 +82,12 @@
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             <div class="flex items-center space-x-1">
-                                <span>NIS</span>
+                                <span>No Anggota</span>
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             <div class="flex items-center space-x-1">
-                                <span>Nama Siswa</span>
+                                <span>Nama Anggota</span>
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -97,7 +97,7 @@
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             <div class="flex items-center space-x-1">
-                                <span>Kelas</span>
+                                <span>Keanggotaan</span>
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -127,7 +127,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-id-card text-gray-800 text-sm"></i>
-                                    <span class="text-sm font-medium text-gray-800">{{ $student->nis_siswa }}</span>
+                                    <span class="text-sm font-medium text-gray-800">{{ $student->no_anggota }}</span>
                                 </div>
                             </td>
 
@@ -135,14 +135,14 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-user-graduate text-gray-800 text-sm"></i>
-                                    <span class="text-sm font-medium text-gray-800">{{ $student->nama_siswa }}</span>
+                                    <span class="text-sm font-medium text-gray-800">{{ $student->nama_anggota }}</span>
                                 </div>
                             </td>
 
                             {{-- Jenis Kelamin --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
-                                    @if ($student->kelamin_siswa == 'Laki-laki' || $student->kelamin_siswa == 'L')
+                                    @if ($student->jenis_kelamin == 'Laki-laki' || $student->jenis_kelamin == 'L')
                                         <i class="fas fa-mars text-gray-800 text-sm"></i>
                                         <span class="text-sm font-medium text-gray-800">Laki-laki</span>
                                     @else
@@ -158,7 +158,7 @@
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-chalkboard-teacher text-gray-800 text-sm"></i>
                                     <span class="text-sm font-medium text-gray-800">
-                                        {{ strtolower($student->kelas_siswa) === 'guru' ? 'Guru' : 'Kelas ' . $student->kelas_siswa }}
+                                        {{ strtolower($student->keanggotaan) === 'guru' ? 'Guru' : 'Siswa ' . $student->keanggotaan }}
                                     </span>
                                 </div>
                 </td>
@@ -167,7 +167,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-phone text-gray-800 text-sm"></i>
-                                    <span class="text-sm font-medium text-gray-800">{{ $student->nohp_siswa }}</span>
+                                    <span class="text-sm font-medium text-gray-800">{{ $student->nohp_anggota }}</span>
                                 </div>
                             </td>
 
@@ -180,7 +180,7 @@
                                         <i class="fas fa-edit text-sm"></i>
                                     </button>
 
-                                    <button onclick="setDeleteId('{{ $student->nis_siswa }}')" data-modal-target="deleteModal"
+                                    <button onclick="setDeleteId('{{ $student->no_anggota }}')" data-modal-target="deleteModal"
                                         data-modal-toggle="deleteModal"
                                         class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                                         title="Hapus Siswa">
@@ -199,7 +199,7 @@
         {{-- Info Halaman --}}
         <div class="text-sm text-gray-600">
             Menampilkan <span class="font-medium">{{ $students->firstItem() ?? 0 }}-{{ $students->lastItem() ?? 0 }}</span>
-            dari <span class="font-medium">{{ $students->total() }}</span> siswa
+            dari <span class="font-medium">{{ $students->total() }}</span> anggota
         </div>
 
         {{-- Navigasi Desktop --}}
@@ -305,7 +305,7 @@
                     @if(request('search'))
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Data Tidak Ditemukan</h3>
                         <p class="text-gray-500 mb-6">
-                            Tidak ada siswa yang cocok dengan kata kunci: 
+                            Tidak ada anggota yang cocok dengan kata kunci: 
                             <span class="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">"{{ request('search') }}"</span>
                         </p>
                         <a href="{{ route('petugas.datasiswa') }}"
@@ -313,11 +313,11 @@
                             <i class="fas fa-arrow-left mr-2"></i>Kembali ke semua data
                         </a>
                     @else
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Belum Ada Data Siswa</h3>
-                        <p class="text-gray-500 mb-6">Silakan tambahkan siswa pertama untuk memulai</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Belum Ada Data Anggota</h3>
+                        <p class="text-gray-500 mb-6">Silakan tambahkan anggota pertama untuk memulai</p>
                         <button data-modal-target="tambahDataModal" data-modal-toggle="tambahDataModal"
                             class="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-0.5">
-                            <i class="fas fa-plus mr-2"></i>Tambah Siswa Pertama
+                            <i class="fas fa-plus mr-2"></i>Tambah Anggota Pertama
                         </button>
                     @endif
                 </div>
@@ -331,21 +331,21 @@
     <script>
         // Function to prepare edit modal with student data
         function prepareEditModal(student) {
-            document.getElementById('edit-nis_siswa').value = student.nis_siswa;
-            document.getElementById('edit-nama_siswa').value = student.nama_siswa;
-            document.getElementById('edit-kelamin_siswa').value = student.kelamin_siswa;
-            document.getElementById('edit-kelas_siswa').value = student.kelas_siswa;
-            document.getElementById('edit-nohp_siswa').value = student.nohp_siswa;
+            document.getElementById('edit-no_anggota').value = student.no_anggota;
+            document.getElementById('edit-nama_anggota').value = student.nama_anggota;
+            document.getElementById('edit-jenis_kelamin').value = student.jenis_kelamin;
+            document.getElementById('edit-keanggotaan').value = student.keanggotaan;
+            document.getElementById('edit-nohp_anggota').value = student.nohp_anggota;
 
             const form = document.getElementById('edit-form');
-            form.action = `/petugas/datasiswa/${student.nis_siswa}`;
+            form.action = `/petugas/datasiswa/${student.no_anggota}`;
             const editModal = new Flowbite.Modal(document.getElementById('editDataModal'));
             editModal.show();
         }
 
         // Function to set student ID for deletion
-        function setDeleteId(nis_siswa) {
-            document.getElementById('delete-form').action = '/petugas/datasiswa/' + nis_siswa;
+        function setDeleteId(no_anggota) {
+            document.getElementById('delete-form').action = '/petugas/datasiswa/' + no_anggota;
         }
 
         // Script untuk mempertahankan nilai pencarian setelah refresh halaman

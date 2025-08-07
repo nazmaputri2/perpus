@@ -151,7 +151,7 @@
                     </span>
                     <input type="text" name="search" value="{{ request('search') }}"
                         class="pl-12 pr-4 py-3 w-full bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="Cari peminjam / siswa / buku"
+                        placeholder="Cari peminjam / anggota / buku"
                         onkeypress="if(event.key === 'Enter') this.form.submit();">
                 </form>
                <button type="button"
@@ -218,7 +218,7 @@
                             <div class="space-y-3">
                                 <div>
                                     <p class="text-sm text-gray-500 mb-1">Nama Peminjam</p>
-                                    <p class="text-lg font-semibold text-gray-900">{{ $data->siswa->nama_siswa }}</p>
+                                    <p class="text-lg font-semibold text-gray-900">{{ $data->anggota->nama_anggota }}</p>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500 mb-1">Judul Buku</p>
@@ -226,13 +226,13 @@
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <div>
-                                        <p class="text-sm text-gray-500">NIS</p>
-                                        <p class="font-medium text-gray-900">{{ $data->siswa->nis_siswa }}</p>
+                                        <p class="text-sm text-gray-500">No Anggota</p>
+                                        <p class="font-medium text-gray-900">{{ $data->anggota->no_anggota }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-500">Kelas</p>
+                                        <p class="text-sm text-gray-500">Keanggotaan</p>
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                                            {{ $data->siswa->kelas_siswa }}
+                                            {{ $data->anggota->keanggotaan }}
                                         </span>
                                     </div>
                                 </div>

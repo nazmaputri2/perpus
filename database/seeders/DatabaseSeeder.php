@@ -41,10 +41,10 @@ class DatabaseSeeder extends Seeder
 
         // Buat pengguna siswa
         $penggunaSiswa = Pengguna::firstOrCreate(
-            ['username' => 'siswa'],
+            ['username' => 'anggota'],
             [
-                'password' => Hash::make('siswa123'),
-                'role' => 'siswa'
+                'password' => Hash::make('anggota123'),
+                'role' => 'anggota'
             ]
         );
         

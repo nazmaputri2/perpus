@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Siswa;
+use App\Models\Anggota;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Collection;
@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 
-class SiswaImport implements ToCollection, WithHeadingRow{
+class AnggotaImport implements ToCollection, WithHeadingRow{
     /**
     * @param Collection $collection
     */
@@ -19,28 +19,28 @@ class SiswaImport implements ToCollection, WithHeadingRow{
         foreach ($rows as $row) {
             // Validasi sederhana: pastikan kolom penting ada
             if (
-                !empty($row['nis']) &&
-                !empty($row['nama_siswa']) &&
-                !empty($row['kelamin']) &&
-                !empty($row['kelas'])
+                !empty($row['no_anggota']) &&
+                !empty($row['nama_anggota']) &&
+                !empty($row['jenis_kelamin']) &&
+                !empty($row['keanggotaan'])
             ) {
                 // Cek jika akun dengan username NIS sudah ada
                 $pengguna = Pengguna::firstOrCreate(
-                    ['username' => $row['nis']],
+                    ['username' => $row['no_anggota']],
                     [
-                        'password' => Hash::make('siswa123'),
-                        'role' => 'siswa',
+                        'password' => Hash::make('anggota123'),
+                        'role' => 'anggota',
                     ]
                 );
 
                 // Cek jika siswa sudah ada berdasarkan NIS
-                Siswa::updateOrCreate(
-                    ['nis_siswa' => $row['nis']],
+                Anggota::updateOrCreate(
+                    ['no_anggota' => $row['no_anggota']],
                     [
-                        'nama_siswa' => $row['nama_siswa'],
-                        'kelamin_siswa' => $row['kelamin'],
-                        'kelas_siswa' => $row['kelas'],
-                        'nohp_siswa' => $row['no_hp'] ?? null,
+                        'nama_anggota' => $row['nama_anggota'],
+                        'jenis_kelamin' => $row['jenis_kelamin'],
+                        'keanggotaan' => $row['keanggotaan'],
+                        'nohp_anggota' => $row['no_hp'] ?? null,
                         'id_user' => $pengguna->id_user,
                     ]
                 );

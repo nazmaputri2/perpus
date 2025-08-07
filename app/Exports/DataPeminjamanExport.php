@@ -20,7 +20,7 @@ class DataPeminjamanExport implements FromCollection, WithHeadings
     public function collection()
     {
         // Ambil data dengan relasi siswa dan buku
-        $query = Peminjaman::with(['siswa', 'buku']);
+        $query = Peminjaman::with(['anggota', 'buku']);
 
         if ($this->bulan) {
             $query->whereMonth('tanggal_peminjaman', $this->bulan);
@@ -35,8 +35,8 @@ class DataPeminjamanExport implements FromCollection, WithHeadings
         // Format data untuk export
         return $data->map(function ($item) {
             return [
-                'nama_siswa'            => $item->siswa->nama_siswa ?? '-',
-                'kelas_siswa'           => $item->siswa->kelas_siswa ?? '-',
+                'nama_anggota'            => $item->anggota->nama_anggota ?? '-',
+                'keanggotaan'           => $item->anggota->keanggotaan ?? '-',
                 'judul_buku'            => $item->buku->judul ?? '-',
                 'tanggal_peminjaman'    => $item->tanggal_peminjaman,
                 'tanggal_pengembalian'  => $item->tanggal_pengembalian ?? '-',
@@ -49,8 +49,8 @@ class DataPeminjamanExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Nama Siswa',
-            'Kelas',
+            'Nama Anggota',
+            'Keanggotaan',
             'Judul Buku',
             'Tanggal Peminjaman',
             'Tanggal Pengembalian',

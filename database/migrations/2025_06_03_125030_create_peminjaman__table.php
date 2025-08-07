@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_peminjaman'); // Primary Key
 
             // Foreign Key ke tabel siswa (nis_siswa string)
-            $table->string('nis_siswa');
+            $table->string('no_anggota');
             // Hapus nama_siswa karena bisa diambil dari relasi ke tabel siswa
             // $table->string('nama_siswa'); 
 
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Definisi Foreign Key Constraints
-            $table->foreign('nis_siswa')->references('nis_siswa')->on('siswa')->onDelete('cascade');
+            $table->foreign('no_anggota')->references('no_anggota')->on('anggota')->onDelete('cascade');
             $table->foreign('isbn')->references('isbn')->on('buku')->onDelete('cascade');
             
             // Foreign key ke tabel 'pengguna' (untuk id_petugas)

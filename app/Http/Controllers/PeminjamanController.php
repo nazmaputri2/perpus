@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
-use App\Models\Siswa;
+use App\Models\Anggota;
 use App\Models\Peminjaman;
 use App\Models\Pengguna; // Tambahkan ini jika model Pengguna digunakan untuk petugas
 use Illuminate\Http\Request;
@@ -15,11 +15,11 @@ class PeminjamanController extends Controller
     public function index(Request $request)
     {
         $buku = Buku::all();
-        $siswa = Siswa::select('nis_siswa', 'nama_siswa', 'kelas_siswa')->orderBy('kelas_siswa')->orderBy('nama_siswa')->get();
+       $anggota = Anggota::select('no_anggota', 'nama_anggota', 'keanggotaan')->orderBy('keanggotaan')->orderBy('nama_anggota')->get();
         $kategoriOptions = Buku::select('jenis_buku')->distinct()->pluck('jenis_buku')->filter()->sort()->values()->all();
         $kelasOptions = Buku::select('kelas')->distinct()->pluck('kelas')->filter()->sort()->values()->all();
 
-        return view('petugas.koleksibuku', compact('buku', 'siswa', 'kategoriOptions', 'kelasOptions'));
+        return view('petugas.koleksibuku', compact('buku', 'anggota', 'kategoriOptions', 'kelasOptions'));
     }
 
     public function store(Request $request)
@@ -27,17 +27,17 @@ class PeminjamanController extends Controller
         try {
             $validatedData = $request->validate([
                 'isbn_buku' => 'required|string|exists:buku,isbn', // Validasi input yang masuk
-                'nis_siswa' => 'required|string|exists:siswa,nis_siswa',
+                'no_anggota' => 'required|string|exists:anggota,no_anggota',
             ]);
 
             $buku = Buku::where('isbn', $validatedData['isbn_buku'])->first();
-            $siswa = Siswa::where('nis_siswa', $validatedData['nis_siswa'])->first();
+           $anggota = Anggota::where('no_anggota', $validatedData['no_anggota'])->first();
 
             if (!$buku) {
                 return response()->json(['success' => false, 'message' => 'Buku tidak ditemukan.'], 404);
             }
-            if (!$siswa) {
-                return response()->json(['success' => false, 'message' => 'Siswa tidak ditemukan.'], 404);
+            if (!$anggota) {
+                return response()->json(['success' => false, 'message' => 'Anggota tidak ditemukan.'], 404);
             }
 
             if ($buku->stok <= 0) {
@@ -62,7 +62,7 @@ class PeminjamanController extends Controller
             // Buat entri peminjaman
             Peminjaman::create([
                 'isbn' => $buku->isbn, // *** PERUBAHAN PENTING DI SINI: GUNAKAN 'isbn' BUKAN 'isbn_buku' ***
-                'nis_siswa' => $siswa->nis_siswa,
+                'no_anggota' =>$anggota->no_anggota,
                 'tanggal_peminjaman' => now(),
                 'tanggal_pengembalian' => now()->addDays(14),
                 'status_peminjaman' => 'Dipinjam', // Status awal, sesuai enum di migrasi
@@ -71,7 +71,7 @@ class PeminjamanController extends Controller
 
             DB::commit();
 
-            catatRiwayat('buku', 'meminjam', 'Petugas meminjamkan buku "' . $buku->judul . '" kepada siswa: ' . $siswa->nama_siswa);
+            catatRiwayat('buku', 'meminjam', 'Petugas meminjamkan buku "' . $buku->judul . '" kepada: ' .$anggota->nama_anggota);
 
             return response()->json([
                 'success' => true,
@@ -86,7 +86,7 @@ class PeminjamanController extends Controller
             DB::rollBack();
             \Log::error('Error during book borrowing: ' . $e->getMessage(), [
                 'isbn_buku_received' => $request->isbn_buku, // Log input yang diterima
-                'nis_siswa_received' => $request->nis_siswa,
+                'no_anggota_received' => $request->no_anggota,
                 'error_line' => $e->getLine(),
                 'error_file' => $e->getFile(),
                 'stack_trace' => $e->getTraceAsString(), // Tambahkan stack trace lengkap

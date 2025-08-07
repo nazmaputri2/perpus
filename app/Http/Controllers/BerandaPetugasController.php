@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Models\Pengguna;
 use App\Helpers\RiwayatHelper;
 use Illuminate\Support\Facades\DB;
-use App\Models\Siswa;
+use App\Models\Anggota;
 
 class BerandaPetugasController extends Controller
 {
@@ -26,11 +26,11 @@ class BerandaPetugasController extends Controller
                     ->get();
 
         // Mengambil data peminjam terbanyak
-        $peminjamTerbanyak = Peminjaman::select('nis_siswa', DB::raw('count(*) as total_peminjaman'))
-                                    ->with(['siswa' => function($query) {
-                                        $query->select('nis_siswa', 'nama_siswa', 'kelas_siswa');
+        $peminjamTerbanyak = Peminjaman::select('no_anggota', DB::raw('count(*) as total_peminjaman'))
+                                    ->with(['anggota' => function($query) {
+                                        $query->select('no_anggota', 'nama_anggota', 'keanggotaan');
                                     }])
-                                    ->groupBy('nis_siswa')
+                                    ->groupBy('no_anggota')
                                     ->orderBy('total_peminjaman', 'desc')
                                     ->limit(3)
                                     ->get();

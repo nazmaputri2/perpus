@@ -11,15 +11,15 @@ class StatistikController extends Controller
 {
      public function statistik(Request $request)
     {
-        $kelas = $request->input('kelas');
+        $keanggotaan = $request->input('keanggotaan');
         $bulan = $request->input('bulan');
         $search = $request->input('search'); // Tambahan: input pencarian
 
-        $daftarKelas = DB::table('siswa')
-            ->select('kelas_siswa')
+        $daftarKeanggotaan = DB::table('anggota')
+            ->select('keanggotaan')
             ->distinct()
-            ->orderBy('kelas_siswa')
-            ->pluck('kelas_siswa');
+            ->orderBy('keanggotaan')
+            ->pluck('keanggotaan');
 
         // Mapping nama bulan Indonesia ke angka
         $bulanMap = [
@@ -30,13 +30,13 @@ class StatistikController extends Controller
         ];
 
         $query = DB::table('peminjaman')
-            ->join('siswa', 'peminjaman.nis_siswa', '=', 'siswa.nis_siswa')
-            ->select('siswa.nama_siswa', 'siswa.kelas_siswa', 'siswa.nis_siswa', DB::raw('COUNT(*) as jumlah'))
+            ->join('anggota', 'peminjaman.no_anggota', '=', 'anggota.no_anggota')
+            ->select('anggota.nama_anggota', 'anggota.keanggotaan', 'anggota.no_anggota', DB::raw('COUNT(*) as jumlah'))
             ->where('peminjaman.status_peminjaman', '!=', 'Proses')
-            ->groupBy('siswa.nama_siswa', 'siswa.kelas_siswa', 'siswa.nis_siswa');
+            ->groupBy('anggota.nama_anggota', 'anggota.keanggotaan', 'anggota.no_anggota');
 
-        if ($kelas) {
-            $query->where('siswa.kelas_siswa', $kelas);
+        if ($keanggotaan) {
+            $query->where('anggota.keanggotaan', $keanggotaan);
         }
 
         $bulanAngka = null;
@@ -63,9 +63,9 @@ class StatistikController extends Controller
         $statQuery = DB::table('peminjaman')
             ->where('status_peminjaman', '!=', 'Proses');
 
-        if ($kelas) {
-            $statQuery->join('siswa', 'peminjaman.nis_siswa', '=', 'siswa.nis_siswa')
-                ->where('siswa.kelas_siswa', $kelas);
+        if ($keanggotaan) {
+            $statQuery->join('anggota', 'peminjaman.no_anggota', '=', 'anggota.no_anggota')
+                ->where('anggota.keanggotaan', $keanggotaan);
         }
 
         if ($bulanAngka) {
@@ -88,7 +88,7 @@ class StatistikController extends Controller
         ];
 
         return view('petugas.statistik', compact(
-            'peminjamTerbanyak', 'kelas', 'bulan', 'search', 'stats', 'daftarKelas'
+            'peminjamTerbanyak', 'keanggotaan', 'bulan', 'search', 'stats', 'daftarKeanggotaan'
         ));
     }
 

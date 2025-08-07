@@ -15,7 +15,7 @@ class Peminjaman extends Model
     protected $primaryKey = 'id_peminjaman'; // Primary key tabel
 
     protected $fillable = [
-        'nis_siswa',
+        'no_anggota',
         'isbn', // Sesuaikan dengan nama kolom di migrasi Anda
         'tanggal_peminjaman', // Sesuaikan dengan nama kolom di migrasi Anda
         'tanggal_pengembalian',
@@ -39,9 +39,9 @@ class Peminjaman extends Model
     }
 
     // Relasi dengan model Siswa
-    public function siswa()
+    public function anggota()
     {
-        return $this->belongsTo(Siswa::class, 'nis_siswa', 'nis_siswa'); // Foreign key 'nis_siswa' di Peminjaman merujuk ke 'nis_siswa' di Siswa
+        return $this->belongsTo(Anggota::class, 'no_anggota', 'no_anggota'); // Foreign key 'no_anggota' di Peminjaman merujuk ke 'no_anggota' di Siswa
     }
 
     // Relasi dengan model Petugas (asumsi petugas adalah user dari tabel 'pengguna')

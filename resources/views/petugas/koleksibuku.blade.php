@@ -111,7 +111,7 @@
     <script>
         // Data yang dilewatkan dari Laravel
         const bukuData = @json($buku);
-        const siswaData = @json($siswa);
+        const anggotaData = @json($anggota);
 
         let currentSelectedBookIsbn = null; // Menyimpan ISBN buku yang sedang dipilih
 
@@ -271,66 +271,66 @@
          * @param {string} isbn - ISBN buku yang akan dipinjam.
          * @param {string} judulBuku - Judul buku yang akan dipinjam.
          */
-        function openPilihSiswaModal(isbn, judulBuku) {
-            const pilihSiswaBukuIsbnEl = document.getElementById('pilihSiswaBukuIsbn');
-            const pilihSiswaBukuJudulEl = document.getElementById('pilihSiswaBukuJudul');
-            const filterKelasSiswaEl = document.getElementById('filterKelasSiswa');
-            const cariSiswaEl = document.getElementById('cariSiswa');
-            const pilihSiswaModalTargetEl = document.getElementById('pilihSiswaModal');
+        function openPilihAnggotaModal(isbn, judulBuku) {
+            const pilihAnggotaBukuIsbnEl = document.getElementById('pilihAnggotaBukuIsbn');
+            const pilihAnggotaBukuJudulEl = document.getElementById('pilihAnggotaBukuJudul');
+            const filterKeanggotaanEl = document.getElementById('filterKeanggotaan');
+            const cariAnggotaEl = document.getElementById('cariAnggota');
+            const pilihAnggotaModalTargetEl = document.getElementById('pilihAnggotaModal');
 
-            // Isi detail buku di modal pilih siswa
-            if (pilihSiswaBukuIsbnEl) pilihSiswaBukuIsbnEl.value = isbn;
-            if (pilihSiswaBukuJudulEl) pilihSiswaBukuJudulEl.textContent = judulBuku;
+            // Isi detail buku di modal pilih Anggota
+            if (pilihAnggotaBukuIsbnEl) pilihAnggotaBukuIsbnEl.value = isbn;
+            if (pilihAnggotaBukuJudulEl) pilihAnggotaBukuJudulEl.textContent = judulBuku;
 
-            // Reset filter dan pencarian siswa setiap kali modal dibuka
-            if (filterKelasSiswaEl) filterKelasSiswaEl.value = '';
-            if (cariSiswaEl) cariSiswaEl.value = '';
+            // Reset filter dan pencarian Anggota setiap kali modal dibuka
+            if (filterKeanggotaanEl) filterKeanggotaanEl.value = '';
+            if (cariAnggotaEl) cariAnggotaEl.value = '';
 
-            // Render daftar siswa (tanpa filter awal)
-            renderSiswaList(siswaData);
+            // Render daftar Anggota (tanpa filter awal)
+            renderAnggotaList(anggotaData);
 
-            // Isi opsi filter kelas siswa secara dinamis
-if (filterKelasSiswaEl) {
-    filterKelasSiswaEl.innerHTML = '<option value="">Cari Anggota</option>';
-    const uniqueKelas = [...new Set(siswaData.map(siswa => siswa.kelas_siswa))].sort();
+            // Isi opsi filter kelas Anggota secara dinamis
+if (filterKeanggotaanEl) {
+    filterKeanggotaanEl.innerHTML = '<option value="">Cari Anggota</option>';
+    const uniqueKeanggotaan = [...new Set(anggotaData.map(anggota => anggota.keanggotaan))].sort();
     
-    uniqueKelas.forEach(kelas => {
-        if (kelas) {
+    uniqueKeanggotaan.forEach(keanggotaan => {
+        if (keanggotaan) {
             const option = document.createElement('option');
-            option.value = kelas;
+            option.value = keanggotaan;
 
             // Jika kelas adalah Guru, tampilkan tanpa "Kelas"
-            if (kelas.toLowerCase() === 'guru') {
-                option.textContent = kelas; // tampilkan apa adanya
+            if (keanggotaan.toLowerCase() === 'guru') {
+                option.textContent = keanggotaan; // tampilkan apa adanya
             } else {
-                option.textContent = `Kelas ${kelas}`;
+                option.textContent = `Siswa ${keanggotaan}`;
             }
 
-            filterKelasSiswaEl.appendChild(option);
+            filterKeanggotaanEl.appendChild(option);
         }
     });
 }
             // Tampilkan modal pilih siswa (menggunakan Flowbite atau manual)
-            if (pilihSiswaModalTargetEl) {
+            if (pilihAnggotaModalTargetEl) {
                 if (isFlowbiteAvailable()) {
                     try {
-                        const pilihSiswaModal = new Flowbite.Modal(pilihSiswaModalTargetEl, {
+                        const pilihAnggotaModal = new Flowbite.Modal(pilihAnggotaModalTargetEl, {
                             placement: 'center',
                             backdrop: 'dynamic',
                             backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
                             closable: true,
                         });
-                        pilihSiswaModal.show();
+                        pilihAnggotaModal.show();
                     } catch (error) {
-                        console.warn('Flowbite Modal error for pilihSiswaModal, using manual modal:', error);
-                        showModal(pilihSiswaModalTargetEl);
+                        console.warn('Flowbite Modal error for pilihAnggotaModal, using manual modal:', error);
+                        showModal(pilihAnggotaModalTargetEl);
                     }
                 } else {
-                    console.warn('Flowbite not available for pilihSiswaModal, using manual modal');
-                    showModal(pilihSiswaModalTargetEl);
+                    console.warn('Flowbite not available for pilihAnggotaModal, using manual modal');
+                    showModal(pilihAnggotaModalTargetEl);
                 }
             } else {
-                console.error('Element with ID "pilihSiswaModal" not found.');
+                console.error('Element with ID "pilihAnggotaModal" not found.');
             }
         }
 
@@ -338,30 +338,30 @@ if (filterKelasSiswaEl) {
          * Merender daftar siswa di modal pilih siswa berdasarkan data filter.
          * @param {Array<object>} filteredSiswa - Array objek siswa yang sudah difilter.
          */
-        function renderSiswaList(filteredSiswa) {
-            const daftarSiswaList = document.getElementById('daftarSiswaList');
-            const noSiswaResults = document.getElementById('noSiswaResults');
+        function renderAnggotaList(filteredAnggota) {
+            const daftarAnggotaList = document.getElementById('daftarAnggotaList');
+            const noAnggotaResults = document.getElementById('noAnggotaResults');
 
-            if (!daftarSiswaList || !noSiswaResults) {
+            if (!daftarAnggotaList || !noAnggotaResults) {
                 console.warn('Elements for student list in modal not found.');
                 return;
             }
 
-            daftarSiswaList.innerHTML = ''; // Kosongkan daftar yang ada
+            daftarAnggotaList.innerHTML = ''; // Kosongkan daftar yang ada
 
-            if (filteredSiswa.length === 0) {
-                noSiswaResults.classList.remove('hidden');
+            if (filteredAnggota.length === 0) {
+                noAnggotaResults.classList.remove('hidden');
             } else {
-                noSiswaResults.classList.add('hidden');
-                filteredSiswa.forEach(siswa => {
+                noAnggotaResults.classList.add('hidden');
+                filteredAnggota.forEach(anggota => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('py-2', 'px-3', 'hover:bg-gray-100', 'cursor-pointer', 'rounded-md');
                     listItem.innerHTML = `
-                    <p class="font-medium text-gray-900">${siswa.nama_siswa}</p>
-                    <p class="text-sm text-gray-500">NISN: ${siswa.nis_siswa} | Kelas: ${siswa.kelas_siswa}</p>
+                    <p class="font-medium text-gray-900">${anggota.nama_anggota}</p>
+                    <p class="text-sm text-gray-500">No Anggota: ${anggota.no_anggota} | Keanggotaan: ${anggota.keanggotaan}</p>
                 `;
-                    listItem.addEventListener('click', () => confirmPeminjaman(siswa.nis_siswa, siswa.nama_siswa));
-                    daftarSiswaList.appendChild(listItem);
+                    listItem.addEventListener('click', () => confirmPeminjaman(anggota.no_anggota, anggota.nama_anggota));
+                    daftarAnggotaList.appendChild(listItem);
                 });
             }
         }
@@ -369,17 +369,17 @@ if (filterKelasSiswaEl) {
         /**
          * Menerapkan filter dan pencarian pada daftar siswa di modal.
          */
-        function filterAndSearchSiswa() {
-            const selectedKelas = document.getElementById('filterKelasSiswa')?.value || '';
-            const searchTerm = document.getElementById('cariSiswa')?.value.toLowerCase() || '';
+        function filterAndSearchAnggota() {
+            const selectedKeanggotaan = document.getElementById('filterKeanggotaan')?.value || '';
+            const searchTerm = document.getElementById('cariAnggota')?.value.toLowerCase() || '';
 
-            const filtered = siswaData.filter(siswa => {
-                const matchesKelas = selectedKelas === '' || siswa.kelas_siswa == selectedKelas;
-                const matchesSearch = siswa.nama_siswa.toLowerCase().includes(searchTerm) ||
-                    siswa.nis_siswa.toLowerCase().includes(searchTerm);
-                return matchesKelas && matchesSearch;
+            const filtered = anggotaData.filter(anggota => {
+                const matchesKeanggotaan = selectedKeanggotaan === '' || anggota.keanggotaan == selectedKeanggotaan;
+                const matchesSearch = anggota.nama_anggota.toLowerCase().includes(searchTerm) ||
+                    anggota.no_anggota.toLowerCase().includes(searchTerm);
+                return matchesKeanggotaan && matchesSearch;
             });
-            renderSiswaList(filtered);
+            renderAnggotaList(filtered);
         }
 
         // --- FUNGSI KONFIRMASI DAN PROSES PEMINJAMAN ---
@@ -389,18 +389,18 @@ if (filterKelasSiswaEl) {
          * @param {string} nisSiswa - NISN siswa yang akan meminjam.
          * @param {string} namaSiswa - Nama siswa yang akan meminjam.
          */
-        function confirmPeminjaman(nisSiswa, namaSiswa) {
-            const isbnBuku = document.getElementById('pilihSiswaBukuIsbn')?.value;
-            const judulBuku = document.getElementById('pilihSiswaBukuJudul')?.textContent;
+        function confirmPeminjaman(noAnggota, namaAnggota) {
+            const isbnBuku = document.getElementById('pilihAnggotaBukuIsbn')?.value;
+            const judulBuku = document.getElementById('pilihAnggotaBukuJudul')?.textContent;
 
             if (!isbnBuku || !judulBuku) {
-                Swal.fire('Error', 'Data buku atau siswa tidak lengkap untuk konfirmasi.', 'error');
+                Swal.fire('Error', 'Data buku atau anggota tidak lengkap untuk konfirmasi.', 'error');
                 return;
             }
 
             Swal.fire({
                 title: 'Konfirmasi Peminjaman',
-                html: `Anda akan meminjamkan buku <strong>"${judulBuku}"</strong> kepada siswa <strong>${namaSiswa} (NISN: ${nisSiswa})</strong>.`,
+                html: `Anda akan meminjamkan buku <strong>"${judulBuku}"</strong> kepada anggota <strong>${namaAnggota} (No Anggota: ${noAnggota})</strong>.`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -409,7 +409,7 @@ if (filterKelasSiswaEl) {
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    performPeminjaman(isbnBuku, nisSiswa);
+                    performPeminjaman(isbnBuku, noAnggota);
                 }
             });
         }
@@ -419,10 +419,10 @@ if (filterKelasSiswaEl) {
          * @param {string} isbnBuku - ISBN buku yang dipinjam.
          * @param {string} nisSiswa - NISN siswa yang meminjam.
          */
-        function performPeminjaman(isbnBuku, nisSiswa) {
+        function performPeminjaman(isbnBuku, noAnggota) {
             // Tutup modal pemilihan siswa terlebih dahulu secara eksplisit
-            const pilihSiswaModalElement = document.getElementById('pilihSiswaModal');
-            hideModal(pilihSiswaModalElement); // Pastikan modal ini ditutup
+            const pilihAnggotaModalElement = document.getElementById('pilihAnggotaModal');
+            hideModal(pilihAnggotaModalElement); // Pastikan modal ini ditutup
 
             Swal.fire({
                 title: 'Memproses...',
@@ -441,7 +441,7 @@ if (filterKelasSiswaEl) {
                     },
                     body: JSON.stringify({
                         isbn_buku: isbnBuku, // Pastikan ini sesuai dengan validasi di Controller
-                        nis_siswa: nisSiswa
+                        no_anggota: noAnggota
                     })
                 })
                 .then(response => {
@@ -528,7 +528,7 @@ if (filterKelasSiswaEl) {
                     const detailModalTargetEl = document.getElementById('detailModal');
                     hideModal(detailModalTargetEl);
 
-                    openPilihSiswaModal(currentSelectedBookIsbn, book.judul);
+                    openPilihAnggotaModal(currentSelectedBookIsbn, book.judul);
                 });
             }
 
@@ -610,11 +610,11 @@ if (filterKelasSiswaEl) {
             applyFiltersBuku(); // Terapkan filter saat halaman pertama kali dimuat
 
             // Event listener untuk filter dan pencarian siswa di modal
-            const filterKelasSiswaModal = document.getElementById('filterKelasSiswa');
-            const cariSiswaModal = document.getElementById('cariSiswa');
+            const filterKeanggotaanModal = document.getElementById('filterKeanggotaan');
+            const cariAnggotaModal = document.getElementById('cariAnggota');
 
-            if (filterKelasSiswaModal) filterKelasSiswaModal.addEventListener('change', filterAndSearchSiswa);
-            if (cariSiswaModal) cariSiswaModal.addEventListener('keyup', filterAndSearchSiswa);
+            if (filterKeanggotaanModal) filterKeanggotaanModal.addEventListener('change', filterAndSearchAnggota);
+            if (cariAnggotaModal) cariAnggotaModal.addEventListener('keyup', filterAndSearchAnggota);
         });
     </script>
 @endpush

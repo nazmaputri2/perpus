@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Siswa;
+use App\Models\Anggota;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use Illuminate\Support\Facades\Storage;
@@ -16,9 +16,9 @@ public function index()
     $buku = Buku::latest()->paginate(10); // <-- ini pagination utama
 
     // Ambil data siswa untuk modal peminjaman
-    $siswa = Siswa::select('nis_siswa', 'nama_siswa', 'kelas_siswa')
-                ->orderBy('kelas_siswa')
-                ->orderBy('nama_siswa')
+    $anggota = Anggota::select('no_anggota', 'nama_anggota', 'keanggotaan')
+                ->orderBy('keanggotaan')
+                ->orderBy('nama_anggota')
                 ->get();
 
     // Ambil data unik kategori & kelas untuk keperluan filter dropdown
@@ -26,7 +26,7 @@ public function index()
     $kelasOptions = Buku::select('kelas')->distinct()->pluck('kelas')->filter()->sort()->values()->all();
 
     // Kirim semua data ke view
-    return view('petugas.databuku', compact('buku', 'siswa', 'kategoriOptions', 'kelasOptions'));
+    return view('petugas.databuku', compact('buku', 'anggota', 'kategoriOptions', 'kelasOptions'));
 }
     public function store(Request $request)
     {
@@ -37,7 +37,7 @@ public function index()
             'penerbit' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer|min:1900|max:' . date("Y"),
             'jenis_buku' => 'required|string|in:Pelajaran,Fiksi,Non-Fiksi',
-            'kelas' => ['nullable', 'string', Rule::in(['Tidak Ada', '1', '2', '3', '4', '5', '6'])],
+            'kelas' => ['nullable', 'string', Rule::in(['Tidak Ada', '1', '2', '3', '4', '5', '6', 'guru'])],
             'sinopsis' => 'nullable|string',
             'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -80,7 +80,7 @@ public function index()
             'penerbit' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer|min:1900|max:' . date("Y"),
             'jenis_buku' => 'required|string|in:Pelajaran,Fiksi,Non-Fiksi',
-            'kelas' => ['nullable', 'string', Rule::in(['Tidak Ada', '1', '2', '3', '4', '5', '6'])],
+            'kelas' => ['nullable', 'string', Rule::in(['Tidak Ada', '1', '2', '3', '4', '5', '6', 'guru'])],
             'sinopsis' => 'nullable|string',
             'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
