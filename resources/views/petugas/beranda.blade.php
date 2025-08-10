@@ -275,10 +275,10 @@
                 </div>
                 <h3 class="text-2xl font-bold text-gray-800 mb-3">Belum Ada Peminjam Terbanyak</h3>
                 <p class="text-gray-600 max-w-md mb-8">Data peminjam terbanyak akan muncul di sini setelah ada aktivitas peminjaman buku yang cukup.</p>
-                <button type="button" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold transition-colors duration-300 shadow-md hover:shadow-lg">
+                <a href="{{ route('petugas.statistik') }}" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold transition-colors duration-300 shadow-md hover:shadow-lg">
                     <i class="fas fa-book-reader mr-2" aria-hidden="true"></i>
-                    Lihat Peminjaman
-                </button>
+                    Lihat Statistik Peminjaman
+                </a>
             </div>
         @endif
     </section>

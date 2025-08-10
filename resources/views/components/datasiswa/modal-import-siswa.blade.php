@@ -19,7 +19,7 @@
                     <p class="text-sm text-gray-600 mb-2">
                         Pastikan file Anda sesuai dengan format yang kami sediakan.
                         <br>
-                        <a href="{{ asset('template/datasiswa.xlsx') }}"
+                        <a href="{{ asset('template/DataAnggota.xlsx') }}"
                             class="text-blue-600 hover:underline inline-flex items-center mt-1" download>
                             <i class="fas fa-file-excel me-1"></i> Unduh Template Excel
                         </a>
