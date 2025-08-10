@@ -103,10 +103,7 @@
                 <h3 class="text-2xl font-bold text-gray-800 mb-3">Tidak Ada Aktivitas Hari Ini</h3>
                 <p class="text-gray-600 max-w-md mb-8">Belum ada kegiatan peminjaman atau pengembalian buku yang tercatat untuk hari ini. Mari mulai buat aktivitas!</p>
                 {{-- Example button, consider linking to an actual "add activity" route --}}
-                <button type="button" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold transition-colors duration-300 shadow-md hover:shadow-lg">
-                    <i class="fas fa-plus mr-2" aria-hidden="true"></i>
-                    Catat Aktivitas Baru
-                </button>
+                
             </div>
         @else
             {{-- List of Today's Activities --}}

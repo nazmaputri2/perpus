@@ -303,7 +303,7 @@ if (filterKeanggotaanEl) {
             if (keanggotaan.toLowerCase() === 'guru') {
                 option.textContent = keanggotaan; // tampilkan apa adanya
             } else {
-                option.textContent = `Siswa ${keanggotaan}`;
+                option.textContent = `anggota ${keanggotaan}`;
             }
 
             filterKeanggotaanEl.appendChild(option);
